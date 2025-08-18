@@ -12,7 +12,7 @@
     <header role="bandera">
         <div class="marca">
             <h1 aria-label="DreamSwap">
-                <img src="imagenes/LaRuta.png" alt="DreamSwap" height="60">La ruta el Pastelazo
+                <img src="imagenes/Logo la ruta el pastelazo.png" alt="DreamSwap" height="120">La ruta el Pastelazo
             </h1>
             <p class="tagline">50 años endulzando con pasteles</p>
         </div>
@@ -30,7 +30,45 @@
 
     </header>
 
-    
+    <main id="contenido" tabindex="-1">
+        <section id="home" class="screen" aria-labelledby="home-title">
+            <h2 id="home-title">Bienvenido a La Ruta el Pastelazo</h2>
+            <p>Endulza tu dia con tortas personalizadas a tu gusto</p>
+
+            <form aria-label="Buscador de Productos de pasteleria" data-screen="home">
+                <label for="q">que se te antoja hoy?</label>
+                <input id="q" name="q" type="search" placeholder="Torta tres leches, Torta mil Hojas">
+                <button type="submit">Buscar</button>
+            </form>
+
+            <section aria-labelledby="home-destacados-title">
+                <h3 id="home-destacados-title">Destacados del dia</h3>
+                <ul class="cards" data-test-id="home-destacados">
+                    <li>
+                        <article>
+                            <img src="imagenes/tortas/TRES-LECHES-1.webp" alt="Torta tres leches conm crema " width="200">
+                            <h4>Torta Tres Leches</h4>
+                            <p>Bizcocho humedo con leche evaporada, condensada y crema. Porciones:12 </p>
+                            <p class="meta">Precio: $22.900</p>
+                            <a href="#detalle-productos" data-action="ver-detalle" data-id="p001">Ver detalle</a>
+
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <img src="imagenes/tortas/torta-naranjax.webp" alt="Torta Naranja-Sweet" width="200">
+                            <h4>Torta Naranja</h4>
+                            <p>Refrescante y deliciosa, con bizcocho blanco remojado en jugo de naranja, crema chantilly y crema de naranja. Porciones: 15</p>
+                            <p class="Meta">Precio: $27.990</p>
+                            <a href="#detalle-productos" data-action="ver-detalle" data-id="p002">Ver detalle</a>
+                        </article>
+                    </li>
+                </ul>
+            </section>
+        </section>
+    </main>
+
+
 </body>
 
 </html>
