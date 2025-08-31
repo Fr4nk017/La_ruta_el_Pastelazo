@@ -1,108 +1,588 @@
--<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>La Ruta el Pastelazo</title>
-    <meta name="description" content="Prototipo HTML de pantalla">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pastelería Mil Sabores – Prototipo HTML</title>
+  <meta name="description" content="Prototipo HTML de Pastelería Mil Sabores con catálogo, detalle, carrito, checkout, perfil y más." />
+
+  <!-- Bootstrap 5 CSS (solo CSS, sin JS) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+
+  <!-- Tipografías (opcional) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+
+  <!-- Tus estilos -->
+  <link rel="stylesheet" href="css/Index.css">
 </head>
-<link rel="stylesheet" href="css/Index.css">
 
+<body class="bg-light text-dark" style="font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;">
+  <a href="#contenido" class="visually-hidden-focusable position-absolute top-0 start-0 p-2 bg-dark text-white">Saltar al contenido</a>
 
-<body>
-    <a href="#contenido" class="skip-link">Saltar al contenido</a>
-
-    <header role="banner">
-        <div class="marca">
-            <h1 aria-label="DreamSwap">
-                <img src="imagenes/Logo la ruta el pastelazo.png" alt="DreamSwap" height="120">La ruta el Pastelazo
-            </h1>
-            <p class="tagline">50 años endulzando tu vida</p>
+  <!-- HEADER / NAV -->
+  <header role="banner" class="py-3 border-bottom bg-white">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <img src="imagenes/Logo la ruta el pastelazo.png" alt="Logotipo Pastelería Mil Sabores" height="72" />
+        <div>
+          <h1 class="h3 m-0" style="font-family: 'Pacifico', cursive;">Pastelería Mil Sabores</h1>
+          <p class="text-muted m-0">50 años endulzando tu vida</p>
         </div>
-        <nav aria-label="Navegacion principal">
-            <ul>
-                <li><a href="#home" data-nav>Inicios</a></li>
-                <li><a href="#catalogo" data-nav>Catalogo</a></li>
-                <li><a href="#carrito" data-nav>Carrito</a></li>
-                <li><a href="#perfil" data-nav>Perfil</a></li>
-                <li><a href="#Contacto" data-nav>Contacto</a></li>
-                <li><a href="#ingresar" data-nav>Ingresar</a></li>
-                
+      </div>
+      <nav aria-label="Navegación principal">
+        <ul class="nav nav-pills">
+          <li class="nav-item"><a class="nav-link" href="#home" aria-current="page">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#catalogo">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link" href="#detalle-producto">Detalle</a></li>
+          <li class="nav-item"><a class="nav-link" href="#carrito">Carrito</a></li>
+          <li class="nav-item"><a class="nav-link" href="#checkout">Checkout</a></li>
+          <li class="nav-item"><a class="nav-link" href="Menu/perfil.html">Perfil</a></li>
+          <li class="nav-item"><a class="nav-link" href="Menu/Ingresar.html">Ingresar</a></li>
+          <li class="nav-item"><a class="nav-link" href="#estado-pedido">Estado</a></li>
+          <li class="nav-item"><a class="nav-link" href="#resenas">Reseñas</a></li>
+          <li class="nav-item"><a class="nav-link" href="#fidelizacion">Fidelización</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido" class="container my-4">
+    <!-- HOME -->
+    <section id="home" class="mb-5" aria-labelledby="home-title">
+      <div class="row g-4 align-items-center">
+        <div class="col-12 col-lg-7">
+          <h2 id="home-title" class="display-6 fw-semibold">Endulza tu día con tortas personalizadas</h2>
+          <p class="lead text-muted">Elige tu favorita, ajusta porciones y retira en tienda o recibe en casa.</p>
+
+          <form aria-label="Buscador de productos de pastelería" class="row g-2 mt-2" method="get" action="#catalogo">
+            <div class="col-12 col-sm-9">
+              <label class="form-label" for="q">¿Qué se te antoja hoy?</label>
+              <input id="q" name="q" type="search" class="form-control" placeholder="Tres leches, Mil hojas, Papaya…" autocomplete="off" />
+            </div>
+            <div class="col-12 col-sm-3 d-grid align-self-end">
+              <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+          </form>
+
+          <!-- Beneficios -->
+          <div class="alert alert-warning mt-3" role="note">
+            <h3 class="h6 m-0">Beneficios de registro</h3>
+            <ul class="mb-0 small">
+              <li>50% de descuento para mayores de 50 años.</li>
+              <li>10% de por vida con el código <strong>FELICES50</strong>.</li>
+              <li>Torta gratis de cumpleaños para estudiantes DUOC con correo institucional.</li>
             </ul>
-        </nav>
+            <div class="mt-2 d-flex gap-2">
+              <a class="btn btn-sm btn-primary" href="Menu/Ingresar.html">Ingresar / Crear cuenta</a>
+              <a class="btn btn-sm btn-outline-primary" href="Menu/perfil.html">Mi Perfil</a>
+            </div>
+          </div>
+        </div>
 
-    </header>
+        <div class="col-12 col-lg-5">
+          <div class="p-4 rounded-4 border bg-white">
+            <h3 class="h5">Destacados de hoy</h3>
+            <ul class="list-unstyled small mb-0">
+              <li class="mb-3">
+                <article>
+                  <h4 class="h6 m-0">Torta Tres Leches</h4>
+                  <p class="m-0 text-muted">Bizcocho húmedo con leches y crema. Porciones: 12</p>
+                  <p class="m-0 fw-semibold">Precio: $22.900</p>
+                  <a class="link-primary" href="#detalle-producto">Ver detalle</a>
+                </article>
+              </li>
+              <li class="mb-3">
+                <article>
+                  <h4 class="h6 m-0">Torta Naranja</h4>
+                  <p class="m-0 text-muted">Bizcocho suave, jugo de naranja y chantilly. Porciones: 15</p>
+                  <p class="m-0 fw-semibold">Precio: $27.990</p>
+                  <a class="link-primary" href="#detalle-producto">Ver detalle</a>
+                </article>
+              </li>
+              <li>
+                <article>
+                  <h4 class="h6 m-0">Torta de Papaya</h4>
+                  <p class="m-0 text-muted">Relleno de papaya natural y crema pastelera. Porciones: 10</p>
+                  <p class="m-0 fw-semibold">Precio: $24.500</p>
+                  <a class="link-primary" href="#detalle-producto">Ver detalle</a>
+                </article>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <main id="contenido" tabindex="-1">
-        <section id="home" class="screen" aria-labelledby="home-title">
-            <h2 id="home-title">Bienvenido a La Ruta el Pastelazo</h2>
-            <p>Endulza tu dia con tortas personalizadas a tu gusto</p>
+    <!-- CATÁLOGO -->
+    <section id="catalogo" class="mb-5" aria-labelledby="catalogo-title">
+      <h2 id="catalogo-title" class="h4">Catálogo</h2>
+      <div class="row g-4">
+        <aside class="col-12 col-lg-3">
+          <div class="p-3 rounded-4 border bg-white">
+            <h3 class="h6">Filtros</h3>
+            <form aria-label="Filtros del catálogo" method="get" action="#catalogo" class="vstack gap-3">
+              <fieldset>
+                <legend class="h6">Categorías</legend>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="catCl" name="cat[]" value="clasicas" />
+                  <label for="catCl" class="form-check-label">Clásicas</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="catFr" name="cat[]" value="fruta" />
+                  <label for="catFr" class="form-check-label">Con fruta</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="catCh" name="cat[]" value="chocolate" />
+                  <label for="catCh" class="form-check-label">Chocolate</label>
+                </div>
+              </fieldset>
 
-            <form aria-label="Buscador de Productos de pasteleria" data-screen="home">
-                <label for="q">que se te antoja hoy?</label>
-                <input id="q" name="q" type="search" placeholder="Torta tres leches, Torta mil Hojas">
-                <button type="submit">Buscar</button>
+              <!-- Tipo y tamaño -->
+              <div>
+                <label class="form-label" for="tipo-torta">Tipo de torta</label>
+                <select id="tipo-torta" name="tipo_torta" class="form-select">
+                  <option value="">Cualquiera</option>
+                  <option value="cuadrada">Tortas Cuadradas</option>
+                  <option value="circular">Tortas Circulares</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="tamano">Tamaño</label>
+                <select id="tamano" name="tamano" class="form-select">
+                  <option value="">Cualquiera</option>
+                  <option value="8">Pequeña (8 porciones)</option>
+                  <option value="12">Mediana (12 porciones)</option>
+                  <option value="15">Grande (15 porciones)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="porciones">Porciones mínimas</label>
+                <input id="porciones" name="porciones_min" class="form-control" type="number" min="6" step="2" placeholder="8" />
+              </div>
+
+              <div>
+                <label class="form-label" for="precio-max">Precio máximo ($)</label>
+                <input id="precio-max" name="precio_max" class="form-control" type="number" min="0" step="1000" placeholder="25000" />
+              </div>
+
+              <button class="btn btn-primary" type="submit">Aplicar filtros</button>
             </form>
+          </div>
+        </aside>
 
-            <section aria-labelledby="home-destacados-title">
-                <h3 id="home-destacados-title">Destacados del dia</h3>
-                <ul class="cards" data-test-id="home-destacados">
-                    <li>
-                        <article>
-                            <h5>Lampa</h5>
-                            <img src="imagenes/tortas/TRES-LECHES-1.webp" alt="Torta tres leches conm crema " width="200">
-                            <h4>Torta Tres Leches</h4>
-                            <p>Bizcocho humedo con leche evaporada, condensada y crema. Porciones:12 </p>
-                            <p class="meta">Precio: $22.900</p>
-                            <a href="#detalle-productos" data-action="ver-detalle" data-id="p001">Ver detalle</a>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <h5>Quilicura</h5>
-                            <img src="imagenes/tortas/torta-naranjax.webp" alt="Torta Naranja-Sweet" width="200">
-                            <h4>Torta Naranja</h4>
-                            <p>Refrescante y deliciosa, con bizcocho blanco remojado en jugo de naranja, crema chantilly y crema de naranja. Porciones: 15</p>
-                            <p class="Meta">Precio: $27.990</p>
-                            <a href="#detalle-productos" data-action="ver-detalle" data-id="p002">Ver detalle</a>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <h5>Región Norte</h5>
-                            <img src="imagenes/tortas/Torta_de_Papaya.png" alt="Torta de Papaya" width="200">
-                            <h4>Torta de Papaya</h4>
-                            <p>Bizcocho suave con relleno de papaya natural y crema pastelera. Porciones: 10</p>
-                            <p class="meta">Precio: $24.500</p>
-                            <a href="#detalle-productos" data-action="ver-detalle" data-id="p003">Ver detalle</a>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <h5>Región Centro</h5>
-                            <img src="imagenes/tortas/Torta_de_uva_Chardonnay.png" alt="Torta de uva Chardonnay" width="200">
-                            <h4>Torta de uva Chardonnay</h4>
-                            <p>Bizcocho esponjoso con crema de uva Chardonnay y cobertura de frutas frescas. Porciones: 12</p>
-                            <p class="meta">Precio: $28.000</p>
-                            <a href="#detalle-productos" data-action="ver-detalle" data-id="p004">Ver detalle</a>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <h5>Región Sur</h5>
-                            <img src="imagenes/tortas/Torta_de_kuchen_de_frambuesa.png" alt="Torta de kuchen de frambuesa" width="200">
-                            <h4>Torta de kuchen de frambuesa</h4>
-                            <p>Kuchen tradicional del sur con frambuesas frescas y masa suave. Porciones: 8</p>
-                            <p class="meta">Precio: $21.900</p>
-                            <a href="#detalle-productos" data-action="ver-detalle" data-id="p005">Ver detalle</a>
-                        </article>
-                    </li>
-                </ul>
-            </section>
-        </section>
-    </main>
+        <div class="col-12 col-lg-9">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h3 class="h5 m-0">Resultados</h3>
+            <span class="badge text-bg-secondary">Colección del día</span>
+          </div>
 
+          <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+            <!-- Cards base -->
+            <div class="col">
+              <article class="card h-100">
+                <img class="card-img-top" src="imagenes/tortas/TRES-LECHES-1.webp" alt="Torta Tres Leches" />
+                <div class="card-body d-flex flex-column">
+                  <h4 class="h6">Torta Tres Leches</h4>
+                  <p class="small text-muted">Porciones: 12 • Lampa</p>
+                  <p class="flex-grow-1">Bizcocho húmedo con leche evaporada y condensada, y crema.</p>
+                  <p class="fw-semibold">Precio: $22.900</p>
+                  <div class="d-flex gap-2">
+                    <a href="#detalle-producto" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+                    <a href="#carrito" class="btn btn-sm btn-primary">Agregar</a>
+                  </div>
+                </div>
+              </article>
+            </div>
 
+            <div class="col">
+              <article class="card h-100">
+                <img class="card-img-top" src="imagenes/tortas/torta-naranjax.webp" alt="Torta Naranja" />
+                <div class="card-body d-flex flex-column">
+                  <h4 class="h6">Torta Naranja</h4>
+                  <p class="small text-muted">Porciones: 15 • Quilicura</p>
+                  <p class="flex-grow-1">Bizcocho blanco con jugo de naranja, chantilly y crema de naranja.</p>
+                  <p class="fw-semibold">Precio: $27.990</p>
+                  <div class="d-flex gap-2">
+                    <a href="#detalle-producto" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+                    <a href="#carrito" class="btn btn-sm btn-primary">Agregar</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col">
+              <article class="card h-100">
+                <img class="card-img-top" src="imagenes/tortas/Torta_de_Papaya.png" alt="Torta de Papaya" />
+                <div class="card-body d-flex flex-column">
+                  <h4 class="h6">Torta de Papaya</h4>
+                  <p class="small text-muted">Porciones: 10 • Región Norte</p>
+                  <p class="flex-grow-1">Relleno de papaya natural con crema pastelera.</p>
+                  <p class="fw-semibold">Precio: $24.500</p>
+                  <div class="d-flex gap-2">
+                    <a href="#detalle-producto" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+                    <a href="#carrito" class="btn btn-sm btn-primary">Agregar</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <!-- Ejemplos con códigos (rúbrica) -->
+            <div class="col">
+              <article class="card h-100">
+                <div class="card-body d-flex flex-column">
+                  <p class="small text-muted m-0">Código: <strong>TC001</strong> • Tortas Cuadradas</p>
+                  <h4 class="h6 mt-1">Torta Cuadrada de Chocolate</h4>
+                  <p class="flex-grow-1">Deliciosa torta de chocolate con ganache y toque de avellanas. Personalizable.</p>
+                  <p class="fw-semibold">Precio: $45.000 CLP</p>
+                  <div class="d-flex gap-2">
+                    <a href="#detalle-producto" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+                    <a href="#carrito" class="btn btn-sm btn-primary">Agregar</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col">
+              <article class="card h-100">
+                <div class="card-body d-flex flex-column">
+                  <p class="small text-muted m-0">Código: <strong>TT001</strong> • Tortas Circulares</p>
+                  <h4 class="h6 mt-1">Torta Circular de Vainilla</h4>
+                  <p class="flex-grow-1">Bizcocho de vainilla con crema pastelera y glaseado dulce.</p>
+                  <p class="fw-semibold">Precio: $40.000 CLP</p>
+                  <div class="d-flex gap-2">
+                    <a href="#detalle-producto" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+                    <a href="#carrito" class="btn btn-sm btn-primary">Agregar</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col">
+              <article class="card h-100">
+                <img class="card-img-top" src="imagenes/tortas/Torta_de_uva_Chardonnay.png" alt="Torta de uva Chardonnay" />
+                <div class="card-body d-flex flex-column">
+                  <h4 class="h6">Torta de uva Chardonnay</h4>
+                  <p class="small text-muted">Porciones: 12 • Región Centro</p>
+                  <p class="flex-grow-1">Crema de uva Chardonnay y cobertura de frutas frescas.</p>
+                  <p class="fw-semibold">Precio: $28.000</p>
+                  <div class="d-flex gap-2">
+                    <a href="#detalle-producto" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+                    <a href="#carrito" class="btn btn-sm btn-primary">Agregar</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col">
+              <article class="card h-100">
+                <img class="card-img-top" src="imagenes/tortas/Torta_de_kuchen_de_frambuesa.png" alt="Torta de kuchen de frambuesa" />
+                <div class="card-body d-flex flex-column">
+                  <h4 class="h6">Torta de kuchen de frambuesa</h4>
+                  <p class="small text-muted">Porciones: 8 • Región Sur</p>
+                  <p class="flex-grow-1">Kuchen tradicional con frambuesas frescas.</p>
+                  <p class="fw-semibold">Precio: $21.900</p>
+                  <div class="d-flex gap-2">
+                    <a href="#detalle-producto" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+                    <a href="#carrito" class="btn btn-sm btn-primary">Agregar</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DETALLE (estático) -->
+    <section id="detalle-producto" class="mb-5" aria-labelledby="detalle-title">
+      <h2 id="detalle-title" class="h4">Detalle del producto</h2>
+      <div class="row g-4">
+        <div class="col-12 col-lg-7">
+          <article class="p-4 rounded-4 border bg-white h-100">
+            <h3 class="h5">Torta Tres Leches</h3>
+            <p class="small text-muted">Porciones base: 12 • Categoría: Clásicas</p>
+            <p>Bizcocho húmedo con leche evaporada y condensada, y una capa generosa de crema. Ideal para celebraciones familiares.</p>
+          </article>
+        </div>
+        <aside class="col-12 col-lg-5">
+          <div class="p-4 rounded-4 border bg-white h-100">
+            <h4 class="h6">Personaliza tu torta</h4>
+            <form aria-label="Personalización" method="post" action="#carrito" class="vstack gap-3">
+              <div>
+                <label class="form-label" for="porciones-detalle">Porciones</label>
+                <input id="porciones-detalle" name="porciones" class="form-control" type="number" min="6" step="2" value="12" />
+              </div>
+              <div>
+                <label class="form-label" for="relleno">Relleno</label>
+                <select id="relleno" name="relleno" class="form-select">
+                  <option>Clásico (crema)</option>
+                  <option>Manjar</option>
+                  <option>Frutilla</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label" for="mensaje">Mensaje en la torta</label>
+                <input id="mensaje" name="mensaje" class="form-control" type="text" placeholder="¡Feliz Cumpleaños!" />
+              </div>
+              <div class="d-grid">
+                <a class="btn btn-primary" href="#carrito">Agregar al carrito</a>
+              </div>
+            </form>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Reseñas del detalle -->
+      <div class="row g-4 mt-1">
+        <div class="col-12">
+          <div class="p-4 rounded-4 border bg-white">
+            <h4 class="h6">Reseñas</h4>
+            <ul class="small mb-0">
+              <li><strong>Ana</strong> ★★★★★ – “Deliciosa, llegó fresca y a tiempo.”</li>
+              <li><strong>Marco</strong> ★★★★☆ – “Muy rica, pediré más porciones la próxima.”</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARRITO -->
+    <section id="carrito" class="mb-5" aria-labelledby="carrito-title">
+      <h2 id="carrito-title" class="h4">Tu Carrito</h2>
+      <div class="table-responsive rounded-4 overflow-hidden border bg-white">
+        <table class="table align-middle mb-0">
+          <caption class="text-muted">Resumen de productos seleccionados</caption>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Porciones</th>
+              <th>Relleno</th>
+              <th>Mensaje</th>
+              <th>Subtotal</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Torta Tres Leches</td>
+              <td>12</td>
+              <td>Clásico (crema)</td>
+              <td>—</td>
+              <td>$22.900</td>
+              <td>
+                <div class="d-flex gap-2">
+                  <a href="#detalle-producto" class="link-primary">Editar</a>
+                  <a href="#carrito" class="link-danger">Eliminar</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" class="fw-bold">Total</td>
+              <td class="fw-bold">$22.900</td>
+              <td><a href="#checkout" class="btn btn-sm btn-primary">Ir a pagar</a></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- CHECKOUT -->
+    <section id="checkout" class="mb-5" aria-labelledby="checkout-title">
+      <h2 id="checkout-title" class="h4">Programar y Confirmar</h2>
+      <form class="row g-4" aria-label="Checkout" method="post" action="#home">
+        <fieldset class="col-12 col-lg-6">
+          <legend class="h6">Retiro / Despacho</legend>
+          <div class="mb-3">
+            <label class="form-label" for="fecha">Fecha</label>
+            <input id="fecha" name="fecha" class="form-control" type="date" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="hora">Hora estimada</label>
+            <input id="hora" name="hora" class="form-control" type="time" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="metodo-entrega">Método de entrega</label>
+            <select id="metodo-entrega" name="metodo_entrega" class="form-select">
+              <option>Retiro en tienda</option>
+              <option>Despacho a domicilio</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="direccion">Dirección (si despacho)</label>
+            <input id="direccion" name="direccion" class="form-control" type="text" placeholder="Calle, número, comuna" />
+          </div>
+        </fieldset>
+
+        <fieldset class="col-12 col-lg-6">
+          <legend class="h6">Pago</legend>
+          <div class="mb-3">
+            <label class="form-label" for="metodo-pago">Método</label>
+            <select id="metodo-pago" name="metodo_pago" class="form-select">
+              <option>Tarjeta</option>
+              <option>Transferencia</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="cupon">Cupón (opcional)</label>
+            <input id="cupon" name="cupon" class="form-control" type="text" placeholder="SABOR10" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="comentarios">Comentarios para la cocina</label>
+            <textarea id="comentarios" name="comentarios" class="form-control" rows="3" placeholder="Sin nueces, sin gluten, etc."></textarea>
+          </div>
+        </fieldset>
+
+        <div class="col-12 d-grid">
+          <button class="btn btn-primary" type="submit">Confirmar pedido</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ESTADO PEDIDO -->
+    <section id="estado-pedido" class="mb-5" aria-labelledby="estado-title">
+      <h2 id="estado-title" class="h4">Estado de tu pedido</h2>
+      <div class="row g-4">
+        <div class="col-12 col-lg-6">
+          <div class="p-4 rounded-4 border bg-white h-100">
+            <form class="row g-2" aria-label="Buscar pedido" method="get" action="#estado-pedido">
+              <div class="col-8">
+                <label class="form-label" for="pedido-id">ID de pedido</label>
+                <input id="pedido-id" name="pedido" class="form-control" type="text" placeholder="MS-2025-0001">
+              </div>
+              <div class="col-4 d-grid align-self-end">
+                <button class="btn btn-primary" type="submit">Consultar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <div class="p-4 rounded-4 border bg-white h-100">
+            <ol class="list-group list-group-numbered">
+              <li class="list-group-item">Preparando tu pedido</li>
+              <li class="list-group-item">En reparto / Listo para retiro</li>
+              <li class="list-group-item">Entregado</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESEÑAS (sección dedicada) -->
+    <section id="resenas" class="mb-5" aria-labelledby="resenas-title">
+      <h2 id="resenas-title" class="h4">Reseñas</h2>
+      <div class="row g-4">
+        <div class="col-12 col-lg-6">
+          <div class="p-4 rounded-4 border bg-white h-100">
+            <h3 class="h6">Deja tu reseña</h3>
+            <form class="vstack gap-3" aria-label="Enviar reseña" method="post" action="#resenas">
+              <div>
+                <label class="form-label" for="producto-resena">Producto</label>
+                <input id="producto-resena" name="producto" class="form-control" type="text" placeholder="Torta Tres Leches">
+              </div>
+              <div>
+                <label class="form-label" for="rating">Calificación</label>
+                <select id="rating" name="rating" class="form-select">
+                  <option>★★★★★</option>
+                  <option>★★★★☆</option>
+                  <option>★★★☆☆</option>
+                  <option>★★☆☆☆</option>
+                  <option>★☆☆☆☆</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label" for="comentario">Comentario</label>
+                <textarea id="comentario" name="comentario" class="form-control" rows="4" placeholder="Cuenta tu experiencia"></textarea>
+              </div>
+              <div class="d-grid">
+                <button class="btn btn-primary" type="submit">Publicar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <div class="p-4 rounded-4 border bg-white h-100">
+            <h3 class="h6">Reseñas de la comunidad</h3>
+            <ul class="small mb-0">
+              <li><strong>Lucía</strong> – ★★★★★ – “La mejor mil hojas que he probado.”</li>
+              <li><strong>Pablo</strong> – ★★★★☆ – “Excelente atención, llegó puntual.”</li>
+              <li><strong>Camila</strong> – ★★★★☆ – “La de papaya es riquísima, pediré de nuevo.”</li>
+              <li><strong>José</strong> – ★★★☆☆ – “Buen sabor, me gustaría más opciones sin azúcar.”</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIDELIZACIÓN -->
+    <section id="fidelizacion" class="mb-5" aria-labelledby="fidelizacion-title">
+      <h2 id="fidelizacion-title" class="h4">Programa de Puntos</h2>
+      <div class="table-responsive rounded-4 overflow-hidden border bg-white">
+        <table class="table align-middle mb-0">
+          <caption class="text-muted">Niveles y beneficios</caption>
+          <thead>
+            <tr>
+              <th>Nivel</th>
+              <th>Requisito</th>
+              <th>Beneficios</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dulcero</td>
+              <td>0–199 pts</td>
+              <td>Cupones 5%</td>
+            </tr>
+            <tr>
+              <td>Maestro</td>
+              <td>200–499 pts</td>
+              <td>1 extra gratis al mes</td>
+            </tr>
+            <tr>
+              <td>Pastelero</td>
+              <td>500+ pts</td>
+              <td>Pruebas de nuevos sabores</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- (Opcional) Impacto comunitario -->
+    <section id="comunidad" class="mb-5" aria-labelledby="comunidad-title">
+      <h2 id="comunidad-title" class="h4">Impacto Comunitario & Repostería</h2>
+      <div class="p-4 rounded-4 border bg-white">
+        <p class="mb-2">Tus compras apoyan a estudiantes de gastronomía y a la comunidad local.</p>
+        <ul class="small mb-0">
+          <li>Historias y origen de recetas tradicionales.</li>
+          <li>Recomendaciones personalizadas según tus preferencias.</li>
+          <li>Notas y consejos de estudiantes DUOC.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-top py-4 mt-5 bg-white">
+    <div class="container d-flex flex-wrap gap-3 justify-content-between align-items-center">
+      <ul class="nav">
+        <li class="nav-item"><a class="nav-link px-2" href="#fidelizacion">Programa</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#estado-pedido">Estado de pedido</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="#resenas">Reseñas</a></li>
+      </ul>
+      <small class="text-muted">© 2025 Pastelería Mil Sabores</small>
+    </div>
+  </footer>
+
+  <!-- Sin JS para mantener "solo HTML". Si luego quieres menú colapsable o carrito dinámico, te paso un app.js ligero. -->
 </body>
-
 </html>
