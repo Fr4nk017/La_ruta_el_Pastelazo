@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap');
+
+/* Paleta pastel extendida */
+:root {
+  --crema: #FFF5E1;
+  --rosa: #FFC0CB;
+  --chocolate: #8B4513;
+  --marron: #5D4037;
+  --gris-claro: #B0BEC5;
+  --celeste: #B3E5FC;
+  --menta: #C8E6C9;
+  --amarillo: #FFF9C4;
+  --lavanda: #E1BEE7;
+}
+
+body {
+  font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--crema) 70%, var(--menta) 100%);
+  color: var(--marron);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: var(--menta);
+  border-bottom: 2px solid var(--lavanda);
+  padding: 2rem 0 1rem 0;
+  text-align: center;
+}
+
+.marca h1 {
+  font-family: 'Pacifico', cursive;
+  color: var(--chocolate);
+  font-size: 2.2rem;
+  margin-bottom: 0.2em;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.tagline {
+  color: var(--gris-claro);
+  font-size: 1.1rem;
+  margin-bottom: 0.5em;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0 0;
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+}
+
+nav a {
+  color: var(--chocolate);
+  background: var(--rosa);
+  padding: 0.5em 1.2em;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 700;
+  border: 1.5px solid var(--chocolate);
+  transition: background 0.3s, color 0.3s;
+}
+nav a[aria-current="page"], nav a:hover, nav a:focus {
+  background: var(--lavanda);
+  color: var(--chocolate);
+  outline: none;
+}
+
+main {
+  max-width: 540px;
+  margin: 2.5rem auto;
+  background: var(--crema);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #e1bee7aa;
+  padding: 2.5rem 2rem;
+  border: 2px solid var(--lavanda);
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-family: 'Pacifico', cursive;
+  color: var(--chocolate);
+  font-size: 1.7rem;
+  margin-bottom: 1.2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+form div, fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+fieldset {
+  border: 1.5px solid var(--celeste);
+  border-radius: 10px;
+  padding: 1rem 1rem 0.7rem 1rem;
+  margin-bottom: 1.2rem;
+  background: var(--menta);
+}
+
+legend {
+  font-size: 1.1rem;
+  color: var(--chocolate);
+  font-family: 'Pacifico', cursive;
+  margin-bottom: 0.3em;
+}
+
+label {
+  font-weight: 700;
+  color: var(--chocolate);
+}
+
+input, select, textarea {
+  padding: 0.5em 0.7em;
+  border-radius: 6px;
+  border: 1.5px solid var(--celeste);
+  background: var(--amarillo);
+  color: var(--marron);
+  font-size: 1rem;
+  font-family: 'Lato', sans-serif;
+  transition: border-color 0.2s, background 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--lavanda);
+  background: var(--celeste);
+  outline: none;
+}
+
+button[type="submit"] {
+  background: var(--rosa);
+  color: var(--chocolate);
+  border: 1.5px solid var(--chocolate);
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.7em 0;
+  margin-top: 0.5em;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+button[type="submit"]:hover, button[type="submit"]:focus {
+  background: var(--lavanda);
+  color: var(--chocolate);
+}
+
+.form-text, .small {
+  color: var(--gris-claro);
+  font-size: 0.95em;
+}
+
+a {
+  color: var(--chocolate);
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+a:hover, a:focus {
+  color: var(--rosa);
+}
+
+hr {
+  border: none;
+  border-top: 2px solid var(--lavanda);
+  margin: 2.5rem 0;
+}
+
+footer {
+  text-align: center;
+  background: var(--menta);
+  border-top: 2px solid var(--lavanda);
+  padding: 1.2rem 0 0.7rem 0;
+  color: var(--gris-claro);
+  font-size: 1rem;
+  margin-top: 2rem;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  background: var(--chocolate);
+  color: var(--crema);
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  z-index: 1000;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  main {
+    padding: 1.2rem 0.5rem;
+    margin: 1.2rem 0.2rem;
+  }
+  header {
+    padding: 1.2rem 0 0.7rem 0;
+  }
+  .marca h1 {
+    font-size: 1.3rem;
+  }
+}
