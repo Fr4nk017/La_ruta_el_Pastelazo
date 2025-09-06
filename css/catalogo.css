@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap');
+
+:root {
+  --crema: #FFF5E1;
+  --rosa: #FFC0CB;
+  --chocolate: #8B4513;
+  --marron: #5D4037;
+  --gris-claro: #B0BEC5;
+  --celeste: #B3E5FC;
+  --menta: #C8E6C9;
+  --amarillo: #FFF9C4;
+  --lavanda: #E1BEE7;
+}
+
+body {
+  font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--crema) 70%, var(--celeste) 100%);
+  color: var(--marron);
+}
+
+h2, h3 {
+  font-family: 'Pacifico', cursive;
+  color: var(--chocolate);
+  margin-bottom: 1rem;
+}
+
+.catalogo-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.catalogo-item {
+  background: var(--crema);
+  border: 2px solid var(--lavanda);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #e1bee7aa;
+  padding: 1.2rem;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.catalogo-item:hover {
+  box-shadow: 0 8px 32px #ffc0cb88;
+  transform: translateY(-4px) scale(1.03);
+}
+
+.catalogo-img {
+  width: 140px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 6px solid #8B5C2A;
+  background: var(--amarillo);
+  margin-bottom: 1rem;
+}
+
+.catalogo-nombre {
+  font-family: 'Pacifico', cursive;
+  color: var(--chocolate);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.catalogo-descripcion {
+  color: var(--gris-claro);
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.catalogo-precio {
+  color: var(--chocolate);
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.catalogo-btn {
+  background: var(--rosa);
+  color: var(--chocolate);
+  border: 1.5px solid var(--chocolate);
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.5em 1.2em;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+.catalogo-btn:hover, .catalogo-btn:focus {
+  background: var(--lavanda);
+  color: var(--chocolate);
+}
+
+@media (max-width: 600px) {
+  .catalogo-lista {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  .catalogo-img {
+    width: 100px;
+    height: 70px;
+  }
+}

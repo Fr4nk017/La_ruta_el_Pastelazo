@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carrito – Pastelería Mil Sabores</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/carrito.css" />
+</head>
+<body>
+  <header>
+    <h1 style="font-family: 'Pacifico', cursive; color: #8B4513;">
+      Carrito de compras
+    </h1>
+    <nav>
+      <a href="../index.html" class="carrito-btn" style="max-width:200px;margin:auto;">Inicio</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="carrito-container">
+      <h2>Productos seleccionados</h2>
+      <table class="carrito-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><img src="../imagenes/torta-chocolate.jpg" alt="Torta de Chocolate" class="carrito-img"></td>
+            <td>Torta de Chocolate</td>
+            <td>1</td>
+            <td>$12.000</td>
+            <td><a href="#" class="carrito-btn">Eliminar</a></td>
+          </tr>
+          <tr>
+            <td><img src="../imagenes/cheesecake-frambuesa.jpg" alt="Cheesecake de Frambuesa" class="carrito-img"></td>
+            <td>Cheesecake de Frambuesa</td>
+            <td>2</td>
+            <td>$21.000</td>
+            <td><a href="#" class="carrito-btn">Eliminar</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="carrito-total">
+        Total: $33.000
+      </div>
+      <a href="checkout.html" class="carrito-btn" style="width:100%;font-size:1.1rem;">Finalizar compra</a>
+    </div>
+  </main>
+
+  <footer>
+    <small>© 2025 Pastelería Mil Sabores</small>
+  </footer>
+</body>
+</html>

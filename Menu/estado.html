@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Estado del pedido – Pastelería Mil Sabores</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/estado.css" />
+</head>
+<body>
+  <header>
+    <h1 style="font-family: 'Pacifico', cursive; color: #8B4513;">
+      Estado de tu pedido
+    </h1>
+    <nav>
+      <a href="../index.html" class="estado-btn" style="max-width:200px;margin:auto;">Inicio</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="estado-container">
+      <div class="estado-info">
+        Pedido #12345<br>
+        Realizado el: 6 de septiembre de 2025
+      </div>
+      <div class="estado-etapa">
+        <div class="etapa completado">
+          <span>✔</span> Pedido recibido
+        </div>
+        <div class="etapa en-proceso">
+          <span>⏳</span> Preparando tu pedido
+        </div>
+        <div class="etapa">
+          <span>🚚</span> En camino
+        </div>
+        <!-- Si el pedido está cancelado, usa la clase "cancelado" -->
+        <!-- <div class="etapa cancelado">
+          <span>✖</span> Pedido cancelado
+        </div> -->
+      </div>
+      <a href="../index.html" class="estado-btn">Volver al inicio</a>
+    </div>
+  </main>
+
+  <footer>
+    <small>© 2025 Pastelería Mil Sabores</small>
+  </footer>
+</body>
+</html>

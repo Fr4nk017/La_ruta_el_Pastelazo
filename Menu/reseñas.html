@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reseñas – Pastelería Mil Sabores</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/reseñas.css" />
+</head>
+<body>
+  <header>
+    <h1 style="font-family: 'Pacifico', cursive; color: #8B4513;">
+      Reseñas de clientes
+    </h1>
+    <nav>
+      <a href="../index.html" class="reseña-form button" style="max-width:200px;margin:auto;">Inicio</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="reseñas-container">
+      <h2>Opiniones recientes</h2>
+      <div class="reseña">
+        <div class="reseña-usuario">Ana Pérez <span class="reseña-rating">★★★★★</span></div>
+        <div class="reseña-fecha">5 de septiembre de 2025</div>
+        <div class="reseña-texto">
+          ¡La torta de chocolate es espectacular! Muy húmeda y con un sabor intenso. Repetiré sin duda.
+        </div>
+      </div>
+      <div class="reseña">
+        <div class="reseña-usuario">Carlos Soto <span class="reseña-rating">★★★★☆</span></div>
+        <div class="reseña-fecha">3 de septiembre de 2025</div>
+        <div class="reseña-texto">
+          El cheesecake de frambuesa estaba delicioso, aunque me gustaría que tuviera más salsa.
+        </div>
+      </div>
+      <div class="reseña">
+        <div class="reseña-usuario">María López <span class="reseña-rating">★★★★★</span></div>
+        <div class="reseña-fecha">1 de septiembre de 2025</div>
+        <div class="reseña-texto">
+          Excelente atención y productos frescos. Recomiendo la Selva Negra.
+        </div>
+      </div>
+
+      <form class="reseña-form" method="post" action="#">
+        <label for="usuario">Tu nombre</label>
+        <input type="text" id="usuario" name="usuario" required>
+
+        <label for="rating">Calificación</label>
+        <select id="rating" name="rating" required>
+          <option value="">Selecciona</option>
+          <option value="5">★★★★★</option>
+          <option value="4">★★★★☆</option>
+          <option value="3">★★★☆☆</option>
+          <option value="2">★★☆☆☆</option>
+          <option value="1">★☆☆☆☆</option>
+        </select>
+
+        <label for="texto">Comentario</label>
+        <textarea id="texto" name="texto" rows="3" required></textarea>
+
+        <button type="submit">Enviar reseña</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <small>© 2025 Pastelería Mil Sabores</small>
+  </footer>
+</body>
+</html>
