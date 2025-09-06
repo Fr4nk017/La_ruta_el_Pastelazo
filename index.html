@@ -6,17 +6,14 @@
   <title>Pastelería Mil Sabores – Prototipo HTML</title>
   <meta name="description" content="Prototipo HTML de Pastelería Mil Sabores con catálogo, detalle, carrito, checkout, perfil y más." />
 
-  <!-- Bootstrap 5 CSS (solo CSS, sin JS) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
         crossorigin="anonymous">
 
-  <!-- Tipografías (opcional) -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
 
-  <!-- Tus estilos -->
   <link rel="stylesheet" href="css/Index.css">
   <link rel="stylesheet" href="css/perfil.css" />
   <link rel="stylesheet" href="css/Ingresar.css" />
@@ -25,7 +22,6 @@
 <body class="bg-light text-dark" style="font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;">
   <a href="#contenido" class="visually-hidden-focusable position-absolute top-0 start-0 p-2 bg-dark text-white">Saltar al contenido</a>
 
-  <!-- HEADER / NAV -->
   <header role="banner" class="py-3 border-bottom bg-white">
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
       <div class="d-flex align-items-center gap-3">
@@ -56,7 +52,6 @@
 <a href="index.html" class="btn btn-primary" style="margin: 1rem 0; display: inline-block;">Inicio</a>
 
   <main id="contenido" class="container my-4">
-    <!-- HOME -->
     <section id="home" class="mb-5" aria-labelledby="home-title">
       <div class="row g-4 align-items-center">
         <div class="col-12 col-lg-7">
@@ -72,8 +67,6 @@
               <button type="submit" class="btn btn-primary">Buscar</button>
             </div>
           </form>
-
-          <!-- Beneficios -->
           <div class="alert alert-warning mt-3" role="note">
             <h3 class="h6 m-0">Beneficios de registro</h3>
             <ul class="mb-0 small">
@@ -121,8 +114,6 @@
         </div>
       </div>
     </section>
-
-    <!-- CATÁLOGO -->
     <section id="catalogo" class="mb-5" aria-labelledby="catalogo-title">
       <h2 id="catalogo-title" class="h4">Catálogo</h2>
       <div class="row g-4">
@@ -145,8 +136,6 @@
                   <label for="catCh" class="form-check-label">Chocolate</label>
                 </div>
               </fieldset>
-
-              <!-- Tipo y tamaño -->
               <div>
                 <label class="form-label" for="tipo-torta">Tipo de torta</label>
                 <select id="tipo-torta" name="tipo_torta" class="form-select">
@@ -188,7 +177,6 @@
           </div>
 
           <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
-            <!-- Cards base -->
             <div class="col">
               <article class="card h-100">
                 <img class="card-img-top" src="imagenes/tortas/TRES-LECHES-1.webp" alt="Torta Tres Leches" />
@@ -237,7 +225,6 @@
               </article>
             </div>
 
-            <!-- Ejemplos con códigos (rúbrica) -->
             <div class="col">
               <article class="card h-100">
                 <img class="card-img-top" src="imagenes/tortas/Torta Cuadrada de Chocolate.png" alt="Torta Cuadrada de Chocolate" />
@@ -306,8 +293,6 @@
         </div>
       </div>
     </section>
-
-    <!-- DETALLE (estático) -->
     <section id="detalle-producto" class="mb-5" aria-labelledby="detalle-title">
       <h2 id="detalle-title" class="h4">Detalle del producto</h2>
       <div class="row g-4">
@@ -346,8 +331,6 @@
           </div>
         </aside>
       </div>
-
-      <!-- Reseñas del detalle -->
       <div class="row g-4 mt-1">
         <div class="col-12">
           <div class="p-4 rounded-4 border bg-white">
@@ -360,8 +343,6 @@
         </div>
       </div>
     </section>
-
-    <!-- CARRITO -->
     <section id="carrito" class="mb-5" aria-labelledby="carrito-title">
       <h2 id="carrito-title" class="h4">Tu Carrito</h2>
       <div class="table-responsive rounded-4 overflow-hidden border bg-white">
@@ -402,8 +383,6 @@
         </table>
       </div>
     </section>
-
-    <!-- CHECKOUT -->
     <section id="checkout" class="mb-5" aria-labelledby="checkout-title">
       <h2 id="checkout-title" class="h4">Programar y Confirmar</h2>
       <form class="row g-4" aria-label="Checkout" method="post" action="#home">
@@ -454,8 +433,6 @@
         </div>
       </form>
     </section>
-
-    <!-- ESTADO PEDIDO -->
     <section id="estado-pedido" class="mb-5" aria-labelledby="estado-title">
       <h2 id="estado-title" class="h4">Estado de tu pedido</h2>
       <div class="row g-4">
@@ -483,8 +460,6 @@
         </div>
       </div>
     </section>
-
-    <!-- RESEÑAS (sección dedicada) -->
     <section id="resenas" class="mb-5" aria-labelledby="resenas-title">
       <h2 id="resenas-title" class="h4">Reseñas</h2>
       <div class="row g-4">
@@ -530,8 +505,6 @@
         </div>
       </div>
     </section>
-
-    <!-- FIDELIZACIÓN -->
     <section id="fidelizacion" class="mb-5" aria-labelledby="fidelizacion-title">
       <h2 id="fidelizacion-title" class="h4">Programa de Puntos</h2>
       <div class="table-responsive rounded-4 overflow-hidden border bg-white">
@@ -565,21 +538,6 @@
       </div>
     </section>
 
-    <!-- (Opcional) Impacto comunitario -->
-    <section id="comunidad" class="mb-5" aria-labelledby="comunidad-title">
-      <h2 id="comunidad-title" class="h4">Impacto Comunitario & Repostería</h2>
-      <div class="p-4 rounded-4 border bg-white">
-        <p class="mb-2">Tus compras apoyan a estudiantes de gastronomía y a la comunidad local.</p>
-        <ul class="small mb-0">
-          <li>Historias y origen de recetas tradicionales.</li>
-          <li>Recomendaciones personalizadas según tus preferencias.</li>
-          <li>Notas y consejos de estudiantes DUOC.</li>
-        </ul>
-      </div>
-    </section>
-  </main>
-
-  <!-- FOOTER -->
   <footer class="border-top py-4 mt-5 bg-white">
     <div class="container d-flex flex-wrap gap-3 justify-content-between align-items-center">
       <ul class="nav">
@@ -591,6 +549,7 @@
     </div>
   </footer>
 
-  <!-- Sin JS para mantener "solo HTML". Si luego quieres menú colapsable o carrito dinámico, te paso un app.js ligero. -->
+  <script src="js/js.js" defer></script>
+
 </body>
 </html>
