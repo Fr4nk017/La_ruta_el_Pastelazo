@@ -7,31 +7,35 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/detalle.css" />
+  <style>
+    body{font-family:Lato,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;background:#FFF5E1;color:#5D4037;margin:0}
+    header{padding:1rem;border-bottom:1px solid #eed9c4;background:#fdeed5}
+    main{padding:1.2rem}
+    .detalle-container{max-width:1100px;margin:auto;display:grid;gap:1.2rem;grid-template-columns:1fr 1.1fr;align-items:start}
+    .detalle-img{width:100%;height:auto;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+    .detalle-nombre{font:700 32px/1.2 Lato;color:#5D4037}
+    .detalle-descripcion{color:#374151}
+    .detalle-precio{font:700 22px/1 Lato;color:#8B4513;margin:.25rem 0 1rem}
+    .detalle-btn{display:inline-block;background:#FFB3BA;color:#5D4037;text-decoration:none;padding:.7rem 1.1rem;border-radius:12px}
+    .muted{color:#6b7280}
+    @media (max-width:860px){.detalle-container{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
   <header>
-    <h1 style="font-family: 'Pacifico', cursive; color: #8B4513;">
-      Detalle del producto
-    </h1>
-    <nav>
-      <a href="../index.html" class="detalle-btn" style="max-width:200px;margin:auto;">Inicio</a>
-    </nav>
+    <h1 style="font-family:'Pacifico',cursive;color:#8B4513;margin:0 0 .5rem">Detalle del producto</h1>
+    <nav><a href="../index.html#catalogo" class="detalle-btn" style="max-width:200px;margin:auto;">← Volver</a></nav>
   </header>
 
   <main>
-    <div class="detalle-container">
-      <img src="../imagenes/torta-chocolate.jpg" alt="Torta de Chocolate" class="detalle-img">
-      <div class="detalle-nombre">Torta de Chocolate</div>
-      <div class="detalle-descripcion">
-        Bizcocho húmedo, relleno de crema y cobertura de chocolate semi-amargo. Ideal para los amantes del chocolate.
-      </div>
-      <div class="detalle-precio">$12.000</div>
-      <a href="carrito.html" class="detalle-btn">Agregar al carrito</a>
-    </div>
+    <div id="detalle" class="detalle-container"></div>
+    <p class="muted" id="fallback" style="max-width:980px;margin:1rem auto 0;display:none">
+      No se encontró el producto solicitado. <a href="../index.html#catalogo">Ir al catálogo</a>
+    </p>
   </main>
 
-  <footer>
-    <small>© 2025 Pastelería Mil Sabores</small>
-  </footer>
+  <footer style="padding:1rem"><small>© 2025 Pastelería Mil Sabores</small></footer>
+
+  <script src="../js/js.js"></script>
 </body>
 </html>
