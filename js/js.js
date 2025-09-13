@@ -293,4 +293,56 @@
     });
   }
 
+  // Utilidad para obtener la ruta correcta de imagen según la página
+  function getImgPath(img) {
+    // Si estamos en la raíz (index.html), no agregamos '../'
+    if (location.pathname.endsWith('index.html') || location.pathname === '/' || location.pathname === '/index.html') {
+      return img.replace('../imagenes/', 'imagenes/').replace('../imagenes2/', 'imagenes2/');
+    }
+    // Si estamos en /Menu/ o subcarpetas, usamos la ruta tal cual
+    return img;
+  }
+
+  // Ejemplo de renderizado en catálogo
+  if (location.pathname.endsWith('catalogo.html')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const lista = document.querySelector('.catalogo-lista');
+      if (!lista) return;
+      lista.innerHTML = TORTAS.map(torta => `
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 text-center">
+            <img src="${getImgPath(torta.imagen)}" class="card-img-top" alt="${torta.nombre}">
+            <div class="card-body">
+              <h5 class="card-title">${torta.nombre}</h5>
+              <p class="card-text">${torta.descripcion}</p>
+              <div class="fw-semibold mb-2">${money(torta.precio)}</div>
+              <button class="btn btn-primary btn-sm agregar-carrito" data-id="${torta.id}">Agregar al carrito</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      // ...eventos...
+    });
+  }
+
+  // Ejemplo de renderizado en index.html (tortas más vendidas)
+  if (location.pathname.endsWith('index.html') || location.pathname === '/' || location.pathname === '/index.html') {
+    document.addEventListener('DOMContentLoaded', () => {
+      const vendidas = document.querySelector('.tortas-vendidas');
+      if (!vendidas) return;
+      vendidas.innerHTML = TORTAS.slice(0, 3).map(torta => `
+        <div class="col">
+          <div class="card h-100 text-center">
+            <img src="${getImgPath(torta.imagen)}" class="card-img-top" alt="${torta.nombre}">
+            <div class="card-body">
+              <h5 class="card-title">${torta.nombre}</h5>
+              <p class="card-text">${torta.descripcion}</p>
+              <a href="Menu/detalle.html?id=${torta.id}" class="btn btn-primary btn-sm">Ver detalle</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    });
+  }
+
 })();
