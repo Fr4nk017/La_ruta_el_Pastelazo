@@ -1,185 +1,296 @@
-const $=(s,el=document)=>el.querySelector(s);
-const $$=(s,el=document)=>[...el.querySelectorAll(s,el)];
-const clp=n=>new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0}).format(n||0);
-const parseCLP=t=>{if(!t)return 0;const m=String(t).replace(/[^\d]/g,'');return m?+m:0};
-function notify(msg,type='info'){const n=document.createElement('div');n.className=`ds-toast ds-toast-${type}`;n.textContent=msg;Object.assign(n.style,{position:'fixed',right:'1rem',bottom:'1rem',zIndex:9999,background:type==='error'?'#9b1c1c':type==='success'?'#065f46':'#334155',color:'#fff',padding:'10px 14px',borderRadius:'10px',boxShadow:'0 10px 30px rgba(0,0,0,.25)',opacity:0,transform:'translateY(8px)',transition:'all .25s ease'});document.body.appendChild(n);requestAnimationFrame(()=>{n.style.opacity=1;n.style.transform='translateY(0)'});setTimeout(()=>{n.style.opacity=0;n.style.transform='translateY(8px)';n.addEventListener('transitionend',()=>n.remove(),{once:true})},1800)}
+/* ===== Pastelería Mil Sabores – JS de catálogo/carrito ===== */
+(function(){
+  // Lazy a todas las imágenes de productos
+  document.querySelectorAll('.card-img-top').forEach(img => {
+    img.setAttribute('loading', 'lazy');
+  });
 
-const STORE_KEY='ms_cart_v1';
-let cart=loadCart();
-function loadCart(){try{return JSON.parse(localStorage.getItem(STORE_KEY))||[]}catch{return[]}}
-function saveCart(){localStorage.setItem(STORE_KEY,JSON.stringify(cart));renderCart()}
+  // Utilidad: formateo CLP simple
+  const money = n => new Intl.NumberFormat('es-CL', { style:'currency', currency:'CLP', maximumFractionDigits:0 }).format(n);
 
-document.addEventListener('click',e=>{
-  const a=e.target.closest('a[href^="#"]'); if(!a) return;
-  const id=a.getAttribute('href'); if(id.length<=1) return;
-  const t=document.querySelector(id);
-  if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
-});
-
-(function initFilters(){
-  const form=$('#catalogo form[aria-label="Filtros del catálogo"]');
-  const grid=$('#catalogo .row.row-cols-1');
-  if(!form||!grid) return;
-  form.addEventListener('submit',e=>{
-    e.preventDefault();
-    const catCl=$('#catCl',form)?.checked;
-    const catFr=$('#catFr',form)?.checked;
-    const catCh=$('#catCh',form)?.checked;
-    const tipo=$('#tipo-torta',form)?.value||'';
-    const tam=$('#tamano',form)?.value||'';
-    const porMin=parseInt($('#porciones',form)?.value||'0',10);
-    const pMax=parseInt($('#precio-max',form)?.value||'0',10);
-
-    $$('.col > .card',grid).forEach(card=>{
-      const title=card.querySelector('h4,.h6')?.textContent?.toLowerCase()||'';
-      const meta=card.querySelector('.small.text-muted')?.textContent?.toLowerCase()||'';
-      const priceText=card.querySelector('.fw-semibold')?.textContent||'';
-      const por=(meta.match(/porciones:\s*(\d+)/i)||[])[1]||'0';
-      const price=parseCLP(priceText);
-      let ok=true;
-
-      if(catCl||catFr||catCh){
-        let m=false;
-        if(catCl) m=m||/clásic|clasica|torta/.test(title);
-        if(catFr) m=m||/fruta|frambues|papaya|naranja|uva/.test(title);
-        if(catCh) m=m||/chocolate|cacao/.test(title);
-        ok=ok&&m;
+  // --- Carrito persistente ---
+  const carrito = {
+    obtener: () => JSON.parse(localStorage.getItem('carrito') || '[]'),
+    guardar: items => localStorage.setItem('carrito', JSON.stringify(items)),
+    agregar: prod => {
+      const items = carrito.obtener();
+      // Si ya existe el producto (por id y personalización), suma cantidad
+      const idx = items.findIndex(p => p.id === prod.id && p.mensaje === prod.mensaje);
+      if (idx >= 0) {
+        items[idx].cantidad += prod.cantidad;
+      } else {
+        items.push(prod);
       }
-      if(tipo==='cuadrada') ok=ok&&/cuadrad/.test(title);
-      if(tipo==='circular') ok=ok&&/circular/.test(title);
-      if(tam==='8')  ok=ok&&(+por>=8);
-      if(tam==='12') ok=ok&&(+por>=12);
-      if(tam==='15') ok=ok&&(+por>=15);
-      if(porMin) ok=ok&&(+por>=porMin);
-      if(pMax)   ok=ok&&(price>0&&price<=pMax);
+      carrito.guardar(items);
+    },
+    quitar: idx => {
+      const items = carrito.obtener();
+      items.splice(idx, 1);
+      carrito.guardar(items);
+    },
+    limpiar: () => localStorage.removeItem('carrito')
+  };
 
-      card.closest('.col').style.display=ok?'':'none';
+  // --- Descuentos automáticos ---
+  function calcularDescuento(usuario, total) {
+    if (!usuario) return total;
+    if (usuario.edad >= 50) return total * 0.5;
+    if (usuario.codigo === "FELICES50") return total * 0.9;
+    if (usuario.correo && usuario.correo.endsWith("@duocuc.cl") && usuario.cumple) {
+      const hoy = new Date();
+      const cumple = new Date(usuario.cumple);
+      if (hoy.getMonth() === cumple.getMonth() && hoy.getDate() === cumple.getDate()) {
+        return 0; // torta gratis en cumpleaños
+      }
+    }
+    return total;
+  }
+
+  // --- Guardar usuario en localStorage ---
+  function guardarUsuario(usuario) {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+  }
+  function obtenerUsuario() {
+    return JSON.parse(localStorage.getItem('usuario') || 'null');
+  }
+
+  // Referencias del carrito
+  const tbody = document.querySelector('#carrito tbody');
+  const totalCell = document.getElementById('total-carrito');
+
+  function recomputeTotal(){
+    let total = 0;
+    tbody.querySelectorAll('tr').forEach(tr=>{
+      const sub = tr.querySelector('[data-subtotal]');
+      total += Number(sub?.dataset.subtotal || 0);
     });
-    notify('Filtros aplicados','success');
-  });
-})();
+    if (totalCell) totalCell.textContent = money(total);
+  }
 
-(function bindAddFromCards(){
-  const grid=$('#catalogo');
-  if(!grid) return;
-  grid.addEventListener('click',e=>{
-    const btn=e.target.closest('.btn.btn-sm.btn-primary'); if(!btn) return;
-    const card=btn.closest('.card'); if(!card) return;
-    e.preventDefault();
-    const name=card.querySelector('h4,.h6')?.textContent?.trim()||'Torta';
-    const meta=card.querySelector('.small.text-muted')?.textContent||'';
-    const por=(meta.match(/Porciones:\s*(\d+)/i)||[])[1]||'';
-    const priceText=card.querySelector('.fw-semibold')?.textContent||'';
-    const precio=parseCLP(priceText)||0;
-    addToCart({id:'CAT-'+Date.now(),producto:name,porciones:por,relleno:'-',mensaje:'—',precio});
-  });
-})();
+  // Manejar clicks en "Agregar"
+  document.addEventListener('click', (ev)=>{
+    const btn = ev.target.closest('a.btn.btn-sm.btn-primary');
+    if(!btn) return;
 
-(function bindAddFromDetail(){
-  const sec=$('#detalle-producto'); if(!sec) return;
-  const add=sec.querySelector('a.btn.btn-primary[href="#carrito"]'); if(!add) return;
-  add.addEventListener('click',e=>{
-    e.preventDefault();
-    const name=sec.querySelector('h3,.h5')?.textContent?.trim()||'Torta';
-    const por=$('#porciones-detalle')?.value||'12';
-    const relleno=$('#relleno')?.value||'Clásico (crema)';
-    const mensaje=$('#mensaje')?.value?.trim()||'—';
-    let precio=0;
-    const match=[...$$('#catalogo .card')].find(c=>c.querySelector('h4,.h6')?.textContent?.trim()===name);
-    if(match) precio=parseCLP(match.querySelector('.fw-semibold')?.textContent||'')||0;
-    if(!precio){ const base=22900; const p=parseInt(por||'12',10); precio=Math.round(base*(p/12)); }
-    addToCart({id:'DET-'+Date.now(),producto:name,porciones:por,relleno,mensaje,precio});
-    location.hash='#carrito';
-  });
-})();
+    // Solo interceptamos si apunta a #carrito (no rompemos otros enlaces)
+    if (btn.getAttribute('href') === '#carrito'){
+      ev.preventDefault();
 
-function addToCart(item){
-  if(!item||!item.id) return;
-  cart.push(item);
-  saveCart();
-  notify('Agregado al carrito','success');
-}
+      const card = btn.closest('.card');
+      if(!card) return;
 
-function renderCart(){
-  const tbody=$('#carrito tbody'); if(!tbody) return;
-  const totalCell=$('#carrito tfoot tr td.fw-bold:nth-child(2)');
-  tbody.innerHTML='';
-  let total=0;
-  cart.forEach((it,idx)=>{
-    total+=Number(it.precio||0);
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td>${it.producto||'Torta'}</td>
-      <td>${it.porciones||'-'}</td>
-      <td>${it.relleno||'-'}</td>
-      <td>${it.mensaje||'—'}</td>
-      <td>${clp(it.precio||0)}</td>
-      <td>
-        <div class="d-flex gap-2">
-          <button class="btn btn-link p-0 text-decoration-none link-danger" data-action="remove" data-idx="${idx}">Eliminar</button>
-        </div>
-      </td>`;
-    tbody.appendChild(tr);
+      const titulo = card.querySelector('h4')?.textContent?.trim() || 'Producto';
+      const codigo = card.querySelector('p.small strong')?.textContent?.trim() || 'SIN-COD';
+      const precioTxt = card.querySelector('.fw-semibold')?.textContent || '';
+      const precio = parsePrecio(precioTxt);
+
+      // Valores por defecto
+      const porciones = 12; // base de cálculo
+      const relleno = 'Clásico';
+      const mensaje = '';
+
+      // Crear fila
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td><strong>${titulo}</strong><br><small class="text-muted">Código: ${codigo}</small></td>
+        <td>
+          <input type="number" class="form-control form-control-sm" value="${porciones}" min="6" step="2" data-porciones />
+        </td>
+        <td>
+          <select class="form-select form-select-sm" data-relleno>
+            <option${relleno==='Clásico'?' selected':''}>Clásico</option>
+            <option${relleno==='Crema'?' selected':''}>Crema</option>
+            <option${relleno==='Manjar'?' selected':''}>Manjar</option>
+            <option${relleno==='Chocolate'?' selected':''}>Chocolate</option>
+          </select>
+        </td>
+        <td>
+          <input type="text" class="form-control form-control-sm" placeholder="Feliz Cumple..." value="${mensaje}" data-mensaje />
+        </td>
+        <td data-subtotal data-precio-base="${precio}" data-porciones-base="12">${money(precio)}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-danger" type="button" data-remove>Quitar</button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+      recomputeTotal();
+      // Navegar hacia el carrito para feedback visual
+      document.querySelector(btn.getAttribute('href'))?.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
   });
-  if(totalCell) totalCell.textContent=clp(total);
-  $$('button[data-action="remove"]',tbody).forEach(b=>{
-    b.addEventListener('click',()=>{
-      const i=+b.dataset.idx;
-      cart.splice(i,1);
-      saveCart();
-      notify('Elemento eliminado','info');
+
+  // Cambios en porciones → recalcular subtotal
+  tbody?.addEventListener('input', (ev)=>{
+    const input = ev.target;
+    if (input.matches('[data-porciones]')){
+      const tr = input.closest('tr');
+      const sub = tr.querySelector('[data-subtotal]');
+      const base = Number(sub.dataset.precioBase || 0);
+      const porcionesBase = Number(sub.dataset.porcionesBase || 12);
+
+      const porciones = Math.max(6, Number(input.value || porcionesBase));
+      const factor = porciones / porcionesBase;
+      const subtotal = Math.round(base * factor);
+
+      sub.dataset.subtotal = String(subtotal);
+      sub.textContent = money(subtotal);
+      recomputeTotal();
+    }
+  });
+
+  // Quitar ítems
+  tbody?.addEventListener('click', (ev)=>{
+    const btn = ev.target.closest('[data-remove]');
+    if (!btn) return;
+    btn.closest('tr')?.remove();
+    recomputeTotal();
+  });
+
+  // (Opcional) manejar envío de checkout
+  const checkout = document.querySelector('#checkout form');
+  checkout?.addEventListener('submit', (_ev)=>{
+    // Aquí podrías validar datos, aplicar cupones, etc.
+  });
+
+  // --- Interacción: Agregar al carrito desde catálogo/detalle ---
+  document.addEventListener('click', e => {
+    // Botón agregar al carrito (catálogo o detalle)
+    if (e.target.matches('.btn-primary, .catalogo-btn') && e.target.textContent.match(/Agregar al carrito/i)) {
+      e.preventDefault();
+      const card = e.target.closest('.card, .catalogo-item, .row');
+      if (card) {
+        // Extraer datos del producto
+        const nombre = card.querySelector('.card-title, .catalogo-nombre, h2')?.textContent || '';
+        const precioTxt = card.querySelector('.fw-semibold, .catalogo-precio, .fw-bold.fs-4')?.textContent || '';
+        const precio = parseInt(precioTxt.replace(/\D/g, '')) || 0;
+        const img = card.querySelector('img')?.src || '';
+        const id = (location.search.match(/id=([A-Z0-9]+)/i) || [])[1] || nombre.replace(/\s/g, '').toUpperCase();
+        // Personalización (mensaje especial)
+        const mensaje = card.querySelector('input[name="mensaje"]')?.value || '';
+        carrito.agregar({ id, nombre, precio, cantidad: 1, mensaje, img });
+        alert('Producto agregado al carrito');
+      }
+    }
+  });
+
+  // --- Renderizar carrito en carrito.html ---
+  if (location.pathname.endsWith('carrito.html')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const tbody = document.querySelector('tbody');
+      const resumen = document.querySelector('#resumen-carrito');
+      const items = carrito.obtener();
+      let total = 0;
+      tbody.innerHTML = '';
+      items.forEach((prod, i) => {
+        const subtotal = prod.precio * prod.cantidad;
+        total += subtotal;
+        tbody.innerHTML += `
+          <tr>
+            <td><img src="${prod.img}" alt="" style="width:48px;height:48px;border-radius:8px;"> ${prod.nombre}${prod.mensaje ? `<br><small>Mensaje: ${prod.mensaje}</small>` : ''}</td>
+            <td>
+              <input type="number" min="1" value="${prod.cantidad}" data-idx="${i}" class="form-control form-control-sm cantidad-carrito" style="width:70px;">
+            </td>
+            <td>${money(prod.precio)}</td>
+            <td>${money(subtotal)}</td>
+            <td><button class="btn btn-sm btn-outline-danger quitar-carrito" data-idx="${i}">&times;</button></td>
+          </tr>
+        `;
+      });
+      // Descuento
+      const usuario = obtenerUsuario();
+      const totalConDescuento = calcularDescuento(usuario, total);
+      resumen.innerHTML = `
+        <div class="fw-bold">Total: ${money(total)}</div>
+        ${total !== totalConDescuento ? `<div class="text-success">Descuento aplicado: ${money(total - totalConDescuento)}</div>` : ''}
+        <div class="fw-bold fs-5">Total a pagar: ${money(totalConDescuento)}</div>
+      `;
+
+      // Cambiar cantidad
+      tbody.querySelectorAll('.cantidad-carrito').forEach(input => {
+        input.addEventListener('change', e => {
+          const idx = +e.target.dataset.idx;
+          const items = carrito.obtener();
+          items[idx].cantidad = Math.max(1, +e.target.value);
+          carrito.guardar(items);
+          location.reload();
+        });
+      });
+      // Quitar producto
+      tbody.querySelectorAll('.quitar-carrito').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const idx = +e.target.dataset.idx;
+          carrito.quitar(idx);
+          location.reload();
+        });
+      });
     });
-  });
-}
-renderCart();
+  }
 
-(function initCheckout(){
-  const form=$('#checkout form[aria-label="Checkout"]'); if(!form) return;
-  form.addEventListener('submit',e=>{
-    e.preventDefault();
-    if(!cart.length){ notify('Tu carrito está vacío','error'); return; }
-    const fecha=$('#fecha')?.value||'(sin fecha)';
-    const hora=$('#hora')?.value||'(sin hora)';
-    const metodo=$('#metodo-pago')?.value||'Tarjeta';
-    const cupon=$('#cupon')?.value?.trim();
-    let total=cart.reduce((a,i)=>a+(i.precio||0),0);
-    if(/^SABOR10$/i.test(cupon)) total=Math.max(0,Math.round(total*0.9));
-    const orderId='MS-'+new Date().toISOString().replace(/[-:.TZ]/g,'').slice(0,14);
-    notify(`Pedido ${orderId} confirmado para ${fecha} ${hora}. Total: ${clp(total)}`,'success');
-    cart=[]; saveCart();
-    location.hash='#estado-pedido';
-    const input=$('#pedido-id'); if(input) input.value=orderId;
-  });
-})();
+  // --- Filtros y búsqueda en catálogo ---
+  if (location.pathname.endsWith('catalogo.html')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const lista = document.querySelector('.catalogo-lista');
+      const filtro = document.querySelector('select.form-select');
+      const busqueda = document.querySelector('input[type="search"]');
+      // Puedes cargar productos desde un array JS o desde el HTML
+      // Aquí solo ejemplo de filtro visual
+      if (filtro) {
+        filtro.addEventListener('change', () => {
+          const val = filtro.value.toLowerCase();
+          lista.querySelectorAll('.catalogo-item').forEach(item => {
+            item.style.display = val === 'categoría' || item.textContent.toLowerCase().includes(val) ? '' : 'none';
+          });
+        });
+      }
+      if (busqueda) {
+        busqueda.addEventListener('input', () => {
+          const val = busqueda.value.toLowerCase();
+          lista.querySelectorAll('.catalogo-item').forEach(item => {
+            item.style.display = item.textContent.toLowerCase().includes(val) ? '' : 'none';
+          });
+        });
+      }
+    });
+  }
 
-(function initTracking(){
-  const form=$('#estado-pedido form[aria-label="Buscar pedido"]'); if(!form) return;
-  form.addEventListener('submit',e=>{
-    e.preventDefault();
-    const id=$('#pedido-id')?.value?.trim();
-    if(!id){ notify('Ingresa un ID de pedido','error'); return; }
-    notify(`Pedido ${id} está “En reparto / Listo para retiro”`,'success');
-  });
-})();
+  // --- Guardar usuario al registrarse (ejemplo simple) ---
+  if (location.pathname.endsWith('Ingresar.html')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          const correo = form.querySelector('#correo')?.value || '';
+          const edad = +(form.querySelector('#edad')?.value || 0);
+          const codigo = form.querySelector('#codigo')?.value || '';
+          const cumple = form.querySelector('#cumple')?.value || '';
+          guardarUsuario({ correo, edad, codigo, cumple });
+          alert('Usuario registrado. ¡Tus descuentos se aplicarán automáticamente!');
+          location.href = '../index.html';
+        });
+      }
+    });
+  }
 
-(function initReviews(){
-  const form=$('#resenas form[aria-label="Enviar reseña"]');
-  const list=$('#resenas .col-12.col-lg-6:last-child ul');
-  if(!form||!list) return;
-  form.addEventListener('submit',e=>{
-    e.preventDefault();
-    const producto=$('#producto-resena')?.value?.trim()||'Producto';
-    const rating=$('#rating')?.value||'★★★★★';
-    const comentario=$('#comentario')?.value?.trim()||'(sin comentario)';
-    const li=document.createElement('li');
-    li.innerHTML=`<strong>Tú</strong> – ${rating} – “${comentario}”`;
-    list.appendChild(li);
-    notify('¡Gracias por tu reseña!','success');
-    form.reset();
-  });
-})();
+  // --- Formulario de ingreso/registro (nuevo) ---
+  if (location.pathname.endsWith('Ingresar.html')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('form[aria-label="Ingresar"]');
+      if (form) {
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          const correo = form.querySelector('#correo')?.value || '';
+          const edad = +(form.querySelector('#edad')?.value || 0);
+          const codigo = form.querySelector('#codigo')?.value || '';
+          const cumple = form.querySelector('#cumple')?.value || '';
+          guardarUsuario({ correo, edad, codigo, cumple });
+          alert('Usuario registrado. ¡Tus descuentos se aplicarán automáticamente!');
+          location.href = '../index.html';
+        });
+      }
+    });
+  }
 
-(function injectToastStyles(){
-  const css=`.ds-toast{font:500 14px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}`;
-  const style=document.createElement('style'); style.textContent=css; document.head.appendChild(style);
 })();

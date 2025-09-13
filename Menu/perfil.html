@@ -3,125 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Perfil — Pastelería Mil Sabores</title>
-  <meta name="description" content="Administra tu información personal, direcciones y preferencias de compra." />
-<<<<<<< HEAD
-
-  <!-- Tipografías -->
-=======
->>>>>>> f84af75f95e0ea31894c657839802335fd478ad6
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>Perfil — Pastelería 1000 Sabores</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/perfil.css" />
-  <link rel="stylesheet" href="../css/Ingresar.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <a href="#contenido" class="skip-link">Saltar al contenido</a>
-
-  <header role="banner">
-    <div class="marca">
-      <h1 style="font-family: 'Pacifico', cursive;">
-        <img src="imagenes/Logo la ruta el pastelazo.png" alt="Logotipo Pastelería Mil Sabores" height="90">
-        Pastelería Mil Sabores
-      </h1>
-      <p class="tagline">50 años endulzando tu vida</p>
-    </div>
-    <nav aria-label="Navegación principal">
-      <ul>
-        <li><a href="index.html#home">Inicio</a></li>
-        <li><a href="index.html#catalogo">Catálogo</a></li>
-        <li><a href="index.html#carrito">Carrito</a></li>
-        <li><a href="perfil.html" aria-current="page">Perfil</a></li>
-        <li><a href="ingresar.html">Ingresar / Crear cuenta</a></li>
-      </ul>
-    </nav>
+  <header class="py-3 border-bottom">
+    <!-- ...igual que en catálogo... -->
   </header>
-
-  <main id="contenido" tabindex="-1">
-    <section aria-labelledby="perfil-title">
-      <h2 id="perfil-title">Mi Perfil</h2>
-      <form aria-label="Perfil" method="post" action="#">
-        <fieldset>
-          <legend>Información personal</legend>
-          <div>
-            <label for="pf-nombre">Nombre y Apellido</label>
-            <input id="pf-nombre" name="nombre" type="text" required>
-          </div>
-          <div>
-            <label for="pf-email">Email</label>
-            <input id="pf-email" name="email" type="email" required>
-          </div>
-          <div>
-            <label for="pf-telefono">Teléfono</label>
-            <input id="pf-telefono" name="telefono" type="tel" placeholder="+56 9 1234 5678">
-          </div>
-          <div>
-            <label for="pf-fecha">Fecha de nacimiento</label>
-            <input id="pf-fecha" name="fecha_nacimiento" type="date">
-            <p class="form-text small">Para aplicar beneficios por edad y cumpleaños (según la rúbrica) :contentReference[oaicite:2]{index=2}</p>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Direcciones</legend>
-          <div>
-            <label for="pf-direccion1">Dirección principal</label>
-            <input id="pf-direccion1" name="direccion_principal" type="text" placeholder="Calle 123, Comuna">
-          </div>
-          <div>
-            <label for="pf-direccion2">Dirección alternativa</label>
-            <input id="pf-direccion2" name="direccion_alt" type="text" placeholder="Av. Principal 456, Piso 3">
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Preferencias de compra</legend>
-          <div>
-            <label for="pf-tipo">Preferencia de torta</label>
-            <select id="pf-tipo" name="tipo_preferido">
-              <option value="">Selecciona…</option>
-              <option>Tortas Cuadradas</option>
-              <option>Tortas Circulares</option>
-              <option>Postres Individuales</option>
-              <option>Productos Sin Azúcar</option>
-              <option>Pastelería Tradicional</option>
-              <option>Productos sin gluten</option>
-              <option>Productos Vegana</option>
-              <option>Tortas Especiales</option>
-            </select>
-          </div>
-          <div>
-            <label for="pf-restricciones">Restricciones/Observaciones</label>
-            <textarea id="pf-restricciones" name="restricciones" rows="3" placeholder="Sin nueces, sin gluten, etc."></textarea>
-          </div>
-          <div>
-            <label for="pf-news">¿Deseas recibir promociones?</label>
-            <select id="pf-news" name="promociones">
-              <option>Sí</option>
-              <option>No</option>
-            </select>
-          </div>
-        </fieldset>
-
-        <div>
-          <button type="submit">Guardar cambios</button>
+  <main class="container my-4">
+    <h2 class="mb-4" style="font-family: 'Pacifico', cursive;">Mi perfil</h2>
+    <a href="../index.html" class="btn btn-outline-primary mb-3">← Volver al inicio</a>
+    <form>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="nombre" class="form-label">Nombre completo</label>
+          <input type="text" class="form-control" id="nombre">
         </div>
-      </form>
-    </section>
-
-    <hr>
-
-    <section aria-labelledby="historial-title">
-      <h2 id="historial-title">Historial de pedidos</h2>
-      <ul class="small">
-        <li>Orden #MS-2025-0001 — Torta Tres Leches — Entregado</li>
-        <li>Orden #MS-2025-0002 — Torta Papaya — Entregado</li>
-      </ul>
-    </section>
+        <div class="col-md-6">
+          <label for="correo" class="form-label">Correo electrónico</label>
+          <input type="email" class="form-control" id="correo">
+        </div>
+        <div class="col-md-6">
+          <label for="edad" class="form-label">Edad</label>
+          <input type="number" class="form-control" id="edad">
+        </div>
+        <div class="col-md-6">
+          <label for="direccion" class="form-label">Dirección</label>
+          <input type="text" class="form-control" id="direccion">
+        </div>
+      </div>
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Actualizar perfil</button>
+      </div>
+    </form>
   </main>
-
-  <footer>
-    <small>© 2025 Pastelería Mil Sabores</small>
+  <footer class="border-top py-4 mt-5">
+    <!-- ...igual que en catálogo... -->
   </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
