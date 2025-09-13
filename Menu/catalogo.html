@@ -3,51 +3,220 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Catálogo – Pastelería Mil Sabores</title>
+  <title>Catálogo – Pastelería 1000 Sabores</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/Catalogo.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <header>
-    <h1 style="font-family: 'Pacifico', cursive; color: #8B4513;">
-      Catálogo Pastelería Mil Sabores
-    </h1>
-    <nav>
-      <a href="../index.html" class="catalogo-btn">Inicio</a>
-    </nav>
+  <header class="py-3 border-bottom">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <img src="../imagenes/Logo%20la%20ruta%20el%20pastelazo.png" alt="Logotipo Pastelería 1000 Sabores" width="56" height="56" loading="lazy"/>
+        <h1 class="h4 m-0" style="font-family: 'Pacifico', cursive; color: #8B4513;">Catálogo</h1>
+      </div>
+      <nav aria-label="Navegación principal">
+        <ul class="nav nav-pills">
+          <li class="nav-item"><a class="nav-link" href="../index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active" href="catalogo.html" aria-current="page">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrito.html">Carrito</a></li>
+          <li class="nav-item"><a class="nav-link" href="checkout.html">Checkout</a></li>
+          <li class="nav-item"><a class="nav-link" href="estado.html">Estado</a></li>
+          <li class="nav-item"><a class="nav-link" href="reseñas.html">Reseñas</a></li>
+          <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
+          <li class="nav-item"><a class="nav-link" href="Ingresar.html">Ingresar</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <h2>Delicias destacadas</h2>
+  <main class="container my-4">
+    <h2 class="mb-4" style="font-family: 'Pacifico', cursive;">Explora nuestras categorías</h2>
+    <form class="row g-3 mb-4">
+      <div class="col-md-4">
+        <select class="form-select" aria-label="Filtrar por categoría">
+          <option selected>Categoría</option>
+          <option value="cuadrada">Tortas Cuadradas</option>
+          <option value="circular">Tortas Circulares</option>
+          <option value="individual">Postres Individuales</option>
+          <option value="sinazucar">Productos Sin Azúcar</option>
+          <option value="tradicional">Pastelería Tradicional</option>
+          <option value="singluten">Productos Sin Gluten</option>
+          <option value="vegana">Productos Vegana</option>
+          <option value="especial">Tortas Especiales</option>
+        </select>
+      </div>
+      <div class="col-md-8">
+        <input type="search" class="form-control" placeholder="Buscar producto, sabor, etc.">
+      </div>
+    </form>
     <div class="catalogo-lista">
       <div class="catalogo-item">
-        <img src="../imagenes/torta-chocolate.jpg" alt="Torta de Chocolate" class="catalogo-img">
-        <div class="catalogo-nombre">Torta de Chocolate</div>
-        <div class="catalogo-descripcion">Bizcocho húmedo, relleno de crema y cobertura de chocolate semi-amargo.</div>
-        <div class="catalogo-precio">$12.000</div>
-        <a href="#" class="catalogo-btn">Agregar al carrito</a>
+        <img src="../imagenes/tortas/Torta Cuadrada de Chocolate.png" alt="Torta Cuadrada de Chocolate" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Cuadrada de Chocolate</div>
+        <div class="catalogo-descripcion">Deliciosa torta de chocolate con capas de ganache y un toque de avellanas. Personalizable con mensajes especiales.</div>
+        <div class="catalogo-precio">$45.000</div>
+        <a href="detalle.html?id=TC001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
       </div>
       <div class="catalogo-item">
-        <img src="../imagenes/cheesecake-frambuesa.jpg" alt="Cheesecake de Frambuesa" class="catalogo-img">
-        <div class="catalogo-nombre">Cheesecake de Frambuesa</div>
-        <div class="catalogo-descripcion">Base crocante, suave crema de queso y salsa de frambuesa natural.</div>
-        <div class="catalogo-precio">$10.500</div>
-        <a href="#" class="catalogo-btn">Agregar al carrito</a>
+        <img src="../imagenes/tortas/Torta_Cuadrada_Frutas.png" alt="Torta Cuadrada de Frutas" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Cuadrada de Frutas</div>
+        <div class="catalogo-descripcion">Bizcocho relleno con crema pastelera y frutas de temporada, cubierta con glasé natural.</div>
+        <div class="catalogo-precio">$50.000</div>
+        <a href="detalle.html?id=TC002" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
       </div>
       <div class="catalogo-item">
-        <img src="../imagenes/selva-negra.jpg" alt="Selva Negra" class="catalogo-img">
-        <div class="catalogo-nombre">Selva Negra</div>
-        <div class="catalogo-descripcion">Bizcocho de chocolate, crema chantilly y guindas frescas.</div>
-        <div class="catalogo-precio">$13.000</div>
-        <a href="#" class="catalogo-btn">Agregar al carrito</a>
+        <img src="../imagenes/tortas/Torta Circular de Vainilla.png" alt="Torta Circular de Vainilla" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Circular de Vainilla</div>
+        <div class="catalogo-descripcion">Bizcocho esponjoso de vainilla con relleno de crema pastelera y cobertura de glasé.</div>
+        <div class="catalogo-precio">$40.000</div>
+        <a href="detalle.html?id=TT001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
       </div>
-      <!-- Agrega más productos aquí -->
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Torta_Circular _de _Manjar.png" alt="Torta Circular de Manjar" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Circular de Manjar</div>
+        <div class="catalogo-descripcion">Bizcocho de vainilla relleno de manjar y crema, cubierta de merengue flameado.</div>
+        <div class="catalogo-precio">$42.000</div>
+        <a href="detalle.html?id=TT002" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Mousse_Chocolate.png" alt="Mousse de Chocolate" class="catalogo-img">
+        <div class="catalogo-nombre">Mousse de Chocolate</div>
+        <div class="catalogo-descripcion">Mousse cremoso de chocolate amargo con toques de café, servido en porción individual.</div>
+        <div class="catalogo-precio">$5.000</div>
+        <a href="detalle.html?id=PI001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Tiramisu.png" alt="Tiramisú Clásico" class="catalogo-img">
+        <div class="catalogo-nombre">Tiramisú Clásico</div>
+        <div class="catalogo-descripcion">Postre italiano elaborado con bizcochos empapados en café, crema de mascarpone y cacao espolvoreado.</div>
+        <div class="catalogo-precio">$5.500</div>
+        <a href="detalle.html?id=PI002" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Torta_SA_Naranja.png" alt="Torta Sin Azúcar de Naranja" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Sin Azúcar de Naranja</div>
+        <div class="catalogo-descripcion">Torta esponjosa con jugo de naranja natural, endulzada con stevia. Ideal para diabéticos.</div>
+        <div class="catalogo-precio">$48.000</div>
+        <a href="detalle.html?id=PSA001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Cheesecake_Sin_Azucar.png" alt="Cheesecake Sin Azúcar" class="catalogo-img">
+        <div class="catalogo-nombre">Cheesecake Sin Azúcar</div>
+        <div class="catalogo-descripcion">Cheesecake con base de galleta integral y endulzado sin azúcar. Suave y delicioso.</div>
+        <div class="catalogo-precio">$47.000</div>
+        <a href="detalle.html?id=PSA002" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Empanada_Manzana.png" alt="Empanada de Manzana" class="catalogo-img">
+        <div class="catalogo-nombre">Empanada de Manzana</div>
+        <div class="catalogo-descripcion">Masa fina rellena de manzana caramelizada con un toque de canela.</div>
+        <div class="catalogo-precio">$3.000</div>
+        <a href="detalle.html?id=PT001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Tarta_Santiago.png" alt="Tarta de Santiago" class="catalogo-img">
+        <div class="catalogo-nombre">Tarta de Santiago</div>
+        <div class="catalogo-descripcion">Clásica tarta gallega de almendra con azúcar glas y cruz de Santiago.</div>
+        <div class="catalogo-precio">$6.000</div>
+        <a href="detalle.html?id=PT002" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Brownie_Sin_Gluten.png" alt="Brownie Sin Gluten" class="catalogo-img">
+        <div class="catalogo-nombre">Brownie Sin Gluten</div>
+        <div class="catalogo-descripcion">Brownie de chocolate intenso elaborado con harina sin gluten.</div>
+        <div class="catalogo-precio">$4.000</div>
+        <a href="detalle.html?id=PG001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Pan_Sin_Gluten.png" alt="Pan Sin Gluten" class="catalogo-img">
+        <div class="catalogo-nombre">Pan Sin Gluten</div>
+        <div class="catalogo-descripcion">Pan artesanal elaborado con mezcla de harinas sin gluten, suave y esponjoso.</div>
+        <div class="catalogo-precio">$3.500</div>
+        <a href="detalle.html?id=PG002" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Torta_Vegana_Chocolate.png" alt="Torta Vegana de Chocolate" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Vegana de Chocolate</div>
+        <div class="catalogo-descripcion">Bizcocho húmedo de cacao elaborado sin productos de origen animal.</div>
+        <div class="catalogo-precio">$50.000</div>
+        <a href="detalle.html?id=PV001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Galletas_Veganas.png" alt="Galletas Veganas de Avena" class="catalogo-img">
+        <div class="catalogo-nombre">Galletas Veganas de Avena</div>
+        <div class="catalogo-descripcion">Crujientes galletas veganas de avena y pasas, sin huevo ni lácteos.</div>
+        <div class="catalogo-precio">$4.500</div>
+        <a href="detalle.html?id=PV002" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Torta_Cumple.png" alt="Torta Especial de Cumpleaños" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Especial de Cumpleaños</div>
+        <div class="catalogo-descripcion">Torta de varias capas, rellena de crema, frutas y cubierta con fondant personalizado.</div>
+        <div class="catalogo-precio">$55.000</div>
+        <a href="detalle.html?id=TE001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Torta_Boda.png" alt="Torta Especial de Boda" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Especial de Boda</div>
+        <div class="catalogo-descripcion">Elegante torta de varios pisos decorada con flores de azúcar. Ideal para celebraciones de boda.</div>
+        <div class="catalogo-precio">$60.000</div>
+        <a href="detalle.html?id=TE002" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Torta_Tres_Leches.png" alt="Torta Tres Leches" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Tres Leches</div>
+        <div class="catalogo-descripcion">Bizcocho suave empapado en tres tipos de leche, cubierto con merengue y frutas.</div>
+        <div class="catalogo-precio">$22.900</div>
+        <a href="detalle.html?id=TL001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Torta_Naranja.png" alt="Torta Naranja" class="catalogo-img">
+        <div class="catalogo-nombre">Torta Naranja</div>
+        <div class="catalogo-descripcion">Bizcocho esponjoso de naranja con relleno de crema y cobertura de glasé.</div>
+        <div class="catalogo-precio">$27.990</div>
+        <a href="detalle.html?id=TN001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
+      <div class="catalogo-item">
+        <img src="../imagenes/tortas/Torta_Papaya.png" alt="Torta de Papaya" class="catalogo-img">
+        <div class="catalogo-nombre">Torta de Papaya</div>
+        <div class="catalogo-descripcion">Bizcocho relleno de crema y papaya natural, decorado con frutas frescas.</div>
+        <div class="catalogo-precio">$24.500</div>
+        <a href="detalle.html?id=TP001" class="catalogo-btn">Ver detalle</a>
+        <a href="#" class="btn btn-primary btn-sm">Agregar al carrito</a>
+      </div>
     </div>
   </main>
 
-  <footer>
-    <small>© 2025 Pastelería Mil Sabores</small>
+  <footer class="border-top py-4 mt-5">
+    <div class="container d-flex flex-wrap gap-3 justify-content-between align-items-center">
+      <ul class="nav">
+        <li class="nav-item"><a class="nav-link px-2" href="fidelizacion.html">Programa</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="estado.html">Estado de pedido</a></li>
+        <li class="nav-item"><a class="nav-link px-2" href="reseñas.html">Reseñas</a></li>
+      </ul>
+      <small class="text-muted">© 2025 Pastelería 1000 Sabores</small>
+    </div>
   </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
