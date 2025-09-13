@@ -56,6 +56,21 @@
           <li>Torta gratis de cumpleaños para estudiantes DUOC con correo institucional.</li>
         </ul>
       </div>
+
+      <!-- Puedes poner esto en Menu/Ingresar.html o Menu/perfil.html -->
+      <form id="registro-form" class="mb-4">
+        <h2>Crear perfil</h2>
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombre" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <input type="email" class="form-control" id="email" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+      </form>
+      <div id="registro-msg"></div>
     </div>
   </main>
 

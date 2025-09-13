@@ -41,13 +41,20 @@
 
     <section class="mt-5">
       <h3 class="h5 mb-3" style="font-family: 'Pacifico', cursive;">Comentarios de clientes</h3>
-      <div class="mb-3">
-        <form id="form-comentario">
-          <textarea class="form-control mb-2" id="comentario" rows="2" placeholder="¿Cómo estuvo tu torta?"></textarea>
-          <button type="submit" class="btn btn-outline-primary btn-sm">Agregar comentario</button>
+      <!-- Formulario de comentarios -->
+      <div class="mt-4">
+        <h4>Deja tu comentario</h4>
+        <form id="comentario-form">
+          <div class="mb-2">
+            <input type="text" class="form-control" id="comentario-nombre" placeholder="Tu nombre" required>
+          </div>
+          <div class="mb-2">
+            <textarea class="form-control" id="comentario-texto" placeholder="Escribe tu comentario" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
         </form>
+        <div id="comentarios-lista" class="mt-3"></div>
       </div>
-      <ul id="lista-comentarios" class="list-group"></ul>
     </section>
   </main>
 
@@ -209,20 +216,23 @@
 
     // Comentarios por producto (localStorage)
     const idProd = new URLSearchParams(location.search).get('id');
-    const lista = document.getElementById('lista-comentarios');
-    const form = document.getElementById('form-comentario');
+    const lista = document.getElementById('comentarios-lista');
+    const form = document.getElementById('comentario-form');
     function renderComentarios() {
       const comentarios = JSON.parse(localStorage.getItem('comentarios_' + idProd) || '[]');
-      lista.innerHTML = comentarios.map(c => `<li class="list-group-item">${c}</li>`).join('');
+      lista.innerHTML = comentarios.map(c => `<div class="border rounded p-2 mb-2">${c}</div>`).join('');
     }
     form?.addEventListener('submit', e => {
       e.preventDefault();
-      const txt = document.getElementById('comentario').value.trim();
-      if (txt) {
+      const nombre = document.getElementById('comentario-nombre').value.trim();
+      const texto = document.getElementById('comentario-texto').value.trim();
+      if (nombre && texto) {
+        const comentario = `<strong>${nombre}</strong>: ${texto}`;
         const comentarios = JSON.parse(localStorage.getItem('comentarios_' + idProd) || '[]');
-        comentarios.push(txt);
+        comentarios.push(comentario);
         localStorage.setItem('comentarios_' + idProd, JSON.stringify(comentarios));
-        document.getElementById('comentario').value = '';
+        document.getElementById('comentario-nombre').value = '';
+        document.getElementById('comentario-texto').value = '';
         renderComentarios();
       }
     });

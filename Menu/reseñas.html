@@ -24,34 +24,38 @@
 
     <div class="reseñas-container">
       <h2>Opiniones recientes</h2>
-      <div class="reseña">
-        <div class="reseña-usuario">Ana Pérez <span class="reseña-rating">★★★★★</span></div>
-        <div class="reseña-fecha">5 de septiembre de 2025</div>
-        <div class="reseña-texto">
-          ¡La torta de chocolate es espectacular! Muy húmeda y con un sabor intenso. Repetiré sin duda.
+      <div id="comentarios-lista">
+        <!-- Aquí se mostrarán las reseñas dinámicamente -->
+        <div class="reseña">
+          <div class="reseña-usuario">Ana Pérez <span class="reseña-rating">★★★★★</span></div>
+          <div class="reseña-fecha">5 de septiembre de 2025</div>
+          <div class="reseña-texto">
+            ¡La torta de chocolate es espectacular! Muy húmeda y con un sabor intenso. Repetiré sin duda.
+          </div>
         </div>
-      </div>
-      <div class="reseña">
-        <div class="reseña-usuario">Carlos Soto <span class="reseña-rating">★★★★☆</span></div>
-        <div class="reseña-fecha">3 de septiembre de 2025</div>
-        <div class="reseña-texto">
-          El cheesecake de frambuesa estaba delicioso, aunque me gustaría que tuviera más salsa.
+        <div class="reseña">
+          <div class="reseña-usuario">Carlos Soto <span class="reseña-rating">★★★★☆</span></div>
+          <div class="reseña-fecha">3 de septiembre de 2025</div>
+          <div class="reseña-texto">
+            El cheesecake de frambuesa estaba delicioso, aunque me gustaría que tuviera más salsa.
+          </div>
         </div>
-      </div>
-      <div class="reseña">
-        <div class="reseña-usuario">María López <span class="reseña-rating">★★★★★</span></div>
-        <div class="reseña-fecha">1 de septiembre de 2025</div>
-        <div class="reseña-texto">
-          Excelente atención y productos frescos. Recomiendo la Selva Negra.
+        <div class="reseña">
+          <div class="reseña-usuario">María López <span class="reseña-rating">★★★★★</span></div>
+          <div class="reseña-fecha">1 de septiembre de 2025</div>
+          <div class="reseña-texto">
+            Excelente atención y productos frescos. Recomiendo la Selva Negra.
+          </div>
         </div>
       </div>
 
-      <form class="reseña-form" method="post" action="#">
-        <label for="usuario">Tu nombre</label>
-        <input type="text" id="usuario" name="usuario" required>
+      <!-- Formulario único para dejar reseña -->
+      <form id="comentario-form" class="reseña-form" method="post" action="#">
+        <label for="comentario-nombre">Tu nombre</label>
+        <input type="text" id="comentario-nombre" name="usuario" required>
 
-        <label for="rating">Calificación</label>
-        <select id="rating" name="rating" required>
+        <label for="comentario-rating">Calificación</label>
+        <select id="comentario-rating" name="rating" required>
           <option value="">Selecciona</option>
           <option value="5">★★★★★</option>
           <option value="4">★★★★☆</option>
@@ -60,8 +64,8 @@
           <option value="1">★☆☆☆☆</option>
         </select>
 
-        <label for="texto">Comentario</label>
-        <textarea id="texto" name="texto" rows="3" required></textarea>
+        <label for="comentario-texto">Comentario</label>
+        <textarea id="comentario-texto" name="texto" rows="3" required></textarea>
 
         <button type="submit">Enviar reseña</button>
       </form>
@@ -72,5 +76,49 @@
     <small>© 2025 Pastelería Mil Sabores</small>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  // Mostrar y guardar reseñas con estrellas
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('comentario-form');
+    const lista = document.getElementById('comentarios-lista');
+    const estrellas = ["★☆☆☆☆","★★☆☆☆","★★★☆☆","★★★★☆","★★★★★"];
+
+    function mostrarComentarios() {
+      const comentarios = JSON.parse(localStorage.getItem('comentarios_generales') || '[]');
+      let html = '';
+      comentarios.forEach(c => {
+        html += `<div class="reseña">
+          <div class="reseña-usuario">${c.nombre} <span class="reseña-rating">${estrellas[c.rating-1]}</span></div>
+          <div class="reseña-fecha">${c.fecha}</div>
+          <div class="reseña-texto">${c.texto}</div>
+        </div>`;
+      });
+      // Mantén las reseñas fijas originales
+      html += lista.innerHTML;
+      lista.innerHTML = html;
+    }
+
+    mostrarComentarios();
+
+    form.onsubmit = function (e) {
+      e.preventDefault();
+      const nombre = document.getElementById('comentario-nombre').value.trim();
+      const texto = document.getElementById('comentario-texto').value.trim();
+      const rating = parseInt(document.getElementById('comentario-rating').value, 10);
+      if (!nombre || !texto || !rating) return;
+      const nuevo = {
+        nombre,
+        texto,
+        rating,
+        fecha: new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })
+      };
+      const comentarios = JSON.parse(localStorage.getItem('comentarios_generales') || '[]');
+      comentarios.unshift(nuevo);
+      localStorage.setItem('comentarios_generales', JSON.stringify(comentarios));
+      form.reset();
+      mostrarComentarios();
+    };
+  });
+  </script>
 </body>
 </html>
