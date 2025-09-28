@@ -13,6 +13,7 @@
     <!-- ...igual que en catálogo... -->
   </header>
   <main class="container my-4">
+  <div id="alerta-feedback" style="position:fixed;top:1rem;right:1rem;z-index:1050;min-width:250px;"></div>
     <h2 class="mb-4" style="font-family: 'Pacifico', cursive;">Mi perfil</h2>
     <a href="../index.html" class="btn btn-outline-primary mb-3">← Volver al inicio</a>
     <form>
@@ -43,5 +44,84 @@
     <!-- ...igual que en catálogo... -->
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</script>
+  <script src="../js/js.js" defer></script>
+</script>
+<script>
+// Feedback visual animado
+function mostrarAlerta(mensaje, tipo = 'success', tiempo = 3000) {
+  const alerta = document.getElementById('alerta-feedback');
+  alerta.innerHTML = `<div class="alert alert-${tipo} fade show shadow" role="alert">${mensaje}</div>`;
+  setTimeout(() => {
+    alerta.innerHTML = '';
+  }, tiempo);
+}
+// Cargar datos del usuario al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+  let usuario = null;
+  if (typeof obtenerUsuario === 'function') {
+    usuario = obtenerUsuario();
+  } else if (window.localStorage) {
+    usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+  }
+  if (usuario) {
+    document.getElementById('correo').value = usuario.correo || '';
+    document.getElementById('edad').value = usuario.edad || '';
+    document.getElementById('nombre').value = usuario.nombre || '';
+    document.getElementById('direccion').value = usuario.direccion || '';
+  }
+});
+// Guardar cambios al enviar el formulario
+document.querySelector('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const usuario = {
+    correo: this.correo.value,
+    edad: parseInt(this.edad.value, 10),
+    nombre: this.nombre.value,
+    direccion: this.direccion.value
+  };
+  if (typeof guardarUsuario === 'function') {
+    guardarUsuario(usuario);
+  } else if (window.localStorage) {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+  }
+  mostrarAlerta('Perfil actualizado', 'success');
+});
+</script>
+</script>
+<script>
+// Cargar datos del usuario al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+  let usuario = null;
+  if (typeof obtenerUsuario === 'function') {
+    usuario = obtenerUsuario();
+  } else if (window.localStorage) {
+    usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+  }
+  if (usuario) {
+    document.getElementById('correo').value = usuario.correo || '';
+    document.getElementById('edad').value = usuario.edad || '';
+    document.getElementById('nombre').value = usuario.nombre || '';
+    document.getElementById('direccion').value = usuario.direccion || '';
+  }
+});
+
+// Guardar cambios al enviar el formulario
+document.querySelector('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const usuario = {
+    correo: this.correo.value,
+    edad: parseInt(this.edad.value, 10),
+    nombre: this.nombre.value,
+    direccion: this.direccion.value
+  };
+  if (typeof guardarUsuario === 'function') {
+    guardarUsuario(usuario);
+  } else if (window.localStorage) {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+  }
+  alert('Perfil actualizado');
+});
+</script>
 </body>
 </html>

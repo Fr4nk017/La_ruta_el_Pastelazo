@@ -24,6 +24,7 @@
   </header>
 
   <main class="container my-5" style="max-width: 480px;">
+  <div id="alerta-feedback" style="position:fixed;top:1rem;right:1rem;z-index:1050;min-width:250px;"></div>
     <div class="p-4 rounded-4 border bg-white shadow-sm">
       <h2 class="mb-4 text-center" style="font-family: 'Pacifico', cursive;">Accede a tu cuenta</h2>
       <form aria-label="Ingresar" method="post" action="#">
@@ -79,5 +80,53 @@
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../js/js.js" defer></script>
+</script>
+<script>
+// Feedback visual animado
+function mostrarAlerta(mensaje, tipo = 'success', tiempo = 3000) {
+  const alerta = document.getElementById('alerta-feedback');
+  alerta.innerHTML = `<div class="alert alert-${tipo} fade show shadow" role="alert">${mensaje}</div>`;
+  setTimeout(() => {
+    alerta.innerHTML = '';
+  }, tiempo);
+}
+document.querySelector('form[aria-label="Ingresar"]').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const usuario = {
+    correo: this.correo.value,
+    edad: parseInt(this.edad.value, 10),
+    codigo: this.codigo.value,
+    cumple: this.cumple.value
+  };
+  if (typeof guardarUsuario === 'function') {
+    guardarUsuario(usuario);
+  } else if (window.localStorage) {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+  }
+  mostrarAlerta('Sesión iniciada. ¡Bienvenido!', 'success');
+  setTimeout(() => {
+    window.location.href = '../Menu/catalogo.html';
+  }, 1200);
+});
+</script>
+</script>
+<script>
+document.querySelector('form[aria-label="Ingresar"]').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const usuario = {
+    correo: this.correo.value,
+    edad: parseInt(this.edad.value, 10),
+    codigo: this.codigo.value,
+    cumple: this.cumple.value
+  };
+  if (typeof guardarUsuario === 'function') {
+    guardarUsuario(usuario);
+  } else if (window.localStorage) {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+  }
+  alert('Sesión iniciada. ¡Bienvenido!');
+  window.location.href = '../Menu/catalogo.html';
+});
+</script>
 </body>
 </html>

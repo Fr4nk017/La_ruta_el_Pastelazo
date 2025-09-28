@@ -13,6 +13,7 @@
     <!-- ...igual que en catálogo... -->
   </header>
   <main class="container my-4">
+  <div id="alerta-feedback" style="position:fixed;top:1rem;right:1rem;z-index:1050;min-width:250px;"></div>
     <h2 class="mb-4" style="font-family: 'Pacifico', cursive;">Tu carrito de compras</h2>
     <div class="alert alert-info">Aquí aparecerán los productos que agregues al carrito.</div>
     <!-- Tabla de carrito (puedes hacerla dinámica con JS después) -->
@@ -21,15 +22,19 @@
         <tr>
           <th>Producto</th>
           <th>Cantidad</th>
-          <th>Precio</th>
-          <th>Total</th>
+          <th>Relleno</th>
+          <th>Mensaje</th>
+          <th>Subtotal</th>
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="carrito">
         <!-- El JS llenará esto -->
       </tbody>
     </table>
+    <div class="d-flex justify-content-end">
+      <span class="fw-bold">Total: <span id="total-carrito">$0</span></span>
+    </div>
     <div id="resumen-carrito" class="my-3"></div>
     <div class="d-flex justify-content-end gap-2">
       <a href="catalogo.html" class="btn btn-outline-primary">Seguir comprando</a>
@@ -45,5 +50,25 @@
     <!-- ...igual que en catálogo... -->
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/js.js" defer></script>
+  <script>
+    // Feedback visual animado
+    function mostrarAlerta(mensaje, tipo = 'success', tiempo = 3000) {
+      const alerta = document.getElementById('alerta-feedback');
+      alerta.innerHTML = `<div class="alert alert-${tipo} fade show shadow" role="alert">${mensaje}</div>`;
+      setTimeout(() => {
+        alerta.innerHTML = '';
+      }, tiempo);
+    }
+    // Interceptar el mensaje de producto quitado
+    document.addEventListener('producto-quitado', function(e) {
+      mostrarAlerta('Producto eliminado del carrito', 'info');
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof renderizarCarritoHTML === 'function') {
+        renderizarCarritoHTML();
+      }
+    });
+  </script>
 </body>
 </html>
