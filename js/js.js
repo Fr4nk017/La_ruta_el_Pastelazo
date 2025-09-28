@@ -1,3 +1,68 @@
+// --- Renderizar catálogo de productos ---
+window.renderizarCatalogo = function() {
+  const CATEGORIAS = {
+    cuadrada: 'Tortas Cuadradas',
+    circular: 'Tortas Circulares',
+    individual: 'Postres Individuales',
+    sinazucar: 'Productos Sin Azúcar',
+    tradicional: 'Pastelería Tradicional',
+    singluten: 'Productos Sin Gluten',
+    vegana: 'Productos Vegana',
+    especial: 'Tortas Especiales'
+  };
+  // Convertir PRODUCTOS (objeto) a array con id
+  const productos = Object.entries(PRODUCTOS).map(([id, p]) => ({ id, ...p }));
+  const lista = document.getElementById('catalogo-lista');
+  const select = document.getElementById('categoria-select');
+  const busquedaInput = document.getElementById('busqueda-input');
+  if (!lista) return;
+  function render(filtroCat = '', busqueda = '') {
+    let filtrados = productos;
+    if (filtroCat) filtrados = filtrados.filter(p => p.categoria === filtroCat);
+    if (busqueda) filtrados = filtrados.filter(p => (p.nombre+p.descripcion).toLowerCase().includes(busqueda.toLowerCase()));
+    if (filtrados.length === 0) {
+      lista.innerHTML = '<div class="col"><div class="alert alert-warning">No se encontraron productos.</div></div>';
+      return;
+    }
+    lista.innerHTML = filtrados.map(p => `
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 text-center position-relative catalogo-item">
+          ${p.masVendido ? '<span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2">Más vendido</span>' : ''}
+          ${p.nuevo ? '<span class="badge bg-success position-absolute top-0 end-0 m-2">Nuevo</span>' : ''}
+          <img src="${p.imagen}" class="card-img-top catalogo-img" alt="${p.nombre}">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <h5 class="card-title catalogo-nombre">${p.nombre}</h5>
+            <p class="card-text small catalogo-descripcion">${p.descripcion}</p>
+            <div class="fw-bold mb-2 catalogo-precio" style="color:#B26673;">${p.precio}</div>
+            <div class="d-flex gap-2 justify-content-center">
+              <a href="detalle.html?id=${p.id}" class="btn btn-outline-primary btn-sm catalogo-btn">Ver detalle</a>
+              <a href="#" class="btn btn-primary btn-sm agregar-carrito catalogo-btn" data-id="${p.id}" data-nombre="${p.nombre}" data-precio="${parseInt((p.precio||'').replace(/[^\d]/g,''))}">Agregar al carrito</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  render();
+  select?.addEventListener('change', function() {
+    render(this.value, busquedaInput.value);
+  });
+  busquedaInput?.addEventListener('input', function() {
+    render(select.value, this.value);
+  });
+  // Feedback visual animado
+  function mostrarAlerta(mensaje, tipo = 'success', tiempo = 3000) {
+    const alerta = document.getElementById('alerta-feedback');
+    if (!alerta) return;
+    alerta.innerHTML = `<div class="alert alert-${tipo} fade show shadow" role="alert">${mensaje}</div>`;
+    setTimeout(() => {
+      alerta.innerHTML = '';
+    }, tiempo);
+  }
+  document.addEventListener('producto-agregado', function(e) {
+    mostrarAlerta('Producto agregado al carrito', 'success');
+  });
+};
 // --- Catálogo de productos ---
 const PRODUCTOS = {
   "TC001": {
