@@ -1,118 +1,208 @@
+// --- Renderizar catálogo de productos ---
+window.renderizarCatalogo = function() {
+  const CATEGORIAS = {
+    cuadrada: 'Tortas Cuadradas',
+    circular: 'Tortas Circulares',
+    individual: 'Postres Individuales',
+    sinazucar: 'Productos Sin Azúcar',
+    tradicional: 'Pastelería Tradicional',
+    singluten: 'Productos Sin Gluten',
+    vegana: 'Productos Vegana',
+    especial: 'Tortas Especiales'
+  };
+  // Convertir PRODUCTOS (objeto) a array con id
+  const productos = Object.entries(PRODUCTOS).map(([id, p]) => ({ id, ...p }));
+  const lista = document.getElementById('catalogo-lista');
+  const select = document.getElementById('categoria-select');
+  const busquedaInput = document.getElementById('busqueda-input');
+  if (!lista) return;
+  function render(filtroCat = '', busqueda = '') {
+    let filtrados = productos;
+    if (filtroCat) filtrados = filtrados.filter(p => p.categoria === filtroCat);
+    if (busqueda) filtrados = filtrados.filter(p => (p.nombre+p.descripcion).toLowerCase().includes(busqueda.toLowerCase()));
+    if (filtrados.length === 0) {
+      lista.innerHTML = '<div class="col"><div class="alert alert-warning">No se encontraron productos.</div></div>';
+      return;
+    }
+    lista.innerHTML = filtrados.map(p => `
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 text-center position-relative catalogo-item">
+          ${p.masVendido ? '<span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2">Más vendido</span>' : ''}
+          ${p.nuevo ? '<span class="badge bg-success position-absolute top-0 end-0 m-2">Nuevo</span>' : ''}
+          <img src="${p.imagen}" class="card-img-top catalogo-img" alt="${p.nombre}">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <h5 class="card-title catalogo-nombre">${p.nombre}</h5>
+            <p class="card-text small catalogo-descripcion">${p.descripcion}</p>
+            <div class="fw-bold mb-2 catalogo-precio" style="color:#B26673;">${p.precio}</div>
+            <div class="d-flex gap-2 justify-content-center">
+              <a href="detalle.html?id=${p.id}" class="btn btn-outline-primary btn-sm catalogo-btn">Ver detalle</a>
+              <a href="#" class="btn btn-primary btn-sm agregar-carrito catalogo-btn" data-id="${p.id}" data-nombre="${p.nombre}" data-precio="${parseInt((p.precio||'').replace(/[^\d]/g,''))}">Agregar al carrito</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  render();
+  select?.addEventListener('change', function() {
+    render(this.value, busquedaInput.value);
+  });
+  busquedaInput?.addEventListener('input', function() {
+    render(select.value, this.value);
+  });
+  // Feedback visual animado
+  function mostrarAlerta(mensaje, tipo = 'success', tiempo = 3000) {
+    const alerta = document.getElementById('alerta-feedback');
+    if (!alerta) return;
+    alerta.innerHTML = `<div class="alert alert-${tipo} fade show shadow" role="alert">${mensaje}</div>`;
+    setTimeout(() => {
+      alerta.innerHTML = '';
+    }, tiempo);
+  }
+  document.addEventListener('producto-agregado', function(e) {
+    mostrarAlerta('Producto agregado al carrito', 'success');
+  });
+};
 // --- Catálogo de productos ---
 const PRODUCTOS = {
   "TC001": {
     nombre: "Torta Cuadrada de Chocolate",
     imagen: "../imagenes/tortas/Torta Cuadrada de Chocolate.png",
     descripcion: "Deliciosa torta de chocolate con capas de ganache y un toque de avellanas. Personalizable con mensajes especiales.",
-    precio: "$45.000"
+    precio: "$45.000",
+    categoria: "cuadrada",
+    masVendido: true
   },
   "TC002": {
     nombre: "Torta Cuadrada de Frutas",
     imagen: "../imagenes/tortas2/torta cuadrada de frutas.jpg",
     descripcion: "Bizcocho relleno con crema pastelera y frutas de temporada, cubierta con glasé natural.",
-    precio: "$50.000"
+    precio: "$50.000",
+    categoria: "cuadrada"
   },
   "TT001": {
     nombre: "Torta Circular de Vainilla",
     imagen: "../imagenes/tortas/Torta Circular de Vainilla.png",
     descripcion: "Bizcocho esponjoso de vainilla con relleno de crema pastelera y cobertura de glasé.",
-    precio: "$40.000"
+    precio: "$40.000",
+    categoria: "circular",
+    nuevo: true
   },
   "TT002": {
     nombre: "Torta Circular de Manjar",
     imagen: "../imagenes/tortas/Torta_Circular _de _Manjar.png",
     descripcion: "Bizcocho de vainilla relleno de manjar y crema, cubierta de merengue flameado.",
-    precio: "$42.000"
+    precio: "$42.000",
+    categoria: "circular"
   },
   "PI001": {
     nombre: "Mousse de Chocolate",
     imagen: "../imagenes/tortas2/mousse de chocolate.jpg",
     descripcion: "Mousse cremoso de chocolate amargo con toques de café, servido en porción individual.",
-    precio: "$5.000"
+    precio: "$5.000",
+    categoria: "individual"
   },
   "PI002": {
     nombre: "Tiramisú Clásico",
     imagen: "../imagenes/tortas2/tiramisu clasico.jpg",
     descripcion: "Postre italiano elaborado con bizcochos empapados en café, crema de mascarpone y cacao espolvoreado.",
-    precio: "$5.500"
+    precio: "$5.500",
+    categoria: "individual",
+    nuevo: true
   },
   "PSA001": {
     nombre: "Torta Sin Azúcar de Naranja",
     imagen: "../imagenes/tortas2/torta sin azucar de naranja.webp",
     descripcion: "Torta esponjosa con jugo de naranja natural, endulzada con stevia. Ideal para diabéticos.",
-    precio: "$48.000"
+    precio: "$48.000",
+    categoria: "sinazucar"
   },
   "PSA002": {
     nombre: "Cheesecake Sin Azúcar",
     imagen: "../imagenes/tortas2/cheesecake sin azucar.jpg",
     descripcion: "Cheesecake con base de galleta integral y endulzado sin azúcar. Suave y delicioso.",
-    precio: "$47.000"
+    precio: "$47.000",
+    categoria: "sinazucar"
   },
   "PT001": {
     nombre: "Empanada de Manzana",
     imagen: "../imagenes/tortas/Empanada_de_Manzana.png",
     descripcion: "Masa fina rellena de manzana caramelizada con un toque de canela.",
-    precio: "$3.000"
+    precio: "$3.000",
+    categoria: "tradicional"
   },
   "PT002": {
     nombre: "Tarta de Santiago",
     imagen: "../imagenes/tortas2/TARTA-DE-SANTIAGO.jpg",
     descripcion: "Clásica tarta gallega de almendra con azúcar glas y cruz de Santiago.",
-    precio: "$6.000"
+    precio: "$6.000",
+    categoria: "tradicional"
   },
   "PG001": {
     nombre: "Brownie Sin Gluten",
     imagen: "../imagenes/tortas2/brownie sin gluten.avif",
     descripcion: "Brownie de chocolate intenso elaborado con harina sin gluten.",
-    precio: "$4.000"
+    precio: "$4.000",
+    categoria: "singluten"
   },
   "PG002": {
     nombre: "Pan Sin Gluten",
     imagen: "../imagenes/tortas2/Pan-sin-gluten.jpg",
     descripcion: "Pan artesanal elaborado con mezcla de harinas sin gluten, suave y esponjoso.",
-    precio: "$3.500"
+    precio: "$3.500",
+    categoria: "singluten"
   },
   "PV001": {
     nombre: "Torta Vegana de Chocolate",
     imagen: "../imagenes/tortas2/torta-vegana-chocolate-arandanos.jpg",
     descripcion: "Bizcocho húmedo de cacao elaborado sin productos de origen animal.",
-    precio: "$50.000"
+    precio: "$50.000",
+    categoria: "vegana",
+    masVendido: true
   },
   "PV002": {
     nombre: "Galletas Veganas de Avena",
     imagen: "../imagenes/tortas2/galletas veganas.jpg",
     descripcion: "Crujientes galletas veganas de avena y pasas, sin huevo ni lácteos.",
-    precio: "$4.500"
+    precio: "$4.500",
+    categoria: "vegana"
   },
   "TE001": {
     nombre: "Torta Especial de Cumpleaños",
     imagen: "../imagenes/tortas/Torta Especial de Cumpleaños.png",
     descripcion: "Torta de varias capas, rellena de crema, frutas y cubierta con fondant personalizado.",
-    precio: "$55.000"
+    precio: "$55.000",
+    categoria: "especial",
+    nuevo: true
   },
   "TE002": {
     nombre: "Torta Especial de Boda",
     imagen: "../imagenes/tortas2/torta-especial-de-boda.jpg",
     descripcion: "Elegante torta de varios pisos decorada con flores de azúcar. Ideal para celebraciones de boda.",
-    precio: "$60.000"
+    precio: "$60.000",
+    categoria: "especial"
   },
   "TL001": {
     nombre: "Torta Tres Leches",
     imagen: "../imagenes/tortas/TRES-LECHES-1.webp",
     descripcion: "Bizcocho suave empapado en tres tipos de leche, cubierto con merengue y frutas.",
-    precio: "$22.900"
+    precio: "$22.900",
+    categoria: "tradicional",
+    masVendido: true
   },
   "TN001": {
     nombre: "Torta Naranja",
     imagen: "../imagenes/tortas2/torta-naranja.jpg",
     descripcion: "Bizcocho esponjoso de naranja con relleno de crema y cobertura de glasé.",
-    precio: "$27.990"
+    precio: "$27.990",
+    categoria: "tradicional"
   },
   "TP001": {
     nombre: "Torta de Papaya",
     imagen: "../imagenes/tortas/Torta_de_Papaya.png",
     descripcion: "Bizcocho relleno de crema y papaya natural, decorado con frutas frescas.",
-    precio: "$24.500"
+    precio: "$24.500",
+    categoria: "tradicional"
   }
 };
 

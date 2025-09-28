@@ -71,7 +71,10 @@
 
   <script src="../js/js.js"></script>
   <script>
-
+    // Solo delega la carga del detalle a js.js
+    if (window.renderizarDetalleProducto) {
+      window.renderizarDetalleProducto();
+    }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
