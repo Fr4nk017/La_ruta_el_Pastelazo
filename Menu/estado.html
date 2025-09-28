@@ -14,17 +14,56 @@
   </header>
   <main class="container my-4">
     <h2 class="mb-4" style="font-family: 'Pacifico', cursive;">Seguimiento de tu pedido</h2>
+    <div id="mensaje-estado"></div>
+  <div id="alerta-feedback" style="position:fixed;top:1rem;right:1rem;z-index:1050;min-width:250px;"></div>
     <form class="mb-4">
       <label for="codigo" class="form-label">Ingresa tu código de pedido</label>
       <input type="text" class="form-control mb-2" id="codigo" placeholder="Ej: PED12345">
       <button type="submit" class="btn btn-primary">Consultar estado</button>
     </form>
     <div class="alert alert-info">Aquí aparecerá el estado de tu pedido.</div>
-    <a href="../index.html" class="btn btn-outline-primary mb-3">← Volver al inicio</a>
+  <div id="seguimiento-estado"></div>
+  <a href="../index.html" class="btn btn-outline-primary mb-3">← Volver al inicio</a>
   </main>
   <footer class="border-top py-4 mt-5">
     <!-- ...igual que en catálogo... -->
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</script>
+<script>
+// Feedback visual animado
+function mostrarAlerta(mensaje, tipo = 'success', tiempo = 3000) {
+  const alerta = document.getElementById('alerta-feedback');
+  alerta.innerHTML = `<div class="alert alert-${tipo} fade show shadow" role="alert">${mensaje}</div>`;
+  setTimeout(() => {
+    alerta.innerHTML = '';
+  }, tiempo);
+}
+
+// Mostrar mensaje de confirmación si viene el código en la URL
+const params = new URLSearchParams(window.location.search);
+const codigo = params.get('codigo');
+if (codigo) {
+  mostrarAlerta('¡Compra realizada con éxito!<br>Código de seguimiento: <strong>' + codigo + '</strong>', 'success', 5000);
+  mostrarEstado(codigo);
+}
+
+// Simulación de estados de pedido
+function mostrarEstado(codigo) {
+  let estado = 'En preparación';
+  if (codigo.endsWith('1') || codigo.endsWith('2')) estado = 'Envío en camino';
+  if (codigo.endsWith('3') || codigo.endsWith('4')) estado = 'Entregado';
+  document.getElementById('seguimiento-estado').innerHTML = `<div class="alert alert-primary fade show" role="alert">Estado actual: <strong>${estado}</strong></div>`;
+}
+
+// Consultar estado desde el formulario
+document.querySelector('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const cod = document.getElementById('codigo').value.trim();
+  if (!cod) return mostrarAlerta('Por favor ingresa un código de pedido.', 'warning');
+  mostrarAlerta('Buscando estado para el código <strong>' + cod + '</strong>...', 'info');
+  setTimeout(() => mostrarEstado(cod), 800);
+});
+</script>
 </body>
 </html>

@@ -13,6 +13,7 @@
     <!-- ...igual que en catálogo... -->
   </header>
   <main class="container my-4">
+  <div id="alerta-feedback" style="position:fixed;top:1rem;right:1rem;z-index:1050;min-width:250px;"></div>
     <h2 class="mb-4" style="font-family: 'Pacifico', cursive;">Confirmar pedido</h2>
     <form>
       <div class="row g-3">
@@ -48,5 +49,37 @@
     <!-- ...igual que en catálogo... -->
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</script>
+  <script src="../js/js.js" defer></script>
+</script>
+<script>
+// Feedback visual animado
+function mostrarAlerta(mensaje, tipo = 'success', tiempo = 3000) {
+  const alerta = document.getElementById('alerta-feedback');
+  alerta.innerHTML = `<div class="alert alert-${tipo} fade show shadow" role="alert">${mensaje}</div>`;
+  setTimeout(() => {
+    alerta.innerHTML = '';
+  }, tiempo);
+}
+// Interceptar el mensaje de compra finalizada
+document.addEventListener('compra-finalizada', function(e) {
+  mostrarAlerta('¡Producto comprado exitosamente!<br>Código de seguimiento: <strong>' + e.detail.codigo + '</strong>', 'success', 5000);
+});
+</script>
+</script>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  // Generar código de seguimiento aleatorio
+  const codigo = 'PED' + Math.floor(100000 + Math.random() * 900000);
+  // Limpiar carrito
+  localStorage.removeItem('carrito');
+  // Feedback visual: lanzar evento personalizado
+  document.dispatchEvent(new CustomEvent('compra-finalizada', { detail: { codigo } }));
+  setTimeout(() => {
+    window.location.href = '../Menu/estado.html?codigo=' + codigo;
+  }, 1800);
+});
+</script>
 </body>
 </html>
