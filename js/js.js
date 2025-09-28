@@ -491,4 +491,138 @@ window.renderizarDetalleProducto = function() {
     }
   });
 
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.agregar-carrito').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const id = this.dataset.id;
+        const nombre = this.dataset.nombre;
+        const precio = parseInt(this.dataset.precio, 10);
+
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        const idx = carrito.findIndex(item => item.id === id);
+
+        if (idx > -1) {
+          carrito[idx].cantidad += 1;
+        } else {
+          carrito.push({ id, nombre, precio, cantidad: 1 });
+        }
+
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        alert(`${nombre} agregado al carrito`);
+      });
+    });
+  });
+
+  // Mostrar carrito en carrito.html
+  if (window.location.pathname.endsWith('carrito.html')) {
+    const lista = document.getElementById('carrito-lista');
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    if (carrito.length === 0) {
+      lista.innerHTML = '<p>El carrito está vacío.</p>';
+    } else {
+      lista.innerHTML = '<ul class="list-group">' +
+        carrito.map(item =>
+          `<li class="list-group-item d-flex justify-content-between align-items-center">
+            ${item.nombre} x${item.cantidad}
+            <span>$${item.precio * item.cantidad}</span>
+          </li>`
+        ).join('') +
+        '</ul>';
+    }
+
+    document.getElementById('comprar-btn').onclick = function () {
+      alert('¡Compra realizada con éxito!');
+      localStorage.removeItem('carrito');
+      window.location.reload();
+    };
+  }
+
+  // Registro de usuario
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('registro-form');
+    if (form) {
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+        localStorage.setItem('usuario', JSON.stringify({ nombre, email }));
+        document.getElementById('registro-msg').innerHTML = `<div class="alert alert-success">¡Perfil creado correctamente!</div>`;
+        form.reset();
+      };
+    }
+  });
+
+  // Agregar al carrito desde detalle.html
+  document.addEventListener('DOMContentLoaded', function () {
+    const btnDetalle = document.getElementById('agregar-detalle-carrito');
+    if (btnDetalle) {
+      btnDetalle.onclick = function () {
+        const id = this.dataset.id;
+        const nombre = this.dataset.nombre;
+        const precio = parseInt(this.dataset.precio, 10);
+
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        const idx = carrito.findIndex(item => item.id === id);
+
+        if (idx > -1) {
+          carrito[idx].cantidad += 1;
+        } else {
+          carrito.push({ id, nombre, precio, cantidad: 1 });
+        }
+
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        alert(`${nombre} agregado al carrito`);
+      };
+    }
+  });
+
+  // Comentarios en detalle.html y reseñas.html
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('comentario-form');
+    const lista = document.getElementById('comentarios-lista');
+    if (form && lista) {
+      // Identificador único por página (por producto o general)
+      let pageKey = 'comentarios_generales';
+      if (window.location.pathname.endsWith('detalle.html')) {
+        const params = new URLSearchParams(window.location.search);
+        pageKey = 'comentarios_' + (params.get('id') || 'detalle');
+      }
+
+      // Mostrar comentarios existentes
+      function mostrarComentarios() {
+        const comentarios = JSON.parse(localStorage.getItem(pageKey) || '[]');
+        if (comentarios.length === 0) {
+          lista.innerHTML = '<p class="text-muted">No hay comentarios aún.</p>';
+        } else {
+          lista.innerHTML = comentarios.map(c =>
+            `<div class="border rounded p-2 mb-2">
+              <strong>${c.nombre}</strong> <span class="text-muted small">${c.fecha}</span>
+              <div>${c.texto}</div>
+            </div>`
+          ).join('');
+        }
+      }
+
+      mostrarComentarios();
+
+      // Guardar nuevo comentario
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        const nombre = document.getElementById('comentario-nombre').value.trim();
+        const texto = document.getElementById('comentario-texto').value.trim();
+        if (!nombre || !texto) return;
+        const nuevo = {
+          nombre,
+          texto,
+          fecha: new Date().toLocaleString('es-CL')
+        };
+        const comentarios = JSON.parse(localStorage.getItem(pageKey) || '[]');
+        comentarios.unshift(nuevo);
+        localStorage.setItem(pageKey, JSON.stringify(comentarios));
+        form.reset();
+        mostrarComentarios();
+      };
+    }
+  });
+
 })();
