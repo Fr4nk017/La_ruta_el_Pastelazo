@@ -13,7 +13,7 @@ export default function AppRouter(){
       <Route path="/" element={<Home/>} />
       <Route path="/catalog" element={<Catalog/>} />
       <Route path="/cart" element={<CartPage/>} />
-  <Route path="/faq" element={<Faq/>} />
+      <Route path="/faq" element={<Faq/>} />
       <Route path="/tracking" element={<Tracking/>} />
       <Route path="*" element={<NotFound/>} />
     </Routes>
