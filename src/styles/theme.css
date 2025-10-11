@@ -1,0 +1,211 @@
+/* Tema de Pastelería 1000 Sabores */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Pacifico&display=swap');
+
+/* === Variables CSS === */
+:root {
+  --bg: #FFF9F0;          /* fondo crema suave */
+  --surface: #FFFFFF;     /* tarjetas blancas */
+  --text: #5D4037;        /* marrón (texto principal) */
+  --muted: #8E9AA3;       /* gris medio (texto secundario) */
+  --border: #EAE7E3;      /* borde sutil */
+  --primary: #FFC0CB;     /* rosa suave (botones/acento) */
+  --primary-dark: #E0A7B0; /* rosa más oscuro para hover */
+  --primary-ink: #6E2230; /* texto sobre primario */
+  --choco: #8B4513;       /* chocolate (titulares) */
+  --radius: 14px;
+  --shadow: 0 10px 26px rgba(139,69,19,.06);
+}
+
+/* === Override Bootstrap defaults === */
+body {
+  font-family: 'Lato', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+  line-height: 1.6;
+}
+
+/* === Títulos === */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  color: var(--choco) !important;
+  letter-spacing: 0.2px;
+}
+
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+  color: var(--choco) !important;
+}
+
+/* === Header/Footer === */
+header, footer {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* === Navegación === */
+.nav-pills .nav-link {
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px !important;
+  color: var(--text) !important;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  text-decoration: none !important;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: #FFF3F6 !important;
+  border-color: #FFE3EA;
+  color: var(--text) !important;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--primary) !important;
+  color: var(--primary-ink) !important;
+  border-color: var(--primary) !important;
+}
+
+/* === Botones === */
+.btn-primary {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-ink) !important;
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+  color: var(--primary-ink) !important;
+}
+
+.btn-outline-primary {
+  background-color: transparent !important;
+  border-color: var(--primary) !important;
+  color: var(--choco) !important;
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-ink) !important;
+}
+
+/* === Cards === */
+.card {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  background-color: #f8f9fa !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* === Text colors === */
+.text-muted {
+  color: var(--muted) !important;
+}
+
+/* === Links === */
+a {
+  color: var(--choco);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-ink);
+}
+
+/* === Alerts === */
+.alert {
+  border-radius: var(--radius) !important;
+}
+
+/* === Forms === */
+.form-control, .form-select {
+  border-radius: 8px !important;
+  border-color: var(--border) !important;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 192, 203, 0.25) !important;
+}
+
+/* === Carousel === */
+.carousel-img {
+  max-height: 340px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.carousel-caption {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  border-radius: 12px;
+  padding: 1rem !important;
+}
+
+/* === Product catalog === */
+.catalogo-img {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.catalogo-item:hover .catalogo-img {
+  transform: scale(1.05);
+}
+
+/* === Badges === */
+.badge {
+  font-size: 0.75em;
+  border-radius: 6px;
+}
+
+/* === Containers === */
+.container {
+  max-width: 1200px;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .nav {
+    justify-content: center;
+  }
+  
+  .nav .nav-link {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.9rem;
+  }
+  
+  header img {
+    height: 40px !important;
+    width: auto;
+  }
+}

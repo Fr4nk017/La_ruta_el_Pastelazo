@@ -1,0 +1,245 @@
+/* Estilos específicos para componentes */
+
+/* === Navbar === */
+.navbar-brand {
+  font-family: 'Pacifico', cursive !important;
+  color: var(--choco) !important;
+  font-size: 1.5rem;
+}
+
+.navbar-brand:hover {
+  color: var(--choco) !important;
+}
+
+/* === Logo en header === */
+header img {
+  height: 56px;
+  width: auto;
+  border-radius: 8px;
+}
+
+/* === Carousel === */
+.carousel-item {
+  height: 400px;
+}
+
+.carousel-item img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-caption h2 {
+  font-family: 'Pacifico', cursive !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* === Product Cards === */
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(139,69,19,.15) !important;
+}
+
+.product-card .card-img-top {
+  height: 220px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-img-top {
+  transform: scale(1.1);
+}
+
+/* === Badges === */
+.badge-new {
+  background-color: #28a745 !important;
+  color: white !important;
+}
+
+.badge-bestseller {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+/* === Buttons especiales === */
+.btn-cart {
+  background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+  border: none;
+  color: var(--primary-ink) !important;
+  font-weight: 700;
+  border-radius: 25px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-cart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 192, 203, 0.4);
+}
+
+/* === Forms === */
+.form-floating > label {
+  color: var(--muted) !important;
+}
+
+.form-floating > .form-control:focus ~ label {
+  color: var(--primary-ink) !important;
+}
+
+/* === Cart items === */
+.cart-item {
+  background-color: var(--surface);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.cart-item:hover {
+  box-shadow: 0 5px 20px rgba(139,69,19,.1);
+}
+
+/* === Price display === */
+.price {
+  color: var(--choco) !important;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.price-small {
+  color: var(--choco) !important;
+  font-weight: 600;
+}
+
+/* === Loading states === */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* === Animations mejoradas === */
+.slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* === Responsive mejorado === */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .nav {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .nav .nav-link {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  header img {
+    height: 45px !important;
+    width: auto;
+  }
+  
+  header .h4 {
+    font-size: 1rem !important;
+  }
+  
+  header p {
+    font-size: 0.75rem;
+  }
+  
+  /* Navbar responsive */
+  header .row {
+    text-align: center;
+  }
+  
+  header .col-lg-4,
+  header .col-lg-8 {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  header .col-lg-8 {
+    margin-bottom: 0;
+  }
+  
+  /* Cards en móvil */
+  .product-card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Carousel en móvil */
+  .carousel-item {
+    height: 250px;
+  }
+  
+  .carousel-caption {
+    display: none !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .nav .nav-link {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .nav .nav-link i {
+    display: none;
+  }
+}
+
+/* === Footer === */
+footer {
+  background-color: #f8f9fa !important;
+  color: var(--muted) !important;
+  margin-top: auto;
+}
+
+footer h5, footer h6 {
+  color: var(--choco) !important;
+}
+
+footer a {
+  color: var(--muted) !important;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: var(--choco) !important;
+}
+
+/* === Utilidades adicionales === */
+.z-index-1 {
+  z-index: 1;
+}
+
+.text-pacifico {
+  font-family: 'Pacifico', cursive !important;
+}
+
+.bg-cream {
+  background-color: var(--bg) !important;
+}
