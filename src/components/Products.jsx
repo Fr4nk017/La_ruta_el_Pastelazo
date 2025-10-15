@@ -6,7 +6,15 @@ import { useCart } from '../contexts/CartContext';
 export default function Products() {
   const { add } = useCart();
 
-  const featuredProducts = products.slice(0, 3); // Mostrar solo los primeros 3 productos
+  // Productos destacados para mostrar en la página de inicio
+  const featuredProducts = [
+    products.find(p => p.id === 'torta_choco_cuadrada'),
+    products.find(p => p.id === 'tiramisu_clasico'),
+    products.find(p => p.id === 'torta_tres_leches'),
+    products.find(p => p.id === 'torta_cumpleanos'),
+    products.find(p => p.id === 'cheesecake_sin_azucar'),
+    products.find(p => p.id === 'torta_vegana_chocolate')
+  ].filter(Boolean); // Filtrar productos que existen
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('es-CL', {
@@ -40,7 +48,7 @@ export default function Products() {
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>{product.name}</Card.Title>
                   <Card.Text className="text-muted mb-3">
-                    Deliciosa torta artesanal hecha con los mejores ingredientes.
+                    {product.description}
                   </Card.Text>
                   <div className="mt-auto">
                     <div className="d-flex justify-content-between align-items-center">
@@ -70,7 +78,7 @@ export default function Products() {
               variant="outline-primary" 
               size="lg"
             >
-              Ver Todo el Catálogo
+              Ver Todo el Catálogo ({products.length} productos)
             </Button>
           </Col>
         </Row>
