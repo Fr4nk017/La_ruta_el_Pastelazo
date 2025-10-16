@@ -187,5 +187,112 @@ export const products = [
     img: "/imagenes/tortas2/TARTA-DE-SANTIAGO.jpg",
     category: "gourmet",
     description: "Tradicional tarta española de almendras con cruz de Santiago."
+  },
+  
+  // Productos adicionales de tortas2
+  {
+    id: "mousse_chocolate_premium",
+    name: "Mousse de Chocolate Premium",
+    price: 7990,
+    img: "/imagenes/tortas2/mousse de chocolate.jpg",
+    category: "clasicos",
+    description: "Mousse de chocolate belga con triple capa y decoración elegante."
+  },
+  {
+    id: "tiramisu_clasico_premium",
+    name: "Tiramisú Clásico Premium",
+    price: 9990,
+    img: "/imagenes/tortas2/tiramisu clasico.jpg",
+    category: "clasicos",
+    description: "Versión premium del clásico tiramisú con café italiano importado."
+  },
+  {
+    id: "torta_naranja_premium",
+    name: "Torta de Naranja Artesanal",
+    price: 14990,
+    img: "/imagenes/tortas2/torta-naranja.jpg",
+    category: "frutas",
+    description: "Torta artesanal de naranja con ralladura cítrica y mermelada natural."
+  },
+  {
+    id: "torta_frutas_premium",
+    name: "Torta Premium de Frutas Frescas",
+    price: 19990,
+    img: "/imagenes/tortas2/torta cuadrada de frutas.jpg",
+    category: "frutas",
+    description: "Elegante torta cubierta con fresas, kiwi, uvas y duraznos frescos."
+  },
+  
+  // Tortas adicionales con variantes
+  {
+    id: "torta_vainilla_circular_alt",
+    name: "Torta de Vainilla Clásica",
+    price: 13490,
+    img: "/imagenes/tortas/Torta_Circular_de_Vainilla.png",
+    category: "clasicas",
+    description: "Suave bizcocho de vainilla con crema de mantequilla casera."
   }
 ];
+
+// Información adicional de los productos
+export const productDetails = {
+  ingredients: {
+    torta_choco_cuadrada: ["Harina", "Chocolate 70%", "Huevos", "Azúcar", "Mantequilla", "Cacao"],
+    torta_vainilla_circular: ["Harina", "Huevos", "Azúcar", "Mantequilla", "Vainilla natural", "Leche"],
+    tiramisu_clasico: ["Mascarpone", "Café espresso", "Bizcochos", "Huevos", "Azúcar", "Cacao"],
+  },
+  allergens: {
+    torta_choco_cuadrada: ["Gluten", "Huevo", "Lácteos"],
+    torta_vegana_chocolate: ["Frutos secos"],
+    brownie_sin_gluten: ["Huevo", "Lácteos"],
+  },
+  sizes: {
+    small: { servings: "6-8 personas", diameter: "20cm" },
+    medium: { servings: "10-12 personas", diameter: "25cm" },
+    large: { servings: "15-20 personas", diameter: "30cm" },
+  }
+};
+
+// Categorías con información adicional
+export const categoryInfo = {
+  clasicas: {
+    name: "Tortas Clásicas",
+    description: "Nuestras recetas tradicionales que han deleitado por generaciones",
+    icon: "🎂"
+  },
+  especiales: {
+    name: "Tortas Especiales",
+    description: "Para ocasiones únicas y celebraciones memorables",
+    icon: "🎉"
+  },
+  frutas: {
+    name: "Tortas de Frutas",
+    description: "Frescura y sabor natural en cada bocado",
+    icon: "🍓"
+  },
+  gourmet: {
+    name: "Línea Gourmet",
+    description: "Sabores sofisticados para paladares exigentes",
+    icon: "⭐"
+  },
+  clasicos: {
+    name: "Postres Clásicos",
+    description: "Delicias individuales para cualquier momento",
+    icon: "🍮"
+  },
+  saludables: {
+    name: "Opciones Saludables",
+    description: "Sin azúcar y sin gluten, sin renunciar al sabor",
+    icon: "🌿"
+  },
+  veganos: {
+    name: "Repostería Vegana",
+    description: "100% vegetal, 100% delicioso",
+    icon: "🌱"
+  },
+  individuales: {
+    name: "Porciones Individuales",
+    description: "Perfecto para disfrutar en solitario o compartir",
+    icon: "🧁"
+  }
+};
