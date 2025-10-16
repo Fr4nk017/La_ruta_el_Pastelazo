@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
+import { memo } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { formatPrice } from '../utils/currency';
+import { IMAGE_CONFIG } from '../config/performance';
 
 /**
  * Componente reutilizable para mostrar una tarjeta de producto
+ * Memoizado para evitar re-renders innecesarios
  */
-export const ProductCard = ({ 
+export const ProductCard = memo(({ 
   product, 
   onAddToCart, 
   imageHeight = '200px',
@@ -19,7 +22,8 @@ export const ProductCard = ({
         src={product.img} 
         alt={product.name}
         style={{ height: imageHeight, objectFit: 'cover' }}
-        loading="lazy"
+        loading={IMAGE_CONFIG.defaultLoading}
+        decoding="async"
       />
       <Card.Body className="d-flex flex-column">
         <Card.Title className="h6">{product.name}</Card.Title>
@@ -46,7 +50,9 @@ export const ProductCard = ({
       </Card.Body>
     </Card>
   );
-};
+});
+
+ProductCard.displayName = 'ProductCard';
 
 ProductCard.propTypes = {
   product: PropTypes.shape({
