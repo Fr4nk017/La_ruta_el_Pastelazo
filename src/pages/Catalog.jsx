@@ -1,51 +1,34 @@
-
-// Página de catálogo - La Ruta el Pastelazo
+// Página de catálogo - Pastelería 1000 Sabores
 import { useState, useMemo } from 'react';
-import { Container, Row, Col, Form, InputGroup, Button } from 'react-bootstrap';
-import { products } from '../data/products';
+import { Container, Row, Col, Form, InputGroup, Button, Badge, Card } from 'react-bootstrap';
+import { products, categories } from '../data/products';
 import { useCart } from '../contexts/CartContext';
 import { ProductCard } from '../components/ui';
 import { debounce } from '../utils';
 
 export default function Catalog() {
   const { add } = useCart();
-  const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Categorías disponibles
-  const categories = [
-    'Todas las categorías',
-    'Tortas Clásicas',
-    'Especiales', 
-    'Frutas',
-    'Gourmet',
-    'Postres Clásicos',
-    'Saludables',
-    'Veganos',
-    'Individuales'
+  // Categorías disponibles con información adicional
+  const categoryOptions = [
+    { key: 'all', name: 'Todas las categorías', icon: '🍰' },
+    ...Object.entries(categories).map(([key, category]) => ({
+      key,
+      name: category.name,
+      icon: category.icon,
+      description: category.description
+    }))
   ];
-
-  // Mapeo de categorías del UI a categorías de datos
-  const categoryMapping = {
-    'Todas las categorías': 'all',
-    'Tortas Clásicas': 'clasicas',
-    'Especiales': 'especiales',
-    'Frutas': 'frutas',
-    'Gourmet': 'gourmet',
-    'Postres Clásicos': 'clasicos',
-    'Saludables': 'saludables',
-    'Veganos': 'veganos',
-    'Individuales': 'individuales'
-  };
 
   // Filtrado de productos
   const filteredProducts = useMemo(() => {
     let filtered = products;
 
     // Filtro por categoría
-    const mappedCategory = categoryMapping[selectedCategory];
-    if (mappedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === mappedCategory);
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => product.category === selectedCategory);
     }
 
     // Filtro por búsqueda
@@ -70,145 +53,165 @@ export default function Catalog() {
   };
 
   const clearFilters = () => {
-    setSelectedCategory('Todas las categorías');
+    setSelectedCategory('all');
     setSearchTerm('');
     // Limpiar también el input de búsqueda
     const searchInput = document.querySelector('input[placeholder="Buscar productos..."]');
     if (searchInput) searchInput.value = '';
   };
 
+  const handleAddToCart = (product) => {
+    add({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.img,
+      qty: 1
+    });
+  };
+
   return (
-    <div style={{ backgroundColor: '#fff5e6', minHeight: '100vh' }}>
+    <div className="bg-light min-vh-100">
       <Container className="py-4">
         {/* Header */}
         <div className="text-center mb-4">
-          <h1 
-            className="display-6 fw-bold mb-2"
-            style={{ 
-              color: '#8B4513',
-              fontFamily: 'cursive',
-              textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-            }}
-          >
-            Explora nuestras categorías
+          <h1 className="display-6 fw-bold mb-2 font-pacifico" style={{ color: '#8B4513' }}>
+            🍰 Nuestro Catálogo
           </h1>
+          <p className="text-muted">
+            Descubre nuestra amplia variedad de productos artesanales
+          </p>
+          <Badge bg="primary" className="fs-6">
+            {filteredProducts.length} productos disponibles
+          </Badge>
         </div>
-        
-        {/* Filtros */}
-        <Row className="mb-4 align-items-end">
-          <Col md={4}>
-            <Form.Group>
-              <Form.Select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                style={{ 
-                  backgroundColor: 'white',
-                  border: '2px solid #D2B48C',
-                  borderRadius: '8px'
-                }}
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Col>
-          
-          <Col md={5}>
-            <Form.Group>
-              <InputGroup>
-                <Form.Control
-                  type="text"
-                  placeholder="Buscar productos..."
-                  onChange={handleSearchChange}
-                  style={{ 
-                    backgroundColor: 'white',
-                    border: '2px solid #D2B48C',
-                    borderRight: 'none'
-                  }}
-                />
-                <InputGroup.Text 
-                  style={{ 
-                    backgroundColor: '#F5DEB3',
-                    border: '2px solid #D2B48C',
-                    borderLeft: 'none'
-                  }}
-                >
-                  🔍
-                </InputGroup.Text>
-              </InputGroup>
-            </Form.Group>
-          </Col>
-          
-          <Col md={3}>
-            <div className="d-grid">
-              <Button 
-                variant="outline-secondary"
-                onClick={clearFilters}
-                style={{ 
-                  color: '#8B4513',
-                  borderColor: '#8B4513',
-                  borderRadius: '8px'
-                }}
-              >
-                Limpiar filtros
-              </Button>
-            </div>
-          </Col>
-        </Row>
 
-        {/* Grid de productos */}
+        {/* Filtros */}
+        <Card className="mb-4 border-0 shadow-sm">
+          <Card.Body>
+            <Row className="g-3 align-items-end">
+              <Col md={6}>
+                <Form.Label>Categoría</Form.Label>
+                <Form.Select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  {categoryOptions.map((category) => (
+                    <option key={category.key} value={category.key}>
+                      {category.icon} {category.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col md={4}>
+                <Form.Label>Buscar</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    type="text"
+                    placeholder="Buscar productos..."
+                    onChange={handleSearchChange}
+                  />
+                </InputGroup>
+              </Col>
+              <Col md={2}>
+                <div className="d-grid">
+                  <Button
+                    variant="outline-secondary"
+                    onClick={clearFilters}
+                    disabled={selectedCategory === 'all' && !searchTerm}
+                  >
+                    🔄 Limpiar
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+
+        {/* Información de categoría seleccionada */}
+        {selectedCategory !== 'all' && (
+          <Card className="mb-4 border-0 shadow-sm" style={{ backgroundColor: '#f8f4e6' }}>
+            <Card.Body>
+              <div className="d-flex align-items-center">
+                <span className="fs-2 me-3">
+                  {categories[selectedCategory]?.icon}
+                </span>
+                <div>
+                  <h5 className="mb-1 font-pacifico" style={{ color: '#8B4513' }}>
+                    {categories[selectedCategory]?.name}
+                  </h5>
+                  <p className="text-muted mb-0">
+                    {categories[selectedCategory]?.description}
+                  </p>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        )}
+
+        {/* Productos */}
         {filteredProducts.length > 0 ? (
           <Row className="g-4">
             {filteredProducts.map((product) => (
-              <Col key={product.id} sm={6} md={4} lg={3}>
-                <ProductCard 
+              <Col key={product.id} lg={4} md={6}>
+                <ProductCard
                   product={product}
-                  onAddToCart={add}
-                  imageHeight="220px"
+                  onAddToCart={() => handleAddToCart(product)}
                   showDescription={true}
-                  buttonText="Agregar al carrito"
+                  imageHeight="250px"
                 />
               </Col>
             ))}
           </Row>
         ) : (
-          <div className="text-center py-5">
-            <div className="display-1 mb-3">🔍</div>
-            <h3 style={{ color: '#8B4513' }}>No se encontraron productos</h3>
-            <p className="text-muted mb-4">
-              {searchTerm 
-                ? `No encontramos productos que coincidan con "${searchTerm}"`
-                : `No hay productos disponibles en la categoría "${selectedCategory}"`
-              }
-            </p>
-            <Button 
-              variant="primary"
-              onClick={clearFilters}
-              style={{ 
-                backgroundColor: '#8B4513', 
-                borderColor: '#8B4513' 
-              }}
-            >
-              Ver todos los productos
-            </Button>
-          </div>
+          <Card className="text-center py-5 border-0 shadow-sm">
+            <Card.Body>
+              <div className="display-1 mb-3">🔍</div>
+              <h4>No se encontraron productos</h4>
+              <p className="text-muted mb-3">
+                {searchTerm 
+                  ? `No hay productos que coincidan con "${searchTerm}"`
+                  : 'No hay productos en esta categoría'
+                }
+              </p>
+              <Button variant="primary" onClick={clearFilters}>
+                Ver todos los productos
+              </Button>
+            </Card.Body>
+          </Card>
         )}
-        
-        {/* Footer de información */}
-        {filteredProducts.length > 0 && (
-          <div className="text-center mt-5 pt-4 border-top">
-            <p className="text-muted mb-2">
-              Mostrando <strong>{filteredProducts.length}</strong> de{' '}
-              <strong>{products.length}</strong> productos
-            </p>
-            <small style={{ color: '#8B4513' }}>
-              ✨ Todos nuestros productos son preparados frescos diariamente con ingredientes premium
-            </small>
-          </div>
-        )}
+
+        {/* Estadísticas del catálogo */}
+        <Card className="mt-5 border-0 shadow-sm" style={{ backgroundColor: '#f8f9fa' }}>
+          <Card.Body>
+            <Row className="text-center">
+              <Col md={3}>
+                <div className="display-6 fw-bold text-primary">
+                  {products.length}
+                </div>
+                <small className="text-muted">Productos totales</small>
+              </Col>
+              <Col md={3}>
+                <div className="display-6 fw-bold text-success">
+                  {Object.keys(categories).length}
+                </div>
+                <small className="text-muted">Categorías</small>
+              </Col>
+              <Col md={3}>
+                <div className="display-6 fw-bold text-info">
+                  50+
+                </div>
+                <small className="text-muted">Años de experiencia</small>
+              </Col>
+              <Col md={3}>
+                <div className="display-6 fw-bold text-warning">
+                  ⭐
+                </div>
+                <small className="text-muted">Calidad garantizada</small>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
       </Container>
     </div>
   );
