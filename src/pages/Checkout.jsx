@@ -9,8 +9,8 @@ import { calcOrderTotal } from '../utils/pricing';
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { cart, summary, checkout, clear } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  const { cart, summary, checkout } = useCart();
+  const { user } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState({});
   const [orderSuccess, setOrderSuccess] = useState(false);

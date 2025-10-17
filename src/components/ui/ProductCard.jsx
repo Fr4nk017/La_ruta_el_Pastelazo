@@ -16,13 +16,11 @@ export const ProductCard = memo(({
   imageHeight = '200px',
   showDescription = true,
   buttonText = 'Agregar al carrito',
-  showCategory = false,
   className = '',
   badges = []
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const category = categoryInfo[product.category] || {};
 
   const handleImageLoad = () => {
     setImageLoaded(true);

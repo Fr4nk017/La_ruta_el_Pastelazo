@@ -29,7 +29,7 @@ class ErrorBoundary extends Component {
                 <p className="mb-3">
                   Lo sentimos, ha ocurrido un error inesperado.
                 </p>
-                {process.env.NODE_ENV === 'development' && (
+                {import.meta.env.DEV && (
                   <details className="text-start">
                     <summary className="mb-2 cursor-pointer">Detalles del error</summary>
                     <pre className="small text-danger">

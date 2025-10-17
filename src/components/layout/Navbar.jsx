@@ -9,7 +9,7 @@ import RegisterModal from '../ui/RegisterModal';
 
 export default function Navbar() {
   const location = useLocation();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const { summary } = useCart();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
