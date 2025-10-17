@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   
+  // Configuración para SPA
+  base: '/',
+  
   // Optimizaciones de rendimiento
   build: {
     // Reducir tamaño del bundle
