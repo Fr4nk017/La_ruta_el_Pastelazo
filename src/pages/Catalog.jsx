@@ -1,7 +1,6 @@
-
 // Página de catálogo - La Ruta el Pastelazo
-import { useState, useMemo } from 'react';
-import { Container, Row, Col, Form, InputGroup, Button } from 'react-bootstrap';
+import { useState, useMemo, useEffect } from 'react';
+import { Container, Row, Col, Form, InputGroup, Button, Badge, Alert } from 'react-bootstrap';
 import { products } from '../data/products';
 import { useCart } from '../contexts/CartContext';
 import { ProductCard } from '../components/ui';
@@ -11,6 +10,22 @@ export default function Catalog() {
   const { add } = useCart();
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Verificar que los productos estén disponibles
+  useEffect(() => {
+    try {
+      if (!products || !Array.isArray(products) || products.length === 0) {
+        throw new Error('No se pudieron cargar los productos');
+      }
+      setLoading(false);
+    } catch (err) {
+      console.error('Error al cargar productos:', err);
+      setError(err.message);
+      setLoading(false);
+    }
+  }, []);
 
   // Categorías disponibles
   const categories = [
@@ -40,19 +55,27 @@ export default function Catalog() {
 
   // Filtrado de productos
   const filteredProducts = useMemo(() => {
+    if (!products || !Array.isArray(products)) {
+      return [];
+    }
+
     let filtered = products;
 
     // Filtro por categoría
     const mappedCategory = categoryMapping[selectedCategory];
     if (mappedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === mappedCategory);
+      filtered = filtered.filter(product => 
+        product && product.category === mappedCategory
+      );
     }
 
     // Filtro por búsqueda
     if (searchTerm) {
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+        product && (
+          product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
       );
     }
 
@@ -77,37 +100,90 @@ export default function Catalog() {
     if (searchInput) searchInput.value = '';
   };
 
+  const handleAddToCart = (product) => {
+    try {
+      if (!product) {
+        console.error('Producto no válido:', product);
+        return;
+      }
+      
+      add({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.img,
+        qty: 1
+      });
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+    }
+  };
+
+  // Estados de carga y error
+  if (loading) {
+    return (
+      <div className="bg-light min-vh-100">
+        <Container className="py-5">
+          <div className="text-center">
+            <div className="spinner-border text-primary mb-3" role="status">
+              <span className="visually-hidden">Cargando...</span>
+            </div>
+            <h3>Cargando catálogo...</h3>
+            <p className="text-muted">Por favor espera mientras cargamos nuestros productos</p>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-light min-vh-100">
+        <Container className="py-5">
+          <div className="text-center">
+            <Alert variant="danger" className="d-inline-block">
+              <h4>❌ Error al cargar el catálogo</h4>
+              <p>{error}</p>
+              <Button 
+                variant="primary" 
+                onClick={() => window.location.reload()}
+                style={{ backgroundColor: '#8B4513', borderColor: '#8B4513' }}
+              >
+                🔄 Recargar página
+              </Button>
+            </Alert>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ backgroundColor: '#fff5e6', minHeight: '100vh' }}>
+    <div className="bg-light min-vh-100">
       <Container className="py-4">
         {/* Header */}
         <div className="text-center mb-4">
-          <h1 
-            className="display-6 fw-bold mb-2"
-            style={{ 
-              color: '#8B4513',
-              fontFamily: 'cursive',
-              textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-            }}
-          >
-            Explora nuestras categorías
+          <h1 className="display-6 fw-bold mb-2 font-pacifico" style={{ color: '#8B4513' }}>
+            🍰 Nuestro Catálogo
           </h1>
+          <p className="text-muted">
+            Descubre nuestra amplia variedad de productos artesanales
+          </p>
+          <Badge bg="primary" className="fs-6">
+            {filteredProducts.length} productos disponibles
+          </Badge>
         </div>
-        
-        {/* Filtros */}
-        <Row className="mb-4 align-items-end">
-          <Col md={4}>
+
+        {/* Controles de filtrado */}
+        <Row className="mb-4">
+          <Col lg={4}>
             <Form.Group>
+              <Form.Label>Categoría</Form.Label>
               <Form.Select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                style={{ 
-                  backgroundColor: 'white',
-                  border: '2px solid #D2B48C',
-                  borderRadius: '8px'
-                }}
               >
-                {categories.map(category => (
+                {categories.map((category) => (
                   <option key={category} value={category}>
                     {category}
                   </option>
@@ -115,61 +191,40 @@ export default function Catalog() {
               </Form.Select>
             </Form.Group>
           </Col>
-          
-          <Col md={5}>
+          <Col lg={6}>
             <Form.Group>
+              <Form.Label>Buscar productos</Form.Label>
               <InputGroup>
                 <Form.Control
                   type="text"
                   placeholder="Buscar productos..."
                   onChange={handleSearchChange}
-                  style={{ 
-                    backgroundColor: 'white',
-                    border: '2px solid #D2B48C',
-                    borderRight: 'none'
-                  }}
                 />
-                <InputGroup.Text 
-                  style={{ 
-                    backgroundColor: '#F5DEB3',
-                    border: '2px solid #D2B48C',
-                    borderLeft: 'none'
-                  }}
-                >
-                  🔍
-                </InputGroup.Text>
               </InputGroup>
             </Form.Group>
           </Col>
-          
-          <Col md={3}>
-            <div className="d-grid">
-              <Button 
-                variant="outline-secondary"
-                onClick={clearFilters}
-                style={{ 
-                  color: '#8B4513',
-                  borderColor: '#8B4513',
-                  borderRadius: '8px'
-                }}
-              >
-                Limpiar filtros
-              </Button>
-            </div>
+          <Col lg={2} className="d-flex align-items-end">
+            <Button
+              variant="outline-secondary"
+              onClick={clearFilters}
+              disabled={selectedCategory === 'Todas las categorías' && !searchTerm}
+              className="w-100"
+            >
+              🔄 Limpiar
+            </Button>
           </Col>
         </Row>
 
-        {/* Grid de productos */}
+        {/* Resultados */}
         {filteredProducts.length > 0 ? (
           <Row className="g-4">
             {filteredProducts.map((product) => (
-              <Col key={product.id} sm={6} md={4} lg={3}>
-                <ProductCard 
+              <Col key={product.id} lg={4} md={6}>
+                <ProductCard
                   product={product}
-                  onAddToCart={add}
-                  imageHeight="220px"
+                  onAddToCart={() => handleAddToCart(product)}
                   showDescription={true}
-                  buttonText="Agregar al carrito"
+                  imageHeight="250px"
                 />
               </Col>
             ))}
@@ -177,38 +232,56 @@ export default function Catalog() {
         ) : (
           <div className="text-center py-5">
             <div className="display-1 mb-3">🔍</div>
-            <h3 style={{ color: '#8B4513' }}>No se encontraron productos</h3>
-            <p className="text-muted mb-4">
+            <h4>No se encontraron productos</h4>
+            <p className="text-muted mb-3">
               {searchTerm 
-                ? `No encontramos productos que coincidan con "${searchTerm}"`
-                : `No hay productos disponibles en la categoría "${selectedCategory}"`
+                ? `No hay productos que coincidan con "${searchTerm}"`
+                : `No hay productos en la categoría "${selectedCategory}"`
               }
             </p>
-            <Button 
-              variant="primary"
-              onClick={clearFilters}
-              style={{ 
-                backgroundColor: '#8B4513', 
-                borderColor: '#8B4513' 
-              }}
-            >
+            <Button variant="primary" onClick={clearFilters}>
               Ver todos los productos
             </Button>
           </div>
         )}
-        
-        {/* Footer de información */}
-        {filteredProducts.length > 0 && (
-          <div className="text-center mt-5 pt-4 border-top">
-            <p className="text-muted mb-2">
-              Mostrando <strong>{filteredProducts.length}</strong> de{' '}
-              <strong>{products.length}</strong> productos
-            </p>
-            <small style={{ color: '#8B4513' }}>
-              ✨ Todos nuestros productos son preparados frescos diariamente con ingredientes premium
-            </small>
-          </div>
-        )}
+
+        {/* Información adicional */}
+        <div className="text-center mt-5 pt-4 border-top">
+          <Row>
+            <Col md={3}>
+              <div className="mb-3">
+                <div className="display-6 fw-bold text-primary">
+                  {products?.length || 0}
+                </div>
+                <small className="text-muted">Productos totales</small>
+              </div>
+            </Col>
+            <Col md={3}>
+              <div className="mb-3">
+                <div className="display-6 fw-bold text-success">
+                  {categories.length - 1}
+                </div>
+                <small className="text-muted">Categorías</small>
+              </div>
+            </Col>
+            <Col md={3}>
+              <div className="mb-3">
+                <div className="display-6 fw-bold text-info">
+                  50+
+                </div>
+                <small className="text-muted">Años de experiencia</small>
+              </div>
+            </Col>
+            <Col md={3}>
+              <div className="mb-3">
+                <div className="display-6 fw-bold text-warning">
+                  ⭐
+                </div>
+                <small className="text-muted">Calidad garantizada</small>
+              </div>
+            </Col>
+          </Row>
+        </div>
       </Container>
     </div>
   );
