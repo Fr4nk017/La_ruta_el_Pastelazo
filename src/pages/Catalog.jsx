@@ -1,6 +1,7 @@
 // Página de catálogo - Pastelería 1000 Sabores
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Container, Row, Col, Form, InputGroup, Button, Badge, Card } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
 import { products, categories } from '../data/products';
 import { useCart } from '../contexts/CartContext';
 import { ProductCard } from '../components/ui';
@@ -8,34 +9,55 @@ import { debounce } from '../utils';
 
 export default function Catalog() {
   const { add } = useCart();
+  const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Categorías disponibles con información adicional
+  // Manejar query parameters para producto específico
+  useEffect(() => {
+    const productId = searchParams.get('product');
+    if (productId) {
+      // Buscar el producto por ID
+      const product = products?.find(p => p.id === productId);
+      if (product) {
+        setSearchTerm(product.name);
+      }
+    }
+  }, [searchParams]);
+
+  // Categorías disponibles con información adicional (con validación)
   const categoryOptions = [
     { key: 'all', name: 'Todas las categorías', icon: '🍰' },
-    ...Object.entries(categories).map(([key, category]) => ({
+    ...Object.entries(categories || {}).map(([key, category]) => ({
       key,
-      name: category.name,
-      icon: category.icon,
-      description: category.description
+      name: category?.name || key,
+      icon: category?.icon || '🍰',
+      description: category?.description || ''
     }))
   ];
 
   // Filtrado de productos
   const filteredProducts = useMemo(() => {
+    if (!products || !Array.isArray(products)) {
+      return [];
+    }
+
     let filtered = products;
 
     // Filtro por categoría
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === selectedCategory);
+      filtered = filtered.filter(product => 
+        product && product.category === selectedCategory
+      );
     }
 
     // Filtro por búsqueda
     if (searchTerm) {
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+        product && (
+          product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
       );
     }
 
@@ -61,14 +83,37 @@ export default function Catalog() {
   };
 
   const handleAddToCart = (product) => {
-    add({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.img,
-      qty: 1
-    });
+    try {
+      if (!product) return;
+      
+      add({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.img,
+        qty: 1
+      });
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+    }
   };
+
+  // Verificar si los datos necesarios están disponibles
+  if (!products || !Array.isArray(products)) {
+    return (
+      <div className="bg-light min-vh-100">
+        <Container className="py-4">
+          <div className="text-center">
+            <h3>Error al cargar el catálogo</h3>
+            <p>No se pudieron cargar los productos. Por favor, recarga la página.</p>
+            <Button onClick={() => window.location.reload()}>
+              Recargar página
+            </Button>
+          </div>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-light min-vh-100">
