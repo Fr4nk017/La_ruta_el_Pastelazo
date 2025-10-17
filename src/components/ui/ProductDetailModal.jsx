@@ -11,8 +11,10 @@ import { PRODUCT_SIZES } from '../../constants/products';
 export const ProductDetailModal = ({ product, show, onHide, onAddToCart }) => {
   if (!product) return null;
 
-  const details = productDetails.ingredients[product.id] || [];
-  const allergens = productDetails.allergens[product.id] || [];
+  const productDetail = productDetails[product.id] || {};
+  const details = productDetail.ingredients || [];
+  const allergens = productDetail.allergens || [];
+  const nutrition = productDetail.nutrition || {};
   const category = categoryInfo[product.category] || {};
 
   const handleAddToCart = () => {
