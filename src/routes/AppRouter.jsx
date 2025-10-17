@@ -6,8 +6,6 @@ import { ROUTES } from '../constants';
 // Lazy loading de páginas para code splitting y mejor performance
 const Home = lazy(() => import('../pages/Home'));
 const Catalog = lazy(() => import('../pages/Catalog'));
-const CatalogTest = lazy(() => import('../pages/CatalogTest'));
-const CatalogSimple = lazy(() => import('../pages/CatalogSimple'));
 const CartPage = lazy(() => import('../pages/Cart'));
 const FAQ = lazy(() => import('../pages/FAQ'));
 const Tracking = lazy(() => import('../pages/Tracking'));
@@ -20,9 +18,7 @@ export default function AppRouter() {
   return (
     <Routes>
       <Route path={ROUTES.HOME} element={<Home />} />
-      <Route path={ROUTES.CATALOG} element={<CatalogSimple />} />
-      <Route path="/catalog-test" element={<CatalogTest />} />
-      <Route path="/catalog-simple" element={<CatalogSimple />} />
+      <Route path={ROUTES.CATALOG} element={<Catalog />} />
       <Route path={ROUTES.CART} element={<CartPage />} />
       <Route path={ROUTES.FAQ} element={<FAQ />} />
       <Route path={ROUTES.TRACKING} element={<Tracking />} />

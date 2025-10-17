@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import { Card, Button, Badge } from 'react-bootstrap';
-import { formatPrice } from '../../utils';
+import { formatPrice, getImageUrl, handleImageError } from '../../utils';
 import { categoryInfo } from '../../data/products';
 import ProductDetailModal from './ProductDetailModal';
 
@@ -26,8 +26,8 @@ export const ProductCard = memo(({
     setImageLoaded(true);
   };
 
-  const handleImageError = (e) => {
-    e.target.src = '/imagenes/placeholder.jpg';
+  const handleImageErrorLocal = (e) => {
+    handleImageError(e);
   };
 
   // Determinar badges automáticamente si no se proporcionan
@@ -96,7 +96,7 @@ export const ProductCard = memo(({
           
           <Card.Img 
             variant="top" 
-            src={product.img} 
+            src={getImageUrl(product.img)} 
             alt={product.name}
             style={{ 
               height: imageHeight, 
@@ -107,7 +107,7 @@ export const ProductCard = memo(({
             loading="lazy"
             decoding="async"
             onLoad={handleImageLoad}
-            onError={handleImageError}
+            onError={handleImageErrorLocal}
           />
         </div>
         
