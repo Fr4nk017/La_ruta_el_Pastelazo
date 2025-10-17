@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { products, categories } from '../data/products';
 import { useCart } from '../contexts/CartContext';
 import { ProductCard } from '../components/ui';
-import { debounce } from '../utils';
+import { debounce } from '../utils/helpers';
 
 export default function Catalog() {
   const { add } = useCart();
