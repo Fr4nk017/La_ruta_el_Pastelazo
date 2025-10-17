@@ -217,6 +217,39 @@ export default function Checkout() {
                     Tu pedido <Badge bg="primary" className="fs-6">#{orderId}</Badge> ha sido recibido exitosamente.
                   </p>
                   
+                  <Row className="mb-4">
+                    <Col md={6}>
+                      <Card className="bg-light h-100">
+                        <Card.Body>
+                          <h6 className="text-muted">📦 Detalles del Pedido</h6>
+                          <p className="mb-1"><strong>Total:</strong> {formatPrice(orderTotal.total)}</p>
+                          <p className="mb-1"><strong>Productos:</strong> {cart.length} items</p>
+                          <p className="mb-0"><strong>Método:</strong> {customerInfo.paymentMethod}</p>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col md={6}>
+                      <Card className="bg-light h-100">
+                        <Card.Body>
+                          <h6 className="text-muted">🚚 Entrega</h6>
+                          <p className="mb-1">
+                            <strong>Fecha:</strong> {new Date(customerInfo.deliveryDate).toLocaleDateString('es-CL')}
+                          </p>
+                          <p className="mb-1">
+                            <strong>Horario:</strong> {
+                              customerInfo.deliveryTime === 'manana' ? 'Mañana (9:00-13:00)' : 
+                              customerInfo.deliveryTime === 'tarde' ? 'Tarde (14:00-18:00)' : 
+                              'Noche (19:00-21:00)'
+                            }
+                          </p>
+                          <p className="mb-0">
+                            <strong>Dirección:</strong> {customerInfo.address}
+                          </p>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  </Row>
+
                   <Alert variant="info" className="mb-4">
                     <strong>📞 ¿Qué sigue?</strong><br/>
                     Te contactaremos en las próximas 2 horas para confirmar tu pedido y coordinar la entrega.
@@ -250,9 +283,9 @@ export default function Checkout() {
   }
 
   const steps = [
-    { number: 1, title: 'Información', icon: '👤' },
-    { number: 2, title: 'Entrega', icon: '🚚' },
-    { number: 3, title: 'Confirmar', icon: '✅' }
+    { number: 1, title: 'Información Personal', icon: '👤' },
+    { number: 2, title: 'Entrega y Pago', icon: '🚚' },
+    { number: 3, title: 'Confirmación', icon: '✅' }
   ];
 
   return (
@@ -301,7 +334,7 @@ export default function Checkout() {
             <Card className="text-center p-4">
               <div className="spinner-border text-primary mb-3" role="status"></div>
               <h5>Procesando tu pedido...</h5>
-              <p className="text-muted mb-0">Por favor espera...</p>
+              <p className="text-muted mb-0">Por favor espera, esto puede tomar unos segundos</p>
             </Card>
           </div>
         )}
@@ -319,6 +352,12 @@ export default function Checkout() {
                     </h5>
                   </Card.Header>
                   <Card.Body>
+                    {errors.general && (
+                      <Alert variant="danger" className="mb-3">
+                        {errors.general}
+                      </Alert>
+                    )}
+
                     <Row>
                       <Col md={6}>
                         <Form.Group className="mb-3">
@@ -448,6 +487,17 @@ export default function Checkout() {
                       </Col>
                     </Row>
 
+                    <Form.Group className="mb-4">
+                      <Form.Label>Referencia (opcional)</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="reference"
+                        value={customerInfo.reference}
+                        onChange={handleInputChange}
+                        placeholder="Ej: Edificio azul, casa esquina, etc."
+                      />
+                    </Form.Group>
+
                     <h6 className="text-muted mb-3">🕐 Horario de entrega</h6>
                     <Row>
                       <Col md={6}>
@@ -515,6 +565,18 @@ export default function Checkout() {
                       />
                     </div>
 
+                    <Form.Group className="mb-4">
+                      <Form.Label>Instrucciones especiales (opcional)</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        name="specialInstructions"
+                        value={customerInfo.specialInstructions}
+                        onChange={handleInputChange}
+                        placeholder="Ej: Sin nueces, decoración especial, mensaje personalizado..."
+                      />
+                    </Form.Group>
+
                     <div className="d-flex justify-content-between">
                       <Button variant="outline-secondary" onClick={prevStep}>
                         👈 Atrás
@@ -540,6 +602,36 @@ export default function Checkout() {
                     </h5>
                   </Card.Header>
                   <Card.Body>
+                    <h6 className="text-muted mb-3">📋 Revisa tu información</h6>
+                    
+                    <Row className="mb-4">
+                      <Col md={6}>
+                        <Card className="bg-light">
+                          <Card.Body>
+                            <h6 className="text-muted">👤 Cliente</h6>
+                            <p className="mb-1"><strong>{customerInfo.firstName} {customerInfo.lastName}</strong></p>
+                            <p className="mb-1">{customerInfo.email}</p>
+                            <p className="mb-0">{customerInfo.phone}</p>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                      <Col md={6}>
+                        <Card className="bg-light">
+                          <Card.Body>
+                            <h6 className="text-muted">🚚 Entrega</h6>
+                            <p className="mb-1">
+                              {new Date(customerInfo.deliveryDate).toLocaleDateString('es-CL')} - {
+                                customerInfo.deliveryTime === 'manana' ? 'Mañana' : 
+                                customerInfo.deliveryTime === 'tarde' ? 'Tarde' : 'Noche'
+                              }
+                            </p>
+                            <p className="mb-1">{customerInfo.address}</p>
+                            <p className="mb-0">{customerInfo.comuna}</p>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    </Row>
+
                     <Form.Group className="mb-4">
                       <Form.Check
                         type="checkbox"
@@ -548,7 +640,11 @@ export default function Checkout() {
                         checked={customerInfo.acceptTerms}
                         onChange={handleInputChange}
                         isInvalid={!!errors.acceptTerms}
-                        label="Acepto los términos y condiciones *"
+                        label={
+                          <span>
+                            Acepto los <a href="#" className="text-decoration-none">términos y condiciones</a> y la <a href="#" className="text-decoration-none">política de privacidad</a> *
+                          </span>
+                        }
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.acceptTerms}
@@ -603,6 +699,35 @@ export default function Checkout() {
                     ))}
                   </ListGroup>
 
+                  {/* Cupón */}
+                  <div className="mb-3">
+                    <h6 className="text-muted">🎟️ Cupón de descuento</h6>
+                    {!couponApplied ? (
+                      <div className="d-flex gap-2">
+                        <Form.Control
+                          size="sm"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                          placeholder="Código"
+                          isInvalid={!!errors.coupon}
+                        />
+                        <Button size="sm" variant="outline-primary" onClick={applyCoupon}>
+                          Aplicar
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="d-flex justify-content-between align-items-center bg-success text-white p-2 rounded">
+                        <small>✅ {couponCode} aplicado</small>
+                        <Button size="sm" variant="outline-light" onClick={removeCoupon}>×</Button>
+                      </div>
+                    )}
+                    {errors.coupon && (
+                      <div className="text-danger small mt-1">{errors.coupon}</div>
+                    )}
+                  </div>
+
+                  <hr/>
+
                   {/* Totales */}
                   <div className="mb-3">
                     <div className="d-flex justify-content-between mb-2">
@@ -627,7 +752,8 @@ export default function Checkout() {
                   </div>
 
                   <Alert variant="info" className="small">
-                    <strong>💡 Te contactaremos para confirmar</strong>
+                    <strong>💡 Información:</strong><br/>
+                    Te contactaremos para confirmar tu pedido antes de procesarlo.
                   </Alert>
                 </Card.Body>
               </Card>
@@ -642,13 +768,16 @@ export default function Checkout() {
           </Modal.Header>
           <Modal.Body>
             <p>¿Estás seguro que deseas confirmar tu pedido por <strong>{formatPrice(orderTotal.total)}</strong>?</p>
+            <small className="text-muted">
+              Una vez confirmado, te contactaremos para coordinar la entrega y el pago.
+            </small>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="outline-secondary" onClick={() => setShowConfirmModal(false)}>
               Cancelar
             </Button>
             <Button variant="success" onClick={confirmOrder}>
-              ✅ Confirmar
+              ✅ Sí, confirmar pedido
             </Button>
           </Modal.Footer>
         </Modal>
