@@ -61,7 +61,15 @@ export default function CartPage(){
             <span>Descuento</span><strong>-{fmt(totals.desc)}</strong>
             <span>Total</span><strong>{fmt(totals.total)}</strong>
           </div>
-          <button className="btn secondary" type="submit" style={{marginTop:'1rem'}}>Confirmar</button>
+          <button className="btn secondary" type="submit" style={{marginTop:'1rem'}}>Confirmar por WhatsApp</button>
+          <button 
+            className="btn primary" 
+            type="button" 
+            style={{marginTop:'0.5rem'}} 
+            onClick={() => window.location.href = '/checkout'}
+          >
+            🛒 Checkout Completo
+          </button>
         </form>
       </div>
     </div>

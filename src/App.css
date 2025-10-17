@@ -1,54 +1,34 @@
+/* Estilos de la aplicación - La Ruta el Pastelazo */
+
+/* Variables CSS customizadas */
+:root {
+  --primary-color: #6f42c1;
+  --secondary-color: #fd7e14;
+  --success-color: #198754;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  --muted-color: #6c757d;
+}
+
+/* Reset y configuración base */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* Estilos para ProductCard */
+/* Efectos de hover para productos */
 .product-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
+  border: none !important;
 }
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
 }
 
 .product-card img {
@@ -59,9 +39,138 @@
   transform: scale(1.05);
 }
 
-/* Animación para los badges */
-.badge {
-  transition: all 0.2s ease;
+/* Hero section */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(111, 66, 193, 0.8) 0%,
+    rgba(253, 126, 20, 0.8) 100%
+  );
+  z-index: -1;
+}
+
+/* Navegación activa */
+.navbar-nav .nav-link.active {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+/* Botones personalizados */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Badge de carrito */
+.navbar .badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Cards responsivos */
+@media (max-width: 768px) {
+  .product-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-section {
+    min-height: 50vh !important;
+  }
+  
+  .display-4 {
+    font-size: 2rem !important;
+  }
+
+  .product-card .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Loading animations */
+.spinner-border {
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Footer */
+footer a:hover {
+  color: var(--warning-color) !important;
+  transition: color 0.3s ease;
+}
+
+/* Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mejoras de accesibilidad */
+.btn:focus,
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+
+/* Texto truncado responsivo */
+.text-truncate-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.text-truncate-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Utilidades adicionales */
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.shadow-custom {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
 /* Modal de detalles */
@@ -89,12 +198,4 @@
 
 .list-group-item:last-child {
   border-bottom: none;
-}
-
-/* Responsive ajustes */
-@media (max-width: 768px) {
-  .product-card .btn {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-  }
 }

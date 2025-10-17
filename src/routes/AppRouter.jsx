@@ -1,34 +1,31 @@
-import { lazy, Suspense } from 'react';
+// Router principal - La Ruta el Pastelazo
+import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { ROUTES } from '../constants';
 
-// Lazy loading de páginas para code splitting
+// Lazy loading de páginas para code splitting y mejor performance
 const Home = lazy(() => import('../pages/Home'));
 const Catalog = lazy(() => import('../pages/Catalog'));
 const CartPage = lazy(() => import('../pages/Cart'));
-const Faq = lazy(() => import('../pages/FAQ'));
+const FAQ = lazy(() => import('../pages/FAQ'));
 const Tracking = lazy(() => import('../pages/Tracking'));
+const Profile = lazy(() => import('../pages/Profile'));
+const Checkout = lazy(() => import('../pages/Checkout'));
+const Reviews = lazy(() => import('../pages/Reviews'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
-// Componente de carga mientras se descarga el chunk
-const PageLoader = () => (
-  <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
-    <div className="spinner-border text-primary" role="status">
-      <span className="visually-hidden">Cargando...</span>
-    </div>
-  </div>
-);
-
-export default function AppRouter(){
+export default function AppRouter() {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/catalog" element={<Catalog/>} />
-        <Route path="/cart" element={<CartPage/>} />
-        <Route path="/faq" element={<Faq/>} />
-        <Route path="/tracking" element={<Tracking/>} />
-        <Route path="*" element={<NotFound/>} />
-      </Routes>
-    </Suspense>
+    <Routes>
+      <Route path={ROUTES.HOME} element={<Home />} />
+      <Route path={ROUTES.CATALOG} element={<Catalog />} />
+      <Route path={ROUTES.CART} element={<CartPage />} />
+      <Route path={ROUTES.FAQ} element={<FAQ />} />
+      <Route path={ROUTES.TRACKING} element={<Tracking />} />
+      <Route path={ROUTES.PROFILE} element={<Profile />} />
+      <Route path={ROUTES.CHECKOUT} element={<Checkout />} />
+      <Route path={ROUTES.REVIEWS} element={<Reviews />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
