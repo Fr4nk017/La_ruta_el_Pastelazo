@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import { Container, Row, Col, Form, Button, Badge, Card } from 'react-bootstrap';
 import { products, categories } from '../data/products';
 import { useCart } from '../contexts/CartContext';
+import { getImageUrl, handleImageError } from '../utils';
 
 export default function CatalogSimple() {
   const { add } = useCart();
@@ -145,11 +146,9 @@ export default function CatalogSimple() {
                 <Card className="h-100 shadow-sm">
                   <Card.Img
                     variant="top"
-                    src={product.img}
+                    src={getImageUrl(product.img)}
                     style={{ height: '250px', objectFit: 'cover' }}
-                    onError={(e) => {
-                      e.target.src = '/imagenes/placeholder.jpg';
-                    }}
+                    onError={handleImageError}
                   />
                   <Card.Body className="d-flex flex-column">
                     <Card.Title className="h5">{product.name}</Card.Title>

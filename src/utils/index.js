@@ -4,3 +4,4 @@ export * from './validation';
 export * from './dates';
 export * from './helpers';
 export * from './pricing';
+export * from './images';

@@ -1,6 +1,7 @@
 // Página de prueba para diagnosticar problemas del catálogo
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { products, categories } from '../data/products';
+import { getImageUrl, handleImageError } from '../utils';
 
 export default function CatalogTest() {
   console.log('Products:', products);
@@ -36,11 +37,9 @@ export default function CatalogTest() {
             <Card>
               <Card.Img 
                 variant="top" 
-                src={product.img} 
+                src={getImageUrl(product.img)} 
                 style={{ height: '200px', objectFit: 'cover' }}
-                onError={(e) => {
-                  e.target.src = '/imagenes/placeholder.jpg';
-                }}
+                onError={handleImageError}
               />
               <Card.Body>
                 <Card.Title>{product.name}</Card.Title>
