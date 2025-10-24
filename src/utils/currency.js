@@ -7,17 +7,12 @@ import { CURRENCY } from '../constants';
  * @returns {string} Precio formateado
  */
 export const formatPrice = (price) => {
-  if (typeof price !== 'number' || isNaN(price)) {
-    return `${CURRENCY.SYMBOL}0`;
-  }
-  
-  return new Intl.NumberFormat(CURRENCY.LOCALE, {
+  return new Intl.NumberFormat('es-CL', {
     style: 'currency',
-    currency: CURRENCY.CODE,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-};
+    currency: 'CLP',
+    minimumFractionDigits: 0
+  }).format(price)
+}
 
 /**
  * Formatea un número como moneda sin el símbolo
