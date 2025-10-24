@@ -1,9 +1,8 @@
 // Componente ProductCard mejorado - La Ruta el Pastelazo
 import PropTypes from 'prop-types';
-import { memo, useState } from 'react';
+import { memo, useState, useCallback, useMemo } from 'react';
 import { Card, Button, Badge } from 'react-bootstrap';
 import { formatPrice, getImageUrl, handleImageError } from '../../utils';
-import { categoryInfo } from '../../data/products';
 import ProductDetailModal from './ProductDetailModal';
 
 /**
@@ -54,55 +53,65 @@ export const ProductCard = memo(({
   return (
     <>
       <Card 
-        className={`h-100 shadow-sm product-card ${className}`} 
-        style={{ 
-          cursor: 'pointer', 
-          transition: 'all 0.3s ease',
-          border: 'none',
-          borderRadius: '12px'
-        }}
+        className={`h-100 shadow-sm product-card transition-all ${className}`}
+        style={{ borderRadius: '1rem' }}
       >
         <div 
           onClick={() => setShowModal(true)}
-          style={{ position: 'relative' }}
+          className="position-relative overflow-hidden"
         >
-          {/* Badges en la esquina superior */}
+          {/* Badges flotantes */}
           {productBadges.map((badge, index) => (
             <Badge 
               key={index}
               bg={badge.variant}
-              className="position-absolute"
+              className="position-absolute m-2 py-2 px-3"
               style={{ 
-                top: '10px', 
-                left: index === 0 ? '10px' : '10px',
-                marginTop: index * 30,
-                zIndex: 1,
+                top: index * 40,
+                left: 0,
+                zIndex: 2,
                 fontSize: '0.75rem',
-                fontWeight: 'bold'
+                fontWeight: '600'
               }}
             >
               {badge.text}
             </Badge>
           ))}
           
+          {/* Placeholder de carga */}
           {!imageLoaded && (
             <div 
-              className="d-flex align-items-center justify-content-center bg-light"
-              style={{ height: imageHeight, borderRadius: '12px 12px 0 0' }}
+              className="d-flex align-items-center justify-content-center bg-light loading-skeleton"
+              style={{ 
+                height: {
+                  xs: '150px',
+                  sm: '180px',
+                  md: imageHeight
+                }[window.innerWidth < 576 ? 'xs' : window.innerWidth < 768 ? 'sm' : 'md'],
+                borderRadius: '1rem 1rem 0 0'
+              }}
             >
-              <div className="text-muted">Cargando...</div>
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Cargando...</span>
+              </div>
             </div>
           )}
           
+          {/* Imagen del producto */}
           <Card.Img 
             variant="top" 
             src={getImageUrl(product.img)} 
             alt={product.name}
+            className="img-fluid transition-transform"
             style={{ 
-              height: imageHeight, 
+              height: {
+                xs: '150px',
+                sm: '180px',
+                md: imageHeight
+              }[window.innerWidth < 576 ? 'xs' : window.innerWidth < 768 ? 'sm' : 'md'],
               objectFit: 'cover',
               display: imageLoaded ? 'block' : 'none',
-              borderRadius: '12px 12px 0 0'
+              borderRadius: '1rem 1rem 0 0'
             }}
             loading="lazy"
             decoding="async"

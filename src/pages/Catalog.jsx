@@ -222,24 +222,24 @@ export default function Catalog() {
 
   return (
     <>
-      <div className="bg-light min-vh-100">
-        <Container className="py-4">
+      <div className="bg-light">
+        <Container fluid="xxl" className="px-3 py-4">
           {/* Header mejorado */}
           <div className="text-center mb-5">
-            <h1 className="display-5 fw-bold mb-3" style={{ color: '#8B4513' }}>
+            <h1 className="display-5 fw-bold mb-3 gradient-text">
               🍰 Nuestro Catálogo Artesanal
             </h1>
             <p className="lead text-muted mb-3">
               Descubre nuestra exquisita selección de postres hechos con amor y los mejores ingredientes
             </p>
-            <div className="d-flex justify-content-center gap-3 flex-wrap">
+            <div className="d-flex justify-content-center gap-2 gap-md-3 flex-wrap">
               <Badge bg="primary" className="fs-6 px-3 py-2">
-                {filteredProducts.length} productos encontrados
+                {filteredProducts.length} productos
               </Badge>
               <Badge bg="success" className="fs-6 px-3 py-2">
                 ✨ Calidad artesanal
               </Badge>
-              <Badge bg="info" className="fs-6 px-3 py-2">
+              <Badge bg="info" className="fs-6 px-3 py-2 d-none d-sm-inline-block">
                 🚚 Delivery disponible
               </Badge>
             </div>
@@ -299,9 +299,9 @@ export default function Catalog() {
 
           {/* Grid de productos */}
           {filteredProducts.length > 0 ? (
-            <Row className="g-4">
+            <Row className="g-3 g-md-4">
               {filteredProducts.map((product) => (
-                <Col key={product.id} xl={4} lg={6} md={6}>
+                <Col key={product.id} xl={3} lg={4} md={6} sm={6} xs={12}>
                   <Card className="h-100 shadow-sm border-0 position-relative overflow-hidden product-card">
                     {/* Badge de categoría */}
                     <div className="position-absolute top-0 start-0 m-2 z-index-1">

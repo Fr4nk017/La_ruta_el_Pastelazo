@@ -1,157 +1,87 @@
-// Navbar principal - Pastelería 1000 Sabores
-import { useState } from 'react';
-import { Container, Button, Badge } from 'react-bootstrap';
-import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { useCart } from '../../contexts/CartContext';
+import { memo, useState, useMemo } from 'react';
+import { Container } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 import LoginModal from '../ui/LoginModal';
 import RegisterModal from '../ui/RegisterModal';
+import { Logo, NavLinks, AuthSection } from './navbar/index.js';
 
-export default function Navbar() {
+/**
+ * Navbar principal de la aplicación con gestión optimizada de modales
+ * @component
+ */
+const Navbar = memo(() => {
   const location = useLocation();
-  const { isAuthenticated, logout } = useAuth();
-  const { summary } = useCart();
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+  // Possible values: 'none', 'login', 'register'
+  const [activeModal, setActiveModal] = useState('none');
 
-  const isActive = (path) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
-    return location.pathname.startsWith(path);
-  };
+  // Verifica si una ruta está activa (memoizado)
+  const isActive = useMemo(() => {
+    return (path) => {
+      if (path === '/') {
+        return location.pathname === '/';
+      }
+      return location.pathname.startsWith(path);
+    };
+  }, [location.pathname]);
 
-  const switchToRegister = () => {
-    setShowLogin(false);
-    setShowRegister(true);
-  };
+  // Manejadores unificados para modales
+  const modalHandlers = useMemo(() => ({
+    showLogin: () => setActiveModal('login'),
+    showRegister: () => setActiveModal('register'),
+    closeModal: () => setActiveModal('none'),
+    switchToRegister: () => setActiveModal('register'),
+    switchToLogin: () => setActiveModal('login')
+  }), []);
 
-  const switchToLogin = () => {
-    setShowRegister(false);
-    setShowLogin(true);
-  };
-
-  return (
+  // JSX memoizado para modales
+  const renderModals = useMemo(() => (
     <>
-      <header className="py-3 border-bottom">
-        <Container className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-          <div className="d-flex align-items-center gap-3">
-            <img 
-              src="/imagenes/Logo la ruta el pastelazo.png" 
-              alt="Logotipo Pastelería 1000 Sabores" 
-              width="72" 
-              height="72" 
-              loading="lazy"
-              style={{ borderRadius: '8px' }}
-            />
-            <div>
-              <h1 className="h3 m-0 font-pacifico" style={{ color: '#8B4513' }}>
-                Pastelería 1000 Sabores
-              </h1>
-              <p className="text-muted m-0">Celebrando 50 años de dulzura y tradición</p>
-            </div>
-          </div>
-          
-          <nav aria-label="Navegación principal">
-            <ul className="nav nav-pills">
-              <li className="nav-item">
-                <Link 
-                  className={`nav-link ${isActive('/') ? 'active' : ''}`} 
-                  to="/" 
-                  aria-current={isActive('/') ? 'page' : undefined}
-                >
-                  Inicio
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className={`nav-link ${isActive('/catalog') ? 'active' : ''}`} to="/catalog">
-                  Catálogo
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className={`nav-link position-relative ${isActive('/cart') ? 'active' : ''}`} to="/cart">
-                  Carrito
-                  {summary.count > 0 && (
-                    <Badge 
-                      bg="danger" 
-                      pill 
-                      className="position-absolute top-0 start-100 translate-middle"
-                      style={{ fontSize: '0.7rem' }}
-                    >
-                      {summary.count}
-                    </Badge>
-                  )}
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className={`nav-link ${isActive('/checkout') ? 'active' : ''}`} to="/checkout">
-                  Checkout
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className={`nav-link ${isActive('/tracking') ? 'active' : ''}`} to="/tracking">
-                  Estado
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className={`nav-link ${isActive('/reviews') ? 'active' : ''}`} to="/reviews">
-                  Reseñas
-                </Link>
-              </li>
-              {isAuthenticated ? (
-                <li className="nav-item">
-                  <Link className={`nav-link ${isActive('/profile') ? 'active' : ''}`} to="/profile">
-                    Perfil
-                  </Link>
-                </li>
-              ) : (
-                <li className="nav-item">
-                  <Button 
-                    variant="link" 
-                    className="nav-link border-0 p-2" 
-                    onClick={() => setShowLogin(true)}
-                    style={{ 
-                      color: '#6c757d', 
-                      textDecoration: 'none',
-                      background: 'none'
-                    }}
-                  >
-                    Ingresar
-                  </Button>
-                </li>
-              )}
-              {isAuthenticated && (
-                <li className="nav-item">
-                  <Button 
-                    variant="link" 
-                    className="nav-link border-0 p-2" 
-                    onClick={logout}
-                    style={{ 
-                      color: '#dc3545', 
-                      textDecoration: 'none',
-                      background: 'none'
-                    }}
-                  >
-                    Salir
-                  </Button>
-                </li>
-              )}
-            </ul>
-          </nav>
-        </Container>
-      </header>
-
       <LoginModal 
-        show={showLogin}
-        onHide={() => setShowLogin(false)}
-        onSwitchToRegister={switchToRegister}
+        show={activeModal === 'login'}
+        onHide={modalHandlers.closeModal}
+        onSwitchToRegister={modalHandlers.switchToRegister}
       />
       
       <RegisterModal 
-        show={showRegister}
-        onHide={() => setShowRegister(false)}
-        onSwitchToLogin={switchToLogin}
+        show={activeModal === 'register'}
+        onHide={modalHandlers.closeModal}
+        onSwitchToLogin={modalHandlers.switchToLogin}
       />
     </>
+  ), [activeModal, modalHandlers]);
+
+  return (
+    <>
+      <header className="py-3 border-bottom sticky-top bg-white">
+        <Container fluid="xxl" className="px-3">
+          <div className="navbar navbar-expand-lg">
+            <Logo />
+            
+            <button
+              className="navbar-toggler ms-auto"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            
+            <nav className="collapse navbar-collapse" id="navbarNav">
+              <NavLinks isActive={isActive} />
+              <AuthSection onShowLogin={modalHandlers.showLogin} />
+            </nav>
+          </div>
+        </Container>
+      </header>
+
+      {renderModals}
+    </>
   );
-}
+});
+
+Navbar.displayName = 'Navbar';
+
+export default Navbar;
