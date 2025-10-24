@@ -12,17 +12,16 @@ export const LAZY_LOAD_CONFIG = {
 
 // Configuración de imágenes
 export const IMAGE_CONFIG = {
+  // Lazy loading habilitado por defecto
+  loading: 'lazy',
+  // Calidad de las imágenes (1-100)
+  quality: 85,
   // Tamaños predefinidos para diferentes contextos
   sizes: {
-    thumbnail: '100px',
-    card: '200px',
-    featured: '250px',
-    hero: '400px',
+    small: 300,
+    medium: 600,
+    large: 1200,
   },
-  // Lazy loading habilitado por defecto
-  defaultLoading: 'lazy',
-  // Formatos soportados
-  formats: ['webp', 'avif', 'jpg', 'png'],
 };
 
 // Configuración de cache
