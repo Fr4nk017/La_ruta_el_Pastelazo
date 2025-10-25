@@ -9,7 +9,8 @@ export const ROUTES = {
   TRACKING: '/tracking',
   PROFILE: '/profile',
   CHECKOUT: '/checkout',
-  REVIEWS: '/reviews'
+  REVIEWS: '/reviews',
+  ROLES_APP: '/roles-app'
 };
 
 export const CURRENCY = {
