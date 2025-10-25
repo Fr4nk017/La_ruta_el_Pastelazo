@@ -9,10 +9,10 @@ export const initializeDefaultData = () => {
   if (existingUsers.length === 0) {
     const defaultAdmin = {
       id: generateId(),
-      email: 'admin@larutaelpastelazo.cl',
+      email: 'gusty@admin.com',
       password: 'admin123', // En producción, esto debería estar hasheado
-      firstName: 'Administrador',
-      lastName: 'Sistema',
+      firstName: 'Gustavo',
+      lastName: 'Gutierrez',
       phone: '+56912345678',
       role: 'admin',
       permissions: [
@@ -21,7 +21,10 @@ export const initializeDefaultData = () => {
         'manage_users',
         'manage_products',
         'view_reports',
-        'manage_system'
+        'manage_system',
+        'update_prices',
+        'add_products',
+        'delete_products'
       ],
       isActive: true,
       createdAt: new Date().toISOString(),
@@ -33,10 +36,10 @@ export const initializeDefaultData = () => {
 
     const defaultWorker = {
       id: generateId(),
-      email: 'trabajador@larutaelpastelazo.cl',
-      password: 'worker123',
-      firstName: 'María',
-      lastName: 'González',
+      email: 'pancho.obrero@gmail.com',
+      password: 'obrero123',
+      firstName: 'Francisco',
+      lastName: 'Levipil',
       phone: '+56987654321',
       role: 'trabajador',
       permissions: [
@@ -44,7 +47,10 @@ export const initializeDefaultData = () => {
         'place_orders',
         'manage_orders',
         'view_inventory',
-        'update_order_status'
+        'update_order_status',
+        'manage_products',
+        'update_prices',
+        'add_products'
       ],
       isActive: true,
       createdAt: new Date().toISOString(),
@@ -81,7 +87,7 @@ export const initializeDefaultData = () => {
     localStorage.setItem('registered_users', JSON.stringify(defaultUsers));
     
     console.log('Usuarios por defecto creados:');
-    console.log('Admin: admin@larutaelpastelazo.cl / admin123');
+    console.log('Admin: gusty@admin.com / admin123');
     console.log('Trabajador: trabajador@larutaelpastelazo.cl / worker123');
     console.log('Cliente: cliente@larutaelpastelazo.cl / client123');
     

@@ -166,13 +166,32 @@ export function AuthProvider({ children }) {
       let permissions = [];
       switch (role) {
         case 'admin':
-          permissions = ['view_products', 'place_orders', 'manage_users', 'manage_products', 'view_reports'];
+          permissions = [
+            'view_products', 
+            'place_orders', 
+            'manage_users', 
+            'manage_products', 
+            'view_reports', 
+            'manage_system',
+            'update_prices',
+            'add_products',
+            'delete_products'
+          ];
           break;
         case 'trabajador':
-          permissions = ['view_products', 'place_orders', 'manage_orders', 'view_inventory'];
+          permissions = [
+            'view_products', 
+            'place_orders', 
+            'manage_orders', 
+            'view_inventory',
+            'update_order_status',
+            'manage_products',
+            'update_prices',
+            'add_products'
+          ];
           break;
         default:
-          permissions = ['view_products', 'place_orders'];
+          permissions = ['view_products', 'place_orders', 'view_own_orders', 'update_profile'];
       }
 
       const newUser = {
