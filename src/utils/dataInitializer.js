@@ -36,7 +36,7 @@ export const initializeDefaultData = () => {
 
     const defaultWorker = {
       id: generateId(),
-      email: 'trabajador@larutaelpastelazo.cl',
+      email: 'obrero@trabajador.com',
       password: 'worker123',
       firstName: 'Francisco',
       lastName: 'Levipil',
@@ -88,7 +88,7 @@ export const initializeDefaultData = () => {
     
     console.log('Usuarios por defecto creados:');
     console.log('Admin: gusty@admin.com / admin123');
-    console.log('Trabajador: trabajador@larutaelpastelazo.cl / worker123');
+    console.log('Trabajador: obrero@trabajador.com / worker123');
     console.log('Cliente: cliente@larutaelpastelazo.cl / client123');
     
     return defaultUsers;

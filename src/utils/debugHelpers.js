@@ -34,8 +34,36 @@ export const checkLocalStorageStatus = () => {
   }
 };
 
+// Función para actualizar email del trabajador
+export const updateWorkerEmail = () => {
+  const users = JSON.parse(localStorage.getItem('registered_users') || '[]');
+  
+  // Buscar el usuario trabajador y actualizar su email
+  const updatedUsers = users.map(user => {
+    if (user.role === 'trabajador') {
+      return {
+        ...user,
+        email: 'obrero@trabajador.com'
+      };
+    }
+    return user;
+  });
+  
+  // Guardar usuarios actualizados
+  localStorage.setItem('registered_users', JSON.stringify(updatedUsers));
+  
+  console.log('✅ Email del trabajador actualizado a: obrero@trabajador.com');
+  console.log('📋 Nuevas credenciales:');
+  updatedUsers.forEach(user => {
+    console.log(`${user.role}: ${user.email} / ${user.password}`);
+  });
+  
+  return updatedUsers;
+};
+
 // Exposer funciones globalmente para debugging
 if (typeof window !== 'undefined') {
   window.resetLocalStorage = resetLocalStorage;
   window.checkLocalStorageStatus = checkLocalStorageStatus;
+  window.updateWorkerEmail = updateWorkerEmail;
 }

@@ -91,6 +91,51 @@ body {
   transition: transform 0.3s ease;
 }
 
+/* Estilos responsive para móviles */
+@media (max-width: 991.98px) {
+  .navbar-brand .text-gradient {
+    font-size: 1rem;
+  }
+  
+  .offcanvas {
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+  }
+  
+  .nav-link {
+    margin-bottom: 0.5rem;
+    border-radius: 8px !important;
+  }
+  
+  .nav-link:hover {
+    background-color: var(--background-light) !important;
+  }
+}
+
+/* Mejoras para el offcanvas */
+.offcanvas-body {
+  overflow-y: auto;
+}
+
+.offcanvas-header {
+  background: linear-gradient(45deg, #8B4513, #D2691E);
+  color: white;
+}
+
+.offcanvas-header .btn-close {
+  filter: invert(1);
+}
+
+/* Espaciado para contenido principal */
+body {
+  padding-top: 80px;
+}
+
+@media (max-width: 991.98px) {
+  body {
+    padding-top: 70px;
+  }
+}
+
 h1 {
   font-size: 2.5em;
   line-height: 1.1;
