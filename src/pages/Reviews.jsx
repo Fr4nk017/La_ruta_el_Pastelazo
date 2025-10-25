@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, Badge, Modal } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
-import { formatDateTime } from '../utils';
+import { formatDateTime } from '../utils/dates';
 
 export default function Reviews() {
   const { user, isAuthenticated } = useAuth();

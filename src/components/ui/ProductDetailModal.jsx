@@ -1,7 +1,7 @@
 // Modal de detalles de producto mejorado - La Ruta el Pastelazo
 import PropTypes from 'prop-types';
 import { Modal, Badge, ListGroup, Row, Col, Button, Alert } from 'react-bootstrap';
-import { formatPrice } from '../../utils';
+import { formatPrice } from '../../utils/currency';
 import { productDetails, categoryInfo } from '../../data/products';
 import { PRODUCT_SIZES } from '../../constants/products';
 

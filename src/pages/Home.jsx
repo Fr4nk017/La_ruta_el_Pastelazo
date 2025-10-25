@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Button, Carousel, Alert } from 'react-bootst
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
-import { formatPrice } from '../utils';
+import { formatPrice } from '../utils/currency';
 
 export default function Home() {
   const { isAuthenticated } = useAuth();

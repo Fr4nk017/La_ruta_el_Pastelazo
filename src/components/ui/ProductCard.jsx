@@ -1,8 +1,9 @@
 // Componente ProductCard mejorado - La Ruta el Pastelazo
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
-import { Card, Button, Badge } from 'react-bootstrap';
-import { formatPrice, getImageUrl, handleImageError } from '../../utils';
+import { Card, Button, Badge, Toast } from 'react-bootstrap';
+import { formatPrice } from '../../utils/currency';
+import { getImageUrl, handleImageError } from '../../utils/images';
 import { categoryInfo } from '../../data/products';
 import ProductDetailModal from './ProductDetailModal';
 
@@ -21,9 +22,17 @@ export const ProductCard = memo(({
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
+  };
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    onAddToCart(product);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
   };
 
   const handleImageErrorLocal = (e) => {
@@ -170,10 +179,7 @@ export const ProductCard = memo(({
               <Button 
                 variant="primary" 
                 size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onAddToCart(product);
-                }}
+                onClick={handleAddToCart}
                 style={{ 
                   backgroundColor: '#CD853F', 
                   borderColor: '#CD853F',
@@ -187,6 +193,28 @@ export const ProductCard = memo(({
           </div>
         </Card.Body>
       </Card>
+
+      {/* Toast de confirmación */}
+      <div
+        className="position-fixed top-0 end-0 p-3"
+        style={{ zIndex: 1050 }}
+      >
+        <Toast 
+          show={showToast} 
+          onClose={() => setShowToast(false)}
+          bg="success"
+          autohide
+          delay={3000}
+        >
+          <Toast.Header closeButton={false}>
+            <i className="fas fa-check-circle text-success me-2"></i>
+            <strong className="me-auto">¡Producto agregado!</strong>
+          </Toast.Header>
+          <Toast.Body className="text-white">
+            <strong>{product.name}</strong> se agregó al carrito exitosamente.
+          </Toast.Body>
+        </Toast>
+      </div>
 
       <ProductDetailModal 
         product={product}

@@ -1,20 +1,19 @@
-// Router principal - La Ruta el Pastelazo
-import { lazy } from 'react';
+// Router principal sin lazy loading - La Ruta el Pastelazo
 import { Routes, Route } from 'react-router-dom';
 import { ROUTES } from '../constants';
 
-// Lazy loading de páginas para code splitting y mejor performance
-const Home = lazy(() => import('../pages/Home'));
-const Catalog = lazy(() => import('../pages/Catalog'));
-const CartPage = lazy(() => import('../pages/Cart'));
-const FAQ = lazy(() => import('../pages/FAQ'));
-const Tracking = lazy(() => import('../pages/Tracking'));
-const Profile = lazy(() => import('../pages/Profile'));
-const Checkout = lazy(() => import('../pages/Checkout'));
-const Reviews = lazy(() => import('../pages/Reviews'));
-const RolesApp = lazy(() => import('../pages/RolesApp'));
-const AdminPanel = lazy(() => import('../pages/AdminPanel'));
-const NotFound = lazy(() => import('../pages/NotFound'));
+// Importaciones directas para debugging
+import Home from '../pages/Home';
+import Catalog from '../pages/Catalog';
+import CartPage from '../pages/Cart';
+import FAQ from '../pages/FAQ';
+import Tracking from '../pages/Tracking';
+import Profile from '../pages/Profile';
+import Checkout from '../pages/Checkout';
+import Reviews from '../pages/Reviews';
+import RolesApp from '../pages/RolesApp';
+import AdminPanel from '../pages/AdminPanel';
+import NotFound from '../pages/NotFound';
 
 export default function AppRouter() {
   return (

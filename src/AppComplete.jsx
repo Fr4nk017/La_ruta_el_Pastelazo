@@ -13,6 +13,10 @@ import Catalog from './pages/Catalog'
 import FAQ from './pages/FAQ'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
+import Cart from './pages/Cart'
+import Profile from './pages/Profile'
+import Reviews from './pages/Reviews'
+import Checkout from './pages/Checkout'
 
 // Nuevas páginas de autenticación
 import AdminPanel from './pages/AdminPanel'
@@ -21,46 +25,18 @@ import RolesApp from './pages/RolesApp'
 import UserDashboard from './pages/UserDashboard'
 
 // Componentes existentes que ahora serán páginas protegidas
-import Cart from './components/Cart'
 import ContactForm from './components/ContactForm'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
-// Páginas wrapper para componentes existentes
-const CartPage = () => (
-  <div className="container mt-4">
-    <h2 className="mb-4">Mi Carrito</h2>
-    <Cart />
-  </div>
-)
-
+// Página wrapper para contacto
 const ContactPage = () => (
   <div className="container mt-4">
     <div className="row justify-content-center">
       <div className="col-md-8">
         <h2 className="mb-4 text-center">Contáctanos</h2>
         <ContactForm />
-      </div>
-    </div>
-  </div>
-)
-
-const ProfilePage = () => (
-  <div className="container mt-4">
-    <div className="row">
-      <div className="col-md-8 mx-auto">
-        <div className="card">
-          <div className="card-header">
-            <h4 className="mb-0">
-              <i className="fas fa-user me-2"></i>
-              Mi Perfil
-            </h4>
-          </div>
-          <div className="card-body">
-            <ContactForm />
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -82,13 +58,23 @@ function AppComplete() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/reviews" element={<Reviews />} />
                 
                 {/* Rutas protegidas (requieren login) */}
                 <Route 
                   path="/cart" 
                   element={
                     <ProtectedRoute>
-                      <CartPage />
+                      <Cart />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                <Route 
+                  path="/checkout" 
+                  element={
+                    <ProtectedRoute>
+                      <Checkout />
                     </ProtectedRoute>
                   } 
                 />
@@ -97,7 +83,7 @@ function AppComplete() {
                   path="/profile" 
                   element={
                     <ProtectedRoute>
-                      <ProfilePage />
+                      <Profile />
                     </ProtectedRoute>
                   } 
                 />

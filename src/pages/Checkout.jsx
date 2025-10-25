@@ -4,7 +4,9 @@ import { Container, Row, Col, Card, Form, Button, Alert, ListGroup, Badge, Progr
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
-import { formatPrice, isValidEmail, isValidChileanPhone, getImageUrl, handleImageError } from '../utils';
+import { formatPrice } from '../utils/currency';
+import { isValidEmail, isValidChileanPhone } from '../utils/validation';
+import { getImageUrl, handleImageError } from '../utils/images';
 import { calcOrderTotal } from '../utils/pricing';
 
 export default function Checkout() {

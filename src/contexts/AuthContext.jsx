@@ -1,7 +1,7 @@
 // Context de autenticación - La Ruta el Pastelazo
 import { createContext, useContext, useState } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { generateId } from '../utils';
+import { generateId } from '../utils/helpers';
 
 const AuthContext = createContext(null);
 

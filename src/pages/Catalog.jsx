@@ -1,7 +1,7 @@
 // Página de catálogo ROBUSTA - La Ruta el Pastelazo
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Form, InputGroup, Button, Badge, Card, Modal, Spinner, Alert } from 'react-bootstrap';
-import { products } from '../data/products';
+import { products as defaultProducts } from '../data/products';
 import { useCart } from '../contexts/CartContext';
 import { formatPrice } from '../utils/currency';
 import { getImageUrl, handleImageError } from '../utils/images';
@@ -15,6 +15,7 @@ export default function Catalog() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imageErrors, setImageErrors] = useState(new Set());
+  const [products, setProducts] = useState([]);
 
   // Hook del carrito
   const { add } = useCart();
@@ -38,11 +39,24 @@ export default function Catalog() {
       try {
         setLoading(true);
         
+        // Cargar productos del localStorage o usar productos por defecto
+        const savedProducts = localStorage.getItem('products_data');
+        let loadedProducts;
+        
+        if (savedProducts) {
+          loadedProducts = JSON.parse(savedProducts);
+        } else {
+          loadedProducts = defaultProducts;
+          localStorage.setItem('products_data', JSON.stringify(defaultProducts));
+        }
+        
         // Verificar que los productos estén disponibles
-        if (!products || !Array.isArray(products) || products.length === 0) {
+        if (!loadedProducts || !Array.isArray(loadedProducts) || loadedProducts.length === 0) {
           throw new Error('No se pudieron cargar los productos del catálogo');
         }
 
+        setProducts(loadedProducts);
+        
         // Simular carga para mejor UX
         await new Promise(resolve => setTimeout(resolve, 500));
         

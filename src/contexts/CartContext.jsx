@@ -3,7 +3,7 @@
 import { createContext, useContext, useMemo, useCallback } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { CART_STORAGE_KEY } from '../constants';
-import { generateId } from '../utils';
+import { generateId } from '../utils/helpers';
 
 const CartContext = createContext(null);
 

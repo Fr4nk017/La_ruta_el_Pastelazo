@@ -5,7 +5,8 @@ import { Container, Row, Col, Card, Button, Form, ListGroup, Badge, Alert, Image
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { calcOrderTotal } from '../utils/pricing';
-import { formatPrice, getImageUrl, handleImageError } from '../utils';
+import { formatPrice } from '../utils/currency';
+import { getImageUrl, handleImageError } from '../utils/images';
 
 export default function CartPage(){
   const { cart, add, dec, remove, clear, checkout } = useCart();

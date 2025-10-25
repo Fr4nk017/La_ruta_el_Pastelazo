@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
-import { Layout } from './components/layout';
+import FixedLayout from './components/layout/FixedLayout';
 import AppRouter from './routes/AppRouter';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Loading } from './components/ui';
@@ -15,11 +15,9 @@ export default function App() {
       <BrowserRouter>
         <AuthProvider>
           <CartProvider>
-            <Layout>
-              <Suspense fallback={<Loading fullPage text="Cargando aplicación..." />}>
-                <AppRouter />
-              </Suspense>
-            </Layout>
+            <FixedLayout>
+              <AppRouter />
+            </FixedLayout>
           </CartProvider>
         </AuthProvider>
       </BrowserRouter>

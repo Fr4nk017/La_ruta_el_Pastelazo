@@ -1,8 +1,8 @@
 // Modal de Registro - La Ruta el Pastelazo
 import { useState } from 'react';
-import { Modal, Form, Button, Alert, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
-import { isValidEmail, isValidChileanPhone } from '../../utils';
+import { isValidEmail, isValidChileanPhone } from '../../utils/validation';
 
 export default function RegisterModal({ show, onHide, onSwitchToLogin }) {
   const { register, isLoading } = useAuth();

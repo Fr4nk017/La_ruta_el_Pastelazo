@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - La Ruta el Pastelazo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        .red { background-color: #dc3545; }
+        .red:hover { background-color: #c82333; }
+        .green { background-color: #28a745; }
+        .green:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍰 La Ruta el Pastelazo - Página de Test</h1>
+        
+        <div class="status info">
+            <strong>🔧 Estado del Sistema:</strong> Esta página confirma que el servidor está funcionando correctamente.
+        </div>
+
+        <div class="status success">
+            <strong>✅ Servidor:</strong> Activo en http://localhost:5173/
+        </div>
+
+        <h2>🧪 Pruebas Rápidas</h2>
+        
+        <div>
+            <button onclick="window.location.href='/'">🏠 Página Principal</button>
+            <button onclick="window.location.href='/catalog'">📋 Catálogo</button>
+            <button onclick="window.location.href='/cart'">🛒 Carrito</button>
+            <button onclick="window.location.href='/login'">🔐 Login</button>
+        </div>
+
+        <h2>🛠️ Herramientas de Debug</h2>
+        
+        <div>
+            <button class="green" onclick="checkLocalStorage()">📊 Ver Estado LocalStorage</button>
+            <button class="red" onclick="resetData()">🗑️ Resetear Datos</button>
+        </div>
+
+        <div id="output" style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; font-family: monospace; font-size: 14px;"></div>
+
+        <h2>🔑 Credenciales de Prueba</h2>
+        <div class="status warning">
+            <strong>Admin:</strong> gusty@admin.com / admin123<br>
+            <strong>Trabajador:</strong> trabajador@larutaelpastelazo.cl / worker123<br>
+            <strong>Cliente:</strong> cliente@larutaelpastelazo.cl / client123
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const output = document.getElementById('output');
+            output.innerHTML += new Date().toLocaleTimeString() + ' - ' + message + '<br>';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function checkLocalStorage() {
+            log('📊 Verificando LocalStorage...');
+            
+            const users = JSON.parse(localStorage.getItem('registered_users') || '[]');
+            const currentUser = JSON.parse(localStorage.getItem('current_user') || 'null');
+            const products = JSON.parse(localStorage.getItem('products_data') || '[]');
+            const cart = JSON.parse(localStorage.getItem('cart_items') || '[]');
+            
+            log(`👥 Usuarios registrados: ${users.length}`);
+            log(`👤 Usuario actual: ${currentUser ? currentUser.email : 'Ninguno'}`);
+            log(`🍰 Productos: ${products.length}`);
+            log(`🛒 Items en carrito: ${cart.length}`);
+            
+            if (users.length > 0) {
+                log('🔑 Usuarios disponibles:');
+                users.forEach(user => {
+                    log(`   ${user.role}: ${user.email}`);
+                });
+            }
+        }
+
+        function resetData() {
+            if (confirm('¿Estás seguro de que quieres resetear todos los datos?')) {
+                localStorage.clear();
+                log('🗑️ Todos los datos han sido eliminados');
+                log('🔄 Recarga la página para inicializar datos por defecto');
+            }
+        }
+
+        // Verificar estado inicial
+        log('🍰 Página de test cargada correctamente');
+        log('🔧 Sistema funcionando normalmente');
+        checkLocalStorage();
+    </script>
+</body>
+</html>

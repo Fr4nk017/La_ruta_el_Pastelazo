@@ -36,8 +36,8 @@ export const initializeDefaultData = () => {
 
     const defaultWorker = {
       id: generateId(),
-      email: 'pancho.obrero@gmail.com',
-      password: 'obrero123',
+      email: 'trabajador@larutaelpastelazo.cl',
+      password: 'worker123',
       firstName: 'Francisco',
       lastName: 'Levipil',
       phone: '+56987654321',
