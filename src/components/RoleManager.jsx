@@ -20,12 +20,15 @@ const RoleManager = () => {
         'manage_users',
         'manage_products',
         'view_reports',
-        'manage_system'
+        'manage_system',
+        'update_prices',
+        'add_products',
+        'delete_products'
       ]
     },
     trabajador: {
       name: 'Trabajador',
-      description: 'Gestión de pedidos e inventario',
+      description: 'Gestión de pedidos, inventario y productos',
       color: '#ffc107',
       icon: 'fa-user-tie',
       permissions: [
@@ -33,7 +36,10 @@ const RoleManager = () => {
         'place_orders',
         'manage_orders',
         'view_inventory',
-        'update_order_status'
+        'update_order_status',
+        'manage_products',
+        'update_prices',
+        'add_products'
       ]
     },
     cliente: {
@@ -54,14 +60,17 @@ const RoleManager = () => {
     view_products: 'Ver productos del catálogo',
     place_orders: 'Realizar pedidos',
     manage_users: 'Gestionar usuarios del sistema',
-    manage_products: 'Administrar productos',
+    manage_products: 'Administrar productos existentes',
     view_reports: 'Ver reportes y estadísticas',
     manage_system: 'Configuración del sistema',
     manage_orders: 'Gestionar todos los pedidos',
     view_inventory: 'Ver inventario',
     update_order_status: 'Actualizar estado de pedidos',
     view_own_orders: 'Ver mis pedidos',
-    update_profile: 'Actualizar mi perfil'
+    update_profile: 'Actualizar mi perfil',
+    update_prices: 'Modificar precios de productos',
+    add_products: 'Agregar nuevos productos',
+    delete_products: 'Eliminar productos del catálogo'
   };
 
   // Estadísticas por rol
@@ -268,10 +277,10 @@ const RoleManager = () => {
               </h6>
               <ul className="list-unstyled mb-0">
                 <li className="mb-2">
-                  <strong>Administrador:</strong> Acceso completo al sistema, puede gestionar usuarios y configuración.
+                  <strong>Administrador:</strong> Acceso completo al sistema, puede gestionar usuarios, productos, precios y configuración.
                 </li>
                 <li className="mb-2">
-                  <strong>Trabajador:</strong> Puede gestionar pedidos, inventario y ver reportes básicos.
+                  <strong>Trabajador:</strong> Puede gestionar pedidos, inventario, agregar productos y modificar precios.
                 </li>
                 <li className="mb-2">
                   <strong>Cliente:</strong> Puede navegar el catálogo y realizar pedidos.
