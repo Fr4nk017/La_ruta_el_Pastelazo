@@ -9,7 +9,7 @@ import RegisterModal from '../ui/RegisterModal';
 
 export default function Navbar() {
   const location = useLocation();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, isAdmin, logout } = useAuth();
   const { summary } = useCart();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -98,6 +98,14 @@ export default function Navbar() {
                   Reseñas
                 </Link>
               </li>
+              {isAuthenticated && isAdmin() && (
+                <li className="nav-item">
+                  <Link className={`nav-link ${isActive('/roles-app') ? 'active' : ''}`} to="/roles-app">
+                    <i className="fas fa-users-cog me-1"></i>
+                    Gestión
+                  </Link>
+                </li>
+              )}
               {isAuthenticated ? (
                 <li className="nav-item">
                   <Link className={`nav-link ${isActive('/profile') ? 'active' : ''}`} to="/profile">

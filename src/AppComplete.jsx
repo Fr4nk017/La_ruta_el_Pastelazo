@@ -1,12 +1,12 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import ProtectedRoute from './auth/ProtectedRoute'
 import RoleRoute from './auth/RoleRoute'
-import { AuthProvider } from './contexts/AuthContextEnhanced'
+import { AuthProvider } from './contexts/AuthContext'
 import { CartProvider } from './contexts/CartContext'
 
 // Layout
 import Footer from './components/layout/Footer'
-import NavbarWithAuth from './components/layout/NavbarWithAuth'
+import Navbar from './components/layout/Navbar'
 
 // Páginas existentes
 import Catalog from './pages/Catalog'
@@ -17,6 +17,7 @@ import NotFound from './pages/NotFound'
 // Nuevas páginas de autenticación
 import AdminPanel from './pages/AdminPanel'
 import Login from './pages/Login'
+import RolesApp from './pages/RolesApp'
 import UserDashboard from './pages/UserDashboard'
 
 // Componentes existentes que ahora serán páginas protegidas
@@ -71,7 +72,7 @@ function AppComplete() {
       <CartProvider>
         <Router>
           <div className="min-vh-100 d-flex flex-column">
-            <NavbarWithAuth />
+            <Navbar />
             
             <main className="flex-grow-1">
               <Routes>
@@ -116,6 +117,15 @@ function AppComplete() {
                   element={
                     <RoleRoute allowedRoles={['admin']}>
                       <AdminPanel />
+                    </RoleRoute>
+                  } 
+                />
+                
+                <Route 
+                  path="/roles-app" 
+                  element={
+                    <RoleRoute allowedRoles={['admin']}>
+                      <RolesApp />
                     </RoleRoute>
                   } 
                 />

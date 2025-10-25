@@ -12,6 +12,7 @@ const Tracking = lazy(() => import('../pages/Tracking'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Checkout = lazy(() => import('../pages/Checkout'));
 const Reviews = lazy(() => import('../pages/Reviews'));
+const RolesApp = lazy(() => import('../pages/RolesApp'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 export default function AppRouter() {
@@ -25,6 +26,7 @@ export default function AppRouter() {
       <Route path={ROUTES.PROFILE} element={<Profile />} />
       <Route path={ROUTES.CHECKOUT} element={<Checkout />} />
       <Route path={ROUTES.REVIEWS} element={<Reviews />} />
+      <Route path={ROUTES.ROLES_APP} element={<RolesApp />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
