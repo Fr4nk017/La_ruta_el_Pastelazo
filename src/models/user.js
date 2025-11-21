@@ -51,11 +51,8 @@ const userSchema = new mongoose.Schema({
 });
 
 // Índices compuestos útiles
-userSchema.index({ email: 1, isActive: 1 }); // Para búsquedas de login
-userSchema.index({ isActive: 1, isAdmin: 1 }); // Para filtrar usuarios activos/admin
-userSchema.index({ firstName: 1, lastName: 1 }); // Para búsquedas por nombre completo
-userSchema.index({ createdAt: -1 }); // Para ordenar por fecha de registro
-
-const User = mongoose.model("User", userSchema);
+userSchema.index({ email: 1}, { unique: true }); // Para búsquedas de login
+userSchema.index({ phone: 1 }, { unique: true });
+export const User = mongoose.model("User", userSchema);
 
 export default User;
