@@ -18,8 +18,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
-    trim: true,
-    index: true
+    trim: true
   },
   passwordHash: {
     type: String,
@@ -33,13 +32,11 @@ const userSchema = new mongoose.Schema({
   },
   isActive: {
     type: Boolean,
-    default: true,
-    index: true
+    default: true
   },
   isAdmin: {
     type: Boolean,
-    default: false,
-    index: true
+    default: false
   },
   profileImage: {
     type: String,
@@ -50,9 +47,10 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Índices compuestos útiles
-userSchema.index({ email: 1}, { unique: true }); // Para búsquedas de login
-userSchema.index({ phone: 1 }, { unique: true });
+// Índice único en email (ya declarado con unique: true arriba)
+// Índice único en teléfono
+userSchema.index({ phone: 1 }, { unique: true, sparse: true });
+
 export const User = mongoose.model("User", userSchema);
 
 export default User;
