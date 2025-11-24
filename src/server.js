@@ -8,6 +8,9 @@ import { connectDB } from "./config/db.js";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 import tenantRoutes from "./routes/tenantRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -63,11 +66,10 @@ app.use('/api/tenants', tenantRoutes);
 // Rutas de usuarios (requieren tenant context)
 app.use('/api/users', userRoutes);
 
-// TODO: Agregar más rutas cuando se creen los modelos
-// app.use('/api/roles', roleRoutes);
-// app.use('/api/products', productRoutes);
-// app.use('/api/carts', cartRoutes);
-// app.use('/api/orders', orderRoutes);
+// Rutas de productos, carrito y órdenes (multi-tenant)
+app.use('/api/products', productRoutes);
+app.use('/api/carts', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 /**
  * MANEJO DE ERRORES

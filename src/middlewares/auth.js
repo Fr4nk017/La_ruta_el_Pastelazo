@@ -102,9 +102,13 @@ export function optionalAuth(req, res, next) {
   }
 }
 
+// Alias para compatibilidad
+export const authMiddleware = auth;
+
 export default {
   signToken,
   auth,
+  authMiddleware,
   optionalAuth
 };
  

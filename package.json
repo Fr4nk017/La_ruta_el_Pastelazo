@@ -13,7 +13,12 @@
     "type": "git",
     "url": "git+https://github.com/Fr4nk017/La_ruta_el_Pastelazo_Backend.git"
   },
-  "keywords": ["api", "backend", "express", "mongodb"],
+  "keywords": [
+    "api",
+    "backend",
+    "express",
+    "mongodb"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -28,6 +33,7 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^7.0.0",
     "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
     "zod": "^3.24.1"
