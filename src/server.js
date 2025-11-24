@@ -4,6 +4,9 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+import path from 'path';
 import { connectDB } from "./config/db.js";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 import tenantRoutes from "./routes/tenantRoutes.js";
@@ -70,6 +73,18 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/api/orders', orderRoutes);
+
+// Swagger / OpenAPI
+const openApiSpecPath = path.resolve(process.cwd(), 'openapi.json');
+let openApiSpec = {};
+try {
+  const raw = fs.readFileSync(openApiSpecPath, 'utf-8');
+  openApiSpec = JSON.parse(raw);
+} catch (err) {
+  console.error('⚠️ No se pudo cargar openapi.json:', err.message);
+}
+app.get('/api/docs-json', (req, res) => res.json(openApiSpec));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 /**
  * MANEJO DE ERRORES
