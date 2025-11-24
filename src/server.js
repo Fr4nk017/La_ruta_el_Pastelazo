@@ -5,6 +5,8 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 import { connectDB } from "./config/db.js";
+import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
+import tenantRoutes from "./routes/tenantRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
@@ -17,41 +19,71 @@ connectDB();
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // máximo 100 requests por ventana
-  message: "Demasiadas solicitudes desde esta IP"
+  message: { error: true, message: "Demasiadas solicitudes desde esta IP. Intente más tarde." }
 });
 
-// Middlewares
-app.use(helmet());
-app.use(cors());
-app.use(morgan('combined'));
-app.use(limiter);
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+// Middlewares globales
+app.use(helmet()); // Seguridad HTTP headers
+app.use(cors()); // CORS
+app.use(morgan('combined')); // Logging
+app.use(limiter); // Rate limiting
+app.use(express.json({ limit: '10mb' })); // Parse JSON
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded
 
-// Rutas
-app.use('/api/users', userRoutes);
-
-// Ruta de prueba
+// Ruta de prueba / health check
 app.get('/', (req, res) => {
   res.json({ 
-    message: 'API La Ruta del Pastelazo - Backend funcionando',
-    version: '1.0.0'
+    message: 'La Ruta del Pastelazo - Backend API',
+    version: '2.0.0',
+    status: 'running',
+    multiTenant: true
   });
 });
 
-// Manejo de rutas no encontradas
-app.use((req, res) => {
-  res.status(404).json({ error: 'Ruta no encontrada' });
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
-// Manejo global de errores
-app.use((error, req, res, next) => {
-  console.error('Error:', error);
-  res.status(500).json({ error: 'Error interno del servidor' });
-});
+/**
+ * RUTAS DE LA API
+ * 
+ * Estructura multi-tenant:
+ * - Rutas de tenant: /api/tenants (gestión de tenants)
+ * - Rutas por tenant con slug: /api/:tenantSlug/users, /api/:tenantSlug/products, etc.
+ * - O con header: x-tenant-id para APIs más limpias
+ */
+
+// Rutas de gestión de tenants (públicas y admin)
+app.use('/api/tenants', tenantRoutes);
+
+// Rutas de usuarios (requieren tenant context)
+app.use('/api/users', userRoutes);
+
+// TODO: Agregar más rutas cuando se creen los modelos
+// app.use('/api/roles', roleRoutes);
+// app.use('/api/products', productRoutes);
+// app.use('/api/carts', cartRoutes);
+// app.use('/api/orders', orderRoutes);
+
+/**
+ * MANEJO DE ERRORES
+ * Estos middlewares DEBEN ir al final, después de todas las rutas
+ */
+
+// Manejador de rutas no encontradas (404)
+app.use(notFoundHandler);
+
+// Manejador global de errores
+app.use(errorHandler);
 
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor funcionando en puerto ${PORT}`);
   console.log(`📡 API disponible en http://localhost:${PORT}`);
+  console.log(`🏢 Sistema multi-tenant activado`);
+  console.log(`🌍 Entorno: ${process.env.NODE_ENV || 'development'}`);
 });
