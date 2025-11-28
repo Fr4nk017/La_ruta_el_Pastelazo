@@ -2,14 +2,14 @@
 import { useState } from 'react';
 import { Container, Button, Badge } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthAPI } from '../../contexts/AuthContextAPI';
 import { useCart } from '../../contexts/CartContext';
 import LoginModal from '../ui/LoginModal';
 import RegisterModal from '../ui/RegisterModal';
 
 export default function Navbar() {
   const location = useLocation();
-  const { isAuthenticated, isAdmin, logout } = useAuth();
+  const { isAuthenticated, isAdmin, logout } = useAuthAPI();
   const { summary } = useCart();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -96,6 +96,11 @@ export default function Navbar() {
               <li className="nav-item">
                 <Link className={`nav-link ${isActive('/reviews') ? 'active' : ''}`} to="/reviews">
                   Reseñas
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className={`nav-link ${isActive('/test-api') ? 'active' : ''}`} to="/test-api">
+                  Test API
                 </Link>
               </li>
               {isAuthenticated && isAdmin() && (

@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, ListGroup, Badge, ProgressBar, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 import { formatPrice, isValidEmail, isValidChileanPhone, getImageUrl, handleImageError } from '../utils';
 import { calcOrderTotal } from '../utils/pricing';
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { cart, checkout, clear } = useCart();
-  const { user } = useAuth();
+  const { user } = useAuthAPI();
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState({});

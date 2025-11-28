@@ -1,6 +1,6 @@
 // Componente gestión de roles - La Ruta el Pastelazo
 import { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 import { resetAllData, exportUserData, importUserData } from '../utils/dataInitializer';
 
 const RoleManager = () => {

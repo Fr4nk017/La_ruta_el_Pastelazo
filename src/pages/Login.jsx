@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContextEnhanced';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,7 +9,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated } = useAuthAPI();
   const location = useLocation();
 
   // Si ya está autenticado, redirigir

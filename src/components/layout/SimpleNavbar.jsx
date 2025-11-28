@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Container, Button, Badge, Navbar, Nav, NavDropdown, Offcanvas } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthAPI as useAuth } from '../../contexts/AuthContextAPI';
 import { useCart } from '../../contexts/CartContext';
 
 export default function SimpleNavbar() {

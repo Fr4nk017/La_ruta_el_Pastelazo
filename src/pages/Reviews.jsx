@@ -1,11 +1,11 @@
 // Página de Reseñas - La Ruta el Pastelazo
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, Badge, Modal } from 'react-bootstrap';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 import { formatDateTime } from '../utils/dates';
 
 export default function Reviews() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthAPI();
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
     productName: '',

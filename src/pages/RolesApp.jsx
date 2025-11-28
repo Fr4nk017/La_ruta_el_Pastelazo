@@ -1,6 +1,6 @@
 // Página de gestión de roles y usuarios - La Ruta el Pastelazo
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 import RoleRoute from '../auth/RoleRoute';
 import UserList from '../components/UserList';
 import UserForm from '../components/UserForm';
@@ -8,7 +8,7 @@ import RoleManager from '../components/RoleManager';
 import '../styles/RolesApp.css';
 
 const RolesApp = () => {
-  const { users, isAdmin, createUser, updateUser, deleteUser } = useAuth();
+  const { users, isAdmin, createUser, updateUser, deleteUser } = useAuthAPI();
   const [activeTab, setActiveTab] = useState('users');
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserForm, setShowUserForm] = useState(false);

@@ -1,8 +1,8 @@
 import RoleRoute from '../auth/RoleRoute';
-import { useAuth } from '../contexts/AuthContextEnhanced';
+import { useAuthAPI as useAuth } from '../contexts/AuthContextAPI';
 
 const UserDashboard = () => {
-  const { user } = useAuth();
+  const { user } = useAuthAPI();
 
   return (
     <RoleRoute allowedRoles={['user', 'vendor', 'admin']}>

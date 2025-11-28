@@ -17,36 +17,38 @@
     "test:demo": "echo 'Demostrando frameworks de testing:' && npm run test:jasmine && npm test"
   },
   "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^6.29.1",
-    "react-bootstrap": "^2.10.6",
+    "axios": "^1.13.2",
     "bootstrap": "^5.3.3",
-    "prop-types": "^15.8.1"
+    "prop-types": "^15.8.1",
+    "react": "^19.1.1",
+    "react-bootstrap": "^2.10.6",
+    "react-dom": "^19.1.1",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^6.29.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/ui": "^2.1.8",
     "eslint": "^9.15.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.12.0",
-    "vite": "^6.0.1",
-    "@testing-library/react": "^16.1.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/user-event": "^14.5.2",
-    "vitest": "^2.1.8",
-    "jsdom": "^25.0.1",
-    "@vitest/ui": "^2.1.8",
     "jasmine": "^5.1.0",
     "jasmine-core": "^5.1.1",
+    "jsdom": "^25.0.1",
     "karma": "^6.4.2",
-    "karma-jasmine": "^5.1.0",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
+    "karma-jasmine": "^5.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
-    "phantomjs-prebuilt": "^2.1.16"
+    "phantomjs-prebuilt": "^2.1.16",
+    "vite": "^6.0.1",
+    "vitest": "^2.1.8"
   }
 }

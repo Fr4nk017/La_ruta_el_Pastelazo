@@ -1,14 +1,14 @@
 // Panel de Administración - La Ruta el Pastelazo
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Table, Modal, Form, Alert } from 'react-bootstrap';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 import { Link } from 'react-router-dom';
 import { products } from '../data/products';
 import { formatPrice } from '../utils/currency';
 import { generateId } from '../utils/helpers';
 
 export default function AdminPanel() {
-  const { users, isAdmin, user } = useAuth();
+  const { users, isAdmin, user } = useAuthAPI();
   const [showProductModal, setShowProductModal] = useState(false);
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);

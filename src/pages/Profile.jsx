@@ -1,14 +1,14 @@
 // Página de Perfil de Usuario - La Ruta el Pastelazo
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, Tab, Tabs } from 'react-bootstrap';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 import { useCart } from '../contexts/CartContext';
 import { formatPrice } from '../utils/currency';
 import { formatDateTime } from '../utils/dates';
 
 // Componente de Login integrado
 function LoginForm() {
-  const { login, register, isLoading } = useAuth();
+  const { login, register, isLoading } = useAuthAPI();
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -170,7 +170,7 @@ function LoginForm() {
 }
 
 export default function Profile() {
-  const { user, updateProfile, isAuthenticated } = useAuth();
+  const { user, updateProfile, isAuthenticated } = useAuthAPI();
   const { orders } = useCart();
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });

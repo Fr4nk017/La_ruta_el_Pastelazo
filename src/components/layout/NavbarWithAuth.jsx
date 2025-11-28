@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../contexts/AuthContextEnhanced'
+import { useAuthAPI as useAuth } from '../../contexts/AuthContextAPI'
 import { useCart } from '../../contexts/CartContext'
 
 const NavbarWithAuth = () => {

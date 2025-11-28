@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 import ProtectedRoute from './ProtectedRoute';
 
 const RoleRoute = ({ 
@@ -9,7 +9,7 @@ const RoleRoute = ({
   fallbackComponent = null,
   redirectTo = "/unauthorized" 
 }) => {
-  const { user, hasRole, hasPermission } = useAuth();
+  const { user, hasRole, hasPermission } = useAuthAPI();
 
   // Primero verificar que esté autenticado
   return (
@@ -35,7 +35,7 @@ const RoleChecker = ({
   fallbackComponent, 
   redirectTo 
 }) => {
-  const { hasRole, hasPermission } = useAuth();
+  const { hasRole, hasPermission } = useAuthAPI();
 
   // Verificar roles si se especificaron
   const hasRequiredRole = allowedRoles.length === 0 || hasRole(allowedRoles);

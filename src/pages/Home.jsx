@@ -2,12 +2,12 @@
 // Página de inicio - Pastelería 1000 Sabores
 import { Container, Row, Col, Card, Button, Carousel, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthAPI } from '../contexts/AuthContextAPI';
 import { useCart } from '../contexts/CartContext';
 import { formatPrice } from '../utils/currency';
 
 export default function Home() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthAPI();
   const { add } = useCart();
 
   const featuredProducts = [

@@ -14,6 +14,7 @@ const Checkout = lazy(() => import('../pages/Checkout'));
 const Reviews = lazy(() => import('../pages/Reviews'));
 const RolesApp = lazy(() => import('../pages/RolesApp'));
 const AdminPanel = lazy(() => import('../pages/AdminPanel'));
+const TestAPIConnection = lazy(() => import('../pages/TestAPIConnection'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 export default function AppRouter() {
@@ -29,6 +30,7 @@ export default function AppRouter() {
       <Route path={ROUTES.REVIEWS} element={<Reviews />} />
       <Route path={ROUTES.ROLES_APP} element={<RolesApp />} />
       <Route path={ROUTES.ADMIN} element={<AdminPanel />} />
+      <Route path="/test-api" element={<TestAPIConnection />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
