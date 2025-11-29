@@ -4,6 +4,7 @@ import { Container, Button, Badge } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthAPI } from '../../contexts/AuthContextAPI';
 import { useCart } from '../../contexts/CartContext';
+import { ROUTES } from '../../constants';
 import LoginModal from '../ui/LoginModal';
 import RegisterModal from '../ui/RegisterModal';
 
@@ -104,12 +105,20 @@ export default function Navbar() {
                 </Link>
               </li>
               {isAuthenticated && isAdmin() && (
-                <li className="nav-item">
-                  <Link className={`nav-link ${isActive('/roles-app') ? 'active' : ''}`} to="/roles-app">
-                    <i className="fas fa-users-cog me-1"></i>
-                    Gestión
-                  </Link>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <Link className={`nav-link ${isActive(ROUTES.ADMIN) ? 'active' : ''}`} to={ROUTES.ADMIN}>
+                      <i className="fas fa-cogs me-1"></i>
+                      Admin Panel
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className={`nav-link ${isActive('/roles-app') ? 'active' : ''}`} to="/roles-app">
+                      <i className="fas fa-users-cog me-1"></i>
+                      Gestión
+                    </Link>
+                  </li>
+                </>
               )}
               {isAuthenticated ? (
                 <li className="nav-item">

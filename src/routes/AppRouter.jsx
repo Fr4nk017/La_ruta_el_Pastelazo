@@ -15,6 +15,8 @@ const Reviews = lazy(() => import('../pages/Reviews'));
 const RolesApp = lazy(() => import('../pages/RolesApp'));
 const AdminPanel = lazy(() => import('../pages/AdminPanel'));
 const TestAPIConnection = lazy(() => import('../pages/TestAPIConnection'));
+
+const Login = lazy(() => import('../pages/Login'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 export default function AppRouter() {

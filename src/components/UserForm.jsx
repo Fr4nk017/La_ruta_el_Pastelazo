@@ -74,9 +74,9 @@ const UserForm = ({ user, isEditing, onSubmit, onCancel }) => {
       }
     }
 
-    // Teléfono (opcional pero validar formato si se proporciona)
-    if (formData.phone && !/^\d{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-      newErrors.phone = 'El teléfono debe tener 10 dígitos';
+    // Teléfono: exactamente 9 dígitos
+    if (formData.phone && !/^\d{9}$/.test(formData.phone.replace(/\D/g, ''))) {
+      newErrors.phone = 'El teléfono debe tener exactamente 9 dígitos';
     }
 
     setErrors(newErrors);
@@ -108,13 +108,15 @@ const UserForm = ({ user, isEditing, onSubmit, onCancel }) => {
 
     try {
       const submitData = { ...formData };
-      
+      // Siempre enviar el campo 'role' aunque no se cambie
+      if (!submitData.role) {
+        submitData.role = 'cliente';
+      }
       // Si está editando y no cambió la contraseña, no incluirla
       if (isEditing && !formData.password) {
         delete submitData.password;
         delete submitData.confirmPassword;
       }
-
       await onSubmit(submitData);
     } catch (error) {
       console.error('Error al enviar formulario:', error);

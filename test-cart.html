@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cart Functionality</title>
+</head>
+<body>
+    <h1>Test de Funcionalidad del Carrito</h1>
+    <p>Abre las herramientas de desarrollador y ejecuta:</p>
+    <pre>
+// Simular un producto de la API
+const testProduct = {
+    _id: "692a73227a2174b067ee58f9",
+    id: "692a73227a2174b067ee58f9", 
+    name: "Torta de Prueba",
+    price: 25000,
+    img: "test.jpg",
+    category: "clasicas"
+};
+
+// Probar agregar al carrito (esto debería estar disponible si CartContext funciona)
+console.log('Test product:', testProduct);
+
+// Verifica si las funciones del carrito están disponibles
+console.log('Available cart functions:', window.cart || 'No cart functions found');
+    </pre>
+    
+    <p>Ve a <a href="http://localhost:5173" target="_blank">http://localhost:5173</a> y prueba agregar un producto.</p>
+    
+    <script>
+        // Verificar el localStorage
+        console.log('Current cart in localStorage:', localStorage.getItem('cart'));
+        
+        // Función de prueba
+        window.testCart = function(product) {
+            console.log('Testing cart with:', product);
+            
+            // Simular la función add
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.push({...product, qty: 1});
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            console.log('Updated cart:', cart);
+            return cart;
+        };
+        
+        console.log('Test functions loaded. Use testCart(product) to test.');
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { authAPI } from '../services/api';
+import { authAPI, usersAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 // Contexto de autenticación que usa API real
@@ -20,7 +20,9 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   error: null,
-  token: null
+  token: null,
+  users: [],
+  usersLoading: false
 };
 
 // Actions del reducer
@@ -30,7 +32,12 @@ const authActions = {
   LOGOUT: 'LOGOUT',
   SET_ERROR: 'SET_ERROR',
   CLEAR_ERROR: 'CLEAR_ERROR',
-  UPDATE_USER: 'UPDATE_USER'
+  UPDATE_USER: 'UPDATE_USER',
+  SET_USERS: 'SET_USERS',
+  SET_USERS_LOADING: 'SET_USERS_LOADING',
+  ADD_USER: 'ADD_USER',
+  UPDATE_USER_LIST: 'UPDATE_USER_LIST',
+  REMOVE_USER: 'REMOVE_USER'
 };
 
 // Reducer para manejar el estado de autenticación
@@ -79,6 +86,39 @@ const authReducer = (state, action) => {
         isLoading: false
       };
 
+    case authActions.SET_USERS:
+      return {
+        ...state,
+        users: action.payload,
+        usersLoading: false
+      };
+
+    case authActions.SET_USERS_LOADING:
+      return {
+        ...state,
+        usersLoading: action.payload
+      };
+
+    case authActions.ADD_USER:
+      return {
+        ...state,
+        users: [...state.users, action.payload]
+      };
+
+    case authActions.UPDATE_USER_LIST:
+      return {
+        ...state,
+        users: state.users.map(user => 
+          user._id === action.payload._id ? action.payload : user
+        )
+      };
+
+    case authActions.REMOVE_USER:
+      return {
+        ...state,
+        users: state.users.filter(user => user._id !== action.payload)
+      };
+
     default:
       return state;
   }
@@ -98,11 +138,13 @@ export const AuthProvider = ({ children }) => {
         try {
           // Verificar si el token es válido obteniendo el perfil
           const profileResponse = await authAPI.getProfile();
+          
           if (profileResponse.success) {
+            const userData = profileResponse.data;
             dispatch({
               type: authActions.LOGIN_SUCCESS,
               payload: {
-                user: profileResponse.data,
+                user: userData,
                 token: token
               }
             });
@@ -258,6 +300,149 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: authActions.CLEAR_ERROR });
   };
 
+  // =====================
+  // Funciones de gestión de usuarios (solo admin)
+  // =====================
+
+  // Cargar todos los usuarios
+  const loadUsers = async () => {
+    if (!isAdmin()) {
+      toast.error('No tienes permisos para ver usuarios');
+      return { success: false, error: 'Sin permisos' };
+    }
+
+    dispatch({ type: authActions.SET_USERS_LOADING, payload: true });
+
+    try {
+      const response = await usersAPI.getAll();
+      console.log('👥 Users loaded:', response);
+      
+      // El backend devuelve { message: "...", statusCode: 200, data: { users: [...] } }
+      if (response.statusCode === 200 || response.success !== false) {
+        const users = response.data?.users || response.users || response.data || [];
+        dispatch({
+          type: authActions.SET_USERS,
+          payload: Array.isArray(users) ? users : []
+        });
+        return { success: true, users };
+      } else {
+        throw new Error(response.message || 'Error al cargar usuarios');
+      }
+    } catch (error) {
+      console.error('❌ Error loading users:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Error de conexión';
+      dispatch({ type: authActions.SET_USERS_LOADING, payload: false });
+      toast.error('Error al cargar usuarios: ' + errorMessage);
+      return { success: false, error: errorMessage };
+    }
+  };
+
+  // Crear nuevo usuario
+  const createUser = async (userData) => {
+    if (!isAdmin()) {
+      toast.error('No tienes permisos para crear usuarios');
+      return { success: false, error: 'Sin permisos' };
+    }
+
+    try {
+      const response = await usersAPI.create(userData);
+      console.log('✅ User created:', response);
+      
+      if (response.statusCode === 201 || response.success !== false) {
+        const newUser = response.data?.user || response.data;
+        dispatch({
+          type: authActions.ADD_USER,
+          payload: newUser
+        });
+        toast.success('Usuario creado exitosamente');
+        return { success: true, user: newUser };
+      } else {
+        throw new Error(response.message || 'Error al crear usuario');
+      }
+    } catch (error) {
+      console.error('❌ Error creating user:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Error de conexión';
+      toast.error('Error al crear usuario: ' + errorMessage);
+      return { success: false, error: errorMessage };
+    }
+  };
+
+  // Actualizar usuario existente
+  const updateUser = async (userId, userData) => {
+    if (!isAdmin()) {
+      toast.error('No tienes permisos para actualizar usuarios');
+      return { success: false, error: 'Sin permisos' };
+    }
+
+    console.log('📝 Updating user:', { userId, userData });
+
+    try {
+      const response = await usersAPI.update(userId, userData);
+      console.log('✅ User updated response:', response);
+      
+      if (response.statusCode === 200 || response.success !== false) {
+        const updatedUser = response.data || response;
+        console.log('🔄 Updated user data:', updatedUser);
+        
+        // Asegurar que tenga _id
+        if (updatedUser._id || updatedUser.id) {
+          const userWithId = {
+            ...updatedUser,
+            _id: updatedUser._id || updatedUser.id
+          };
+          
+          dispatch({
+            type: authActions.UPDATE_USER_LIST,
+            payload: userWithId
+          });
+          toast.success('Usuario actualizado exitosamente');
+          return { success: true, user: userWithId };
+        } else {
+          throw new Error('Usuario actualizado pero sin ID válido');
+        }
+      } else {
+        throw new Error(response.message || 'Error al actualizar usuario');
+      }
+    } catch (error) {
+      console.error('❌ Error updating user:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Error de conexión';
+      toast.error('Error al actualizar usuario: ' + errorMessage);
+      return { success: false, error: errorMessage };
+    }
+  };
+
+  // Eliminar usuario
+  const deleteUser = async (userId) => {
+    if (!isAdmin()) {
+      toast.error('No tienes permisos para eliminar usuarios');
+      return { success: false, error: 'Sin permisos' };
+    }
+
+    console.log('🗑️ Deleting user:', userId);
+
+    try {
+      const response = await usersAPI.delete(userId);
+      console.log('✅ User deleted response:', response);
+      
+      if (response.statusCode === 200 || response.success !== false) {
+        // Eliminar el usuario de la lista local
+        dispatch({
+          type: authActions.REMOVE_USER,
+          payload: userId
+        });
+        toast.success('Usuario eliminado permanentemente');
+        return { success: true };
+      } else {
+        throw new Error(response.message || 'Error al eliminar usuario');
+      }
+    } catch (error) {
+      console.error('❌ Error deleting user:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Error de conexión';
+      toast.error('Error al eliminar usuario: ' + errorMessage);
+      return { success: false, error: errorMessage };
+    }
+  };
+
   // Valor del contexto
   const value = {
     // Estado
@@ -266,13 +451,21 @@ export const AuthProvider = ({ children }) => {
     isLoading: state.isLoading,
     error: state.error,
     token: state.token,
+    users: state.users,
+    usersLoading: state.usersLoading,
 
-    // Funciones
+    // Funciones de autenticación
     login,
     register,
     logout,
     updateProfile,
     clearError,
+
+    // Funciones de gestión de usuarios (admin)
+    loadUsers,
+    createUser,
+    updateUser,
+    deleteUser,
 
     // Utilidades
     hasRole,

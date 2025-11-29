@@ -1,7 +1,7 @@
 // Componente lista de usuarios - La Ruta el Pastelazo
 import { useState, useMemo } from 'react';
 
-const UserList = ({ users, onEdit, onDelete }) => {
+const UserList = ({ users, usersLoading, onEdit, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -138,81 +138,90 @@ const UserList = ({ users, onEdit, onDelete }) => {
       </div>
 
       {/* Tabla de usuarios */}
-      <div className="table-responsive">
-        <table className="table table-hover users-table">
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>Email</th>
-              <th>Teléfono</th>
-              <th>Rol</th>
-              <th>Estado</th>
-              <th>Fecha Registro</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentUsers.length === 0 ? (
+      {usersLoading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+          <p className="mt-2 text-muted">Cargando usuarios desde la base de datos...</p>
+        </div>
+      ) : (
+        <div className="table-responsive">
+          <table className="table table-hover users-table">
+            <thead>
               <tr>
-                <td colSpan="7" className="text-center py-5">
-                  <i className="fas fa-users fa-3x text-muted mb-3 d-block"></i>
-                  <p className="text-muted">No se encontraron usuarios</p>
-                </td>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Fecha Registro</th>
+                <th>Acciones</th>
               </tr>
-            ) : (
-              currentUsers.map(user => (
-                <tr key={user.id}>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      <div className="avatar me-3">
-                        <div className="avatar-placeholder">
-                          {user.firstName.charAt(0)}{user.lastName.charAt(0)}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="fw-bold">{user.firstName} {user.lastName}</div>
-                        <small className="text-muted">ID: {user.id}</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{user.email}</td>
-                  <td>{user.phone || 'No especificado'}</td>
-                  <td>
-                    <span className={getRoleBadgeClass(user.role)}>
-                      {getRoleDisplayName(user.role)}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${user.isActive ? 'active' : 'inactive'}`}>
-                      <span className="status-indicator"></span>
-                      {user.isActive ? 'Activo' : 'Inactivo'}
-                    </span>
-                  </td>
-                  <td>{formatDate(user.createdAt)}</td>
-                  <td>
-                    <div className="action-buttons">
-                      <button
-                        className="btn btn-action btn-edit"
-                        onClick={() => onEdit(user)}
-                        title="Editar usuario"
-                      >
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <button
-                        className="btn btn-action btn-delete"
-                        onClick={() => onDelete(user.id)}
-                        title="Eliminar usuario"
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {currentUsers.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-5">
+                    <i className="fas fa-users fa-3x text-muted mb-3 d-block"></i>
+                    <p className="text-muted">No se encontraron usuarios</p>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : (
+                currentUsers.map(user => (
+                  <tr key={user._id || user.id}>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        <div className="avatar me-3">
+                          <div className="avatar-placeholder">
+                            {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="fw-bold">{user.firstName} {user.lastName}</div>
+                          <small className="text-muted">ID: {user._id || user.id}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{user.email}</td>
+                    <td>{user.phone || 'No especificado'}</td>
+                    <td>
+                      <span className={getRoleBadgeClass(user.role)}>
+                        {getRoleDisplayName(user.role)}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`status-badge ${user.isActive ? 'active' : 'inactive'}`}>
+                        <span className="status-indicator"></span>
+                        {user.isActive ? 'Activo' : 'Inactivo'}
+                      </span>
+                    </td>
+                    <td>{formatDate(user.createdAt)}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button
+                          className="btn btn-action btn-edit"
+                          onClick={() => onEdit(user)}
+                          title="Editar usuario"
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        <button
+                          className="btn btn-action btn-delete"
+                          onClick={() => onDelete(user._id || user.id)}
+                          title="Eliminar usuario"
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Paginación */}
       {totalPages > 1 && (

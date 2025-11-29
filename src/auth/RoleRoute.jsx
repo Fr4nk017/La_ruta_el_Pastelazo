@@ -38,7 +38,8 @@ const RoleChecker = ({
   const { hasRole, hasPermission } = useAuthAPI();
 
   // Verificar roles si se especificaron
-  const hasRequiredRole = allowedRoles.length === 0 || hasRole(allowedRoles);
+  const hasRequiredRole = allowedRoles.length === 0 || 
+    allowedRoles.some(role => hasRole(role));
 
   // Verificar permisos si se especificaron
   const hasRequiredPermissions = requiredPermissions.length === 0 || 
@@ -77,7 +78,7 @@ const UnauthorizedComponent = ({ user, requiredRoles }) => (
           </div>
           <div className="card-body text-center">
             <p className="mb-3">
-              Hola <strong>{user?.name}</strong>, no tienes permisos para acceder a esta sección.
+              Hola <strong>{user?.firstName} {user?.lastName}</strong>, no tienes permisos para acceder a esta sección.
             </p>
             <p className="text-muted mb-3">
               Tu rol actual: <span className="badge bg-secondary">{user?.role}</span>
@@ -89,13 +90,22 @@ const UnauthorizedComponent = ({ user, requiredRoles }) => (
                 ))}
               </p>
             )}
-            <button 
-              className="btn btn-primary" 
-              onClick={() => window.history.back()}
-            >
-              <i className="fas fa-arrow-left me-2"></i>
-              Volver
-            </button>
+            <div className="d-flex gap-2 justify-content-center">
+              <button 
+                className="btn btn-primary" 
+                onClick={() => window.history.back()}
+              >
+                <i className="fas fa-arrow-left me-2"></i>
+                Volver
+              </button>
+              <button 
+                className="btn btn-outline-primary" 
+                onClick={() => window.location.href = '/'}
+              >
+                <i className="fas fa-home me-2"></i>
+                Inicio
+              </button>
+            </div>
           </div>
         </div>
       </div>

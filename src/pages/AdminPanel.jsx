@@ -1,11 +1,10 @@
 // Panel de Administración - La Ruta el Pastelazo
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Table, Modal, Form, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Table, Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import { useAuthAPI } from '../contexts/AuthContextAPI';
+import { productsAPI } from '../services/api';
 import { Link } from 'react-router-dom';
-import { products } from '../data/products';
 import { formatPrice } from '../utils/currency';
-import { generateId } from '../utils/helpers';
 
 export default function AdminPanel() {
   const { users, isAdmin, user } = useAuthAPI();
@@ -14,13 +13,15 @@ export default function AdminPanel() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productPrice, setProductPrice] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
-  const [localProducts, setLocalProducts] = useState([]);
+  const [apiProducts, setApiProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: '',
     price: '',
     description: '',
-    category: 'tortas',
-    image: ''
+    category: 'clasicas',
+    img: ''
   });
 
   // Verificar si el usuario puede administrar (admin o trabajador)
@@ -29,14 +30,31 @@ export default function AdminPanel() {
   };
 
   useEffect(() => {
-    const savedProducts = localStorage.getItem('products_data');
-    if (savedProducts) {
-      setLocalProducts(JSON.parse(savedProducts));
-    } else {
-      setLocalProducts(products);
-      localStorage.setItem('products_data', JSON.stringify(products));
-    }
+    loadProducts();
   }, []);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await productsAPI.getAll();
+      console.log('Products response:', response);
+      const products = response.products || response.data?.products || response;
+      // Filtrar productos inactivos para que no se muestren
+      const activeProducts = (Array.isArray(products) ? products : []).filter(p => p.isActive !== false);
+      setApiProducts(activeProducts);
+    } catch (error) {
+      console.error('Error loading products:', error);
+      setMessage({ type: 'danger', text: 'Error al cargar productos de la base de datos' });
+      setApiProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showMessage = (type, text) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+  };
 
   const handleEditPrice = (product) => {
     setSelectedProduct(product);
@@ -44,78 +62,89 @@ export default function AdminPanel() {
     setShowProductModal(true);
   };
 
-  const handleSavePrice = () => {
+  const handleSavePrice = async () => {
     if (!selectedProduct) return;
 
     const newPrice = parseInt(productPrice);
     if (isNaN(newPrice) || newPrice <= 0) {
-      setMessage({ type: 'danger', text: 'Por favor ingresa un precio válido' });
+      showMessage('danger', 'Por favor ingresa un precio válido');
       return;
     }
 
-    const updatedProducts = localProducts.map(p =>
-      p.id === selectedProduct.id ? { ...p, price: newPrice } : p
-    );
-
-    setLocalProducts(updatedProducts);
-    localStorage.setItem('products_data', JSON.stringify(updatedProducts));
-
-    setMessage({ type: 'success', text: `Precio actualizado para ${selectedProduct.name}` });
-    setShowProductModal(false);
-    setSelectedProduct(null);
-    setProductPrice('');
-
-    setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+    try {
+      setSaving(true);
+      await productsAPI.update(selectedProduct._id, { price: newPrice });
+      showMessage('success', `Precio actualizado para ${selectedProduct.name}`);
+      setShowProductModal(false);
+      setSelectedProduct(null);
+      setProductPrice('');
+      loadProducts(); // Recargar productos
+    } catch (error) {
+      console.error('Error updating price:', error);
+      showMessage('danger', 'Error al actualizar el precio');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleAddProduct = () => {
+  const handleAddProduct = async () => {
     if (!newProduct.name || !newProduct.price || !newProduct.description) {
-      setMessage({ type: 'danger', text: 'Por favor completa todos los campos obligatorios' });
+      showMessage('danger', 'Por favor completa todos los campos obligatorios');
       return;
     }
 
     const price = parseInt(newProduct.price);
     if (isNaN(price) || price <= 0) {
-      setMessage({ type: 'danger', text: 'Por favor ingresa un precio válido' });
+      showMessage('danger', 'Por favor ingresa un precio válido');
       return;
     }
 
-    const productToAdd = {
-      id: generateId(),
-      name: newProduct.name,
-      price: price,
-      description: newProduct.description,
-      category: newProduct.category,
-      image: newProduct.image || '/imagenes/tortas/default.png',
-      featured: false
-    };
+    try {
+      setSaving(true);
+      const productData = {
+        name: newProduct.name,
+        price: price,
+        description: newProduct.description,
+        category: newProduct.category,
+        img: newProduct.img || '/imagenes/tortas/default.png',
+        isActive: true
+      };
 
-    const updatedProducts = [...localProducts, productToAdd];
-    setLocalProducts(updatedProducts);
-    localStorage.setItem('products_data', JSON.stringify(updatedProducts));
-
-    setMessage({ type: 'success', text: `Producto "${newProduct.name}" agregado exitosamente` });
-    setShowAddProductModal(false);
-    setNewProduct({
-      name: '',
-      price: '',
-      description: '',
-      category: 'tortas',
-      image: ''
-    });
-
-    setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+      console.log('Creating product:', productData);
+      await productsAPI.create(productData);
+      
+      showMessage('success', `Producto "${newProduct.name}" agregado exitosamente a la base de datos`);
+      setShowAddProductModal(false);
+      setNewProduct({
+        name: '',
+        price: '',
+        description: '',
+        category: 'clasicas',
+        img: ''
+      });
+      loadProducts(); // Recargar productos
+    } catch (error) {
+      console.error('Error creating product:', error);
+      showMessage('danger', `Error al crear producto: ${error.message || 'Error desconocido'}`);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleDeleteProduct = (productId) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) return;
+  const handleDeleteProduct = async (productId) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar este producto de la base de datos?')) return;
 
-    const updatedProducts = localProducts.filter(p => p.id !== productId);
-    setLocalProducts(updatedProducts);
-    localStorage.setItem('products_data', JSON.stringify(updatedProducts));
-
-    setMessage({ type: 'success', text: 'Producto eliminado exitosamente' });
-    setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+    try {
+      setSaving(true);
+      await productsAPI.delete(productId);
+      showMessage('success', 'Producto eliminado exitosamente de la base de datos');
+      loadProducts(); // Recargar productos
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      showMessage('danger', 'Error al eliminar producto');
+    } finally {
+      setSaving(false);
+    }
   };  if (!canManage()) {
     return (
       <Container className="py-5">
@@ -203,67 +232,96 @@ export default function AdminPanel() {
 
       <Card className="mb-4">
         <Card.Header className="d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">Gestión de Productos y Precios</h5>
-          <small className="text-muted">Total: {localProducts.length} productos</small>
+          <h5 className="mb-0">Gestión de Productos y Precios (MongoDB)</h5>
+          <small className="text-muted">Total: {apiProducts.length} productos</small>
         </Card.Header>
         <Card.Body>
-          <Table responsive hover>
-            <thead>
-              <tr>
-                <th>Producto</th>
-                <th>Precio Actual</th>
-                <th>Categoría</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {localProducts.map(product => (
-                <tr key={product.id}>
-                  <td>
-                    <div>
-                      <strong>{product.name}</strong>
-                      <br />
-                      <small className="text-muted">{product.description?.substring(0, 50)}...</small>
-                    </div>
-                  </td>
-                  <td>
-                    <strong className="text-primary">{formatPrice(product.price)}</strong>
-                  </td>
-                  <td>
-                    <span className="badge bg-secondary">{product.category}</span>
-                  </td>
-                  <td>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="me-2"
-                      onClick={() => handleEditPrice(product)}
-                    >
-                      Editar Precio
-                    </Button>
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={() => handleDeleteProduct(product.id)}
-                    >
-                      Eliminar
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          
-          {localProducts.length === 0 && (
+          {loading ? (
+            <div className="text-center py-5">
+              <Spinner animation="border" />
+              <p className="mt-2">Cargando productos desde la base de datos...</p>
+            </div>
+          ) : apiProducts.length === 0 ? (
             <div className="text-center py-4">
-              <p className="text-muted">No hay productos disponibles</p>
+              <p className="text-muted">No hay productos en la base de datos</p>
               <Button 
                 variant="primary" 
                 onClick={() => setShowAddProductModal(true)}
+                disabled={saving}
               >
                 Agregar Primer Producto
               </Button>
             </div>
+          ) : (
+            <Table responsive hover>
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Precio Actual</th>
+                  <th>Categoría</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {apiProducts.map(product => (
+                  <tr key={product._id}>
+                    <td>
+                      <div className="d-flex align-items-center">
+                        {product.img && (
+                          <img 
+                            src={product.img} 
+                            alt={product.name}
+                            style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                            className="rounded me-2"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        )}
+                        <div>
+                          <strong>{product.name}</strong>
+                          <br />
+                          <small className="text-muted">{product.description?.substring(0, 50)}...</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <strong className="text-primary">{formatPrice(product.price)}</strong>
+                    </td>
+                    <td>
+                      <span className="badge bg-secondary">{product.category}</span>
+                    </td>
+                    <td>
+                      <span className={`badge ${product.isActive !== false ? 'bg-success' : 'bg-danger'}`}>
+                        {product.isActive !== false ? 'Activo' : 'Inactivo'}
+                      </span>
+                    </td>
+                    <td>
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        className="me-2"
+                        onClick={() => handleEditPrice(product)}
+                        disabled={saving}
+                      >
+                        Editar Precio
+                      </Button>
+                      {user?.role === 'admin' && (
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => handleDeleteProduct(product._id)}
+                          disabled={saving}
+                        >
+                          Eliminar
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
           )}
         </Card.Body>
       </Card>
@@ -293,11 +351,18 @@ export default function AdminPanel() {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowProductModal(false)}>
+          <Button variant="secondary" onClick={() => setShowProductModal(false)} disabled={saving}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleSavePrice}>
-            Guardar Precio
+          <Button variant="primary" onClick={handleSavePrice} disabled={saving}>
+            {saving ? (
+              <>
+                <Spinner animation="border" size="sm" className="me-2" />
+                Guardando...
+              </>
+            ) : (
+              'Guardar Precio'
+            )}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -354,11 +419,14 @@ export default function AdminPanel() {
                     value={newProduct.category}
                     onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
                   >
-                    <option value="tortas">Tortas</option>
-                    <option value="pasteles">Pasteles</option>
-                    <option value="cupcakes">Cupcakes</option>
-                    <option value="postres">Postres</option>
+                    <option value="clasicas">Tortas Clásicas</option>
                     <option value="especiales">Especiales</option>
+                    <option value="frutas">Frutales</option>
+                    <option value="gourmet">Gourmet</option>
+                    <option value="clasicos">Postres Clásicos</option>
+                    <option value="saludables">Saludables</option>
+                    <option value="veganos">Veganos</option>
+                    <option value="individuales">Individuales</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -367,9 +435,9 @@ export default function AdminPanel() {
                   <Form.Label>URL de Imagen (opcional)</Form.Label>
                   <Form.Control
                     type="text"
-                    value={newProduct.image}
-                    onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
-                    placeholder="/imagenes/tortas/mi-torta.png"
+                    value={newProduct.img}
+                    onChange={(e) => setNewProduct({...newProduct, img: e.target.value})}
+                    placeholder="https://ejemplo.com/imagen.jpg"
                   />
                 </Form.Group>
               </Col>
@@ -384,11 +452,18 @@ export default function AdminPanel() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAddProductModal(false)}>
+          <Button variant="secondary" onClick={() => setShowAddProductModal(false)} disabled={saving}>
             Cancelar
           </Button>
-          <Button variant="success" onClick={handleAddProduct}>
-            Agregar Producto
+          <Button variant="success" onClick={handleAddProduct} disabled={saving}>
+            {saving ? (
+              <>
+                <Spinner animation="border" size="sm" className="me-2" />
+                Creando...
+              </>
+            ) : (
+              'Agregar Producto'
+            )}
           </Button>
         </Modal.Footer>
       </Modal>

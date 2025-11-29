@@ -1,13 +1,13 @@
 // Aplicación principal - La Ruta el Pastelazo
 import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContextAPI'; // Cambiado a AuthContextAPI
+import { AuthProvider } from './contexts/AuthContextAPI';
 import { CartProvider } from './contexts/CartContext';
 import FixedLayout from './components/layout/FixedLayout';
 import AppRouter from './routes/AppRouter';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Loading } from './components/ui';
-import { Toaster } from 'react-hot-toast'; // Agregado para notificaciones
+import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 export default function App() {

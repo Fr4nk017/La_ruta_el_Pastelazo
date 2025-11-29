@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Form, Button, Alert, ListGroup, Badge, Progr
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useAuthAPI } from '../contexts/AuthContextAPI';
+import { ordersAPI } from '../services/api';
 import { formatPrice } from '../utils/currency';
 import { isValidEmail, isValidChileanPhone } from '../utils/validation';
 import { getImageUrl, handleImageError } from '../utils/images';
@@ -12,7 +13,7 @@ import { calcOrderTotal } from '../utils/pricing';
 export default function Checkout() {
   const navigate = useNavigate();
   const { cart, checkout, clear } = useCart();
-  const { user } = useAuthAPI();
+  const { user, isAuthenticated } = useAuthAPI();
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState({});
@@ -178,29 +179,70 @@ export default function Checkout() {
 
   const confirmOrder = async () => {
     setShowConfirmModal(false);
+    // Si no está autenticado, mostrar error y no continuar
+    if (!isAuthenticated) {
+      setErrors({ general: 'Debes iniciar sesión para confirmar tu compra y ver tu historial de pedidos.' });
+      return;
+    }
     setIsProcessing(true);
 
     try {
-      // Simular procesamiento
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      console.log('🛒 Starting order creation...');
+      console.log('🛒 Cart contents:', cart);
+      // Preparar datos para la API
+      const orderData = {
+        items: cart.map(item => {
+          console.log('📦 Processing item:', item);
+          return {
+            productId: item._id || item.id, // Usar _id si existe, sino id como fallback
+            quantity: item.qty
+          };
+        }),
+        customerInfo: {
+          firstName: customerInfo.firstName,
+          lastName: customerInfo.lastName,
+          email: customerInfo.email,
+          phone: customerInfo.phone,
+          address: customerInfo.address,
+          comuna: customerInfo.comuna,
+          reference: customerInfo.reference || ''
+        },
+        deliveryDate: customerInfo.deliveryDate,
+        deliveryTime: customerInfo.deliveryTime,
+        paymentMethod: customerInfo.paymentMethod,
+        specialInstructions: customerInfo.specialInstructions || '',
+        couponCode: couponApplied ? couponCode : ''
+      };
 
-      const newOrderId = checkout({
-        fecha: customerInfo.deliveryDate,
-        hora: customerInfo.deliveryTime,
-        metodo: customerInfo.paymentMethod,
-        comuna: customerInfo.comuna,
-        cupon: couponApplied ? couponCode : '',
-        customerInfo: customerInfo,
-        total: orderTotal.total
-      });
+      console.log('📦 Order data prepared:', orderData);
+
+      // Crear orden en el backend
+      const response = await ordersAPI.create(orderData);
       
+      console.log('✅ Order created successfully:', response);
+      
+      // Usar _id de la orden para seguimiento
+      const newOrderId = response.data._id || response.data.orderNumber;
       setOrderId(newOrderId);
+      // Guardar el último orderId en localStorage para fallback en seguimiento
+      if (newOrderId) {
+        localStorage.setItem('lastOrderId', newOrderId);
+      }
       setOrderSuccess(true);
       setIsProcessing(false);
       clear(); // Limpiar carrito después del pedido exitoso
-      
     } catch (error) {
-      setErrors({ general: 'Error al procesar el pedido. Intenta nuevamente.' });
+      console.error('❌ Order creation failed:', error);
+      
+      let errorMessage = 'Error al procesar el pedido. Intenta nuevamente.';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setErrors({ general: errorMessage });
       setIsProcessing(false);
     }
   };
@@ -218,17 +260,15 @@ export default function Checkout() {
                   <p className="lead mb-4">
                     Tu pedido <Badge bg="primary" className="fs-6">#{orderId}</Badge> ha sido recibido exitosamente.
                   </p>
-                  
                   <Alert variant="info" className="mb-4">
                     <strong>📞 ¿Qué sigue?</strong><br/>
                     Te contactaremos en las próximas 2 horas para confirmar tu pedido y coordinar la entrega.
                   </Alert>
-
                   <div className="d-grid gap-2 d-md-flex justify-content-md-center">
                     <Button 
                       variant="primary" 
                       size="lg"
-                      onClick={() => navigate('/tracking')}
+                      onClick={() => navigate(`/tracking?id=${orderId}`)}
                       style={{ backgroundColor: '#8B4513', borderColor: '#8B4513' }}
                     >
                       📦 Seguir Pedido

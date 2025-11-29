@@ -8,11 +8,18 @@ import RoleManager from '../components/RoleManager';
 import '../styles/RolesApp.css';
 
 const RolesApp = () => {
-  const { users, isAdmin, createUser, updateUser, deleteUser } = useAuthAPI();
+  const { users, usersLoading, isAdmin, loadUsers, createUser, updateUser, deleteUser } = useAuthAPI();
   const [activeTab, setActiveTab] = useState('users');
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserForm, setShowUserForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  // Cargar usuarios al montar el componente
+  useEffect(() => {
+    if (isAdmin()) {
+      loadUsers();
+    }
+  }, []);
 
   // Estadísticas de usuarios
   const userStats = {
@@ -48,7 +55,7 @@ const RolesApp = () => {
   const handleSubmitUser = async (userData) => {
     let result;
     if (isEditing) {
-      result = await updateUser(selectedUser.id, userData);
+      result = await updateUser(selectedUser._id, userData);
     } else {
       result = await createUser(userData);
     }
@@ -188,6 +195,7 @@ const RolesApp = () => {
                   {activeTab === 'users' && (
                     <UserList
                       users={users}
+                      usersLoading={usersLoading}
                       onEdit={handleEditUser}
                       onDelete={handleDeleteUser}
                     />

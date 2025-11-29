@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 // Context del carrito de compras - La Ruta el Pastelazo
-import { createContext, useContext, useMemo, useCallback } from 'react';
+import { createContext, useContext, useMemo, useCallback, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { CART_STORAGE_KEY } from '../constants';
 import { generateId } from '../utils/helpers';
@@ -19,9 +19,59 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useLocalStorage(CART_STORAGE_KEY, []);
   const [orders, setOrders] = useLocalStorage('orders_history', []);
 
+  // TEMPORAL: Deshabilitar limpieza automática para debugging
+  useEffect(() => {
+    console.log('🔍 Cart useEffect - Current cart:', cart);
+    
+    const hasOldProducts = cart.some(item => 
+      typeof item.id === 'string' && 
+      !item.id.match(/^[0-9a-fA-F]{24}$/) && 
+      !item._id // No tiene _id de MongoDB
+    );
+    
+    if (hasOldProducts) {
+      console.log('🧹 Detected old products in cart, but NOT clearing for debugging...');
+      console.log('🔍 Old products detected:', cart.filter(item => 
+        typeof item.id === 'string' && 
+        !item.id.match(/^[0-9a-fA-F]{24}$/) && 
+        !item._id
+      ));
+      // setCart([]); // Comentado temporalmente
+    } else {
+      console.log('✅ No old products detected in cart');
+    }
+  }, []); // Solo ejecutar una vez al montar el componente
+
+  // Test function para debugging
+  const testAdd = useCallback(() => {
+    console.log('🧪 Test add function called');
+    const uniqueId = `test-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const testProduct = {
+      _id: uniqueId,
+      id: uniqueId,
+      name: `Producto de Prueba ${new Date().toLocaleTimeString()}`,
+      price: 10000,
+      image: "test.jpg",
+      qty: 1
+    };
+    
+    console.log('🧪 Adding test product:', testProduct);
+    
+    setCart(currentCart => {
+      console.log('🧪 Current cart before test add:', currentCart);
+      const newCart = [...currentCart, testProduct];
+      console.log('🧪 New cart after test add:', newCart);
+      return newCart;
+    });
+  }, []);
+
   // Agregar producto al carrito
   const add = useCallback((product) => {
+    console.log('🛒 Adding product to cart:', product);
+    
     setCart(currentCart => {
+      console.log('🛒 Current cart before adding:', currentCart);
+      
       const existingIndex = currentCart.findIndex(item => item.id === product.id);
       
       if (existingIndex > -1) {
@@ -30,10 +80,13 @@ export function CartProvider({ children }) {
           ...updatedCart[existingIndex],
           qty: updatedCart[existingIndex].qty + 1
         };
+        console.log('🛒 Updated existing item, new cart:', updatedCart);
         return updatedCart;
       }
       
-      return [...currentCart, { ...product, qty: 1 }];
+      const newCart = [...currentCart, { ...product, qty: 1 }];
+      console.log('🛒 Added new item, new cart:', newCart);
+      return newCart;
     });
   }, [setCart]);
 
@@ -135,6 +188,7 @@ export function CartProvider({ children }) {
     cart,
     orders,
     add,
+    testAdd,
     dec,
     inc,
     remove,
@@ -148,6 +202,7 @@ export function CartProvider({ children }) {
     cart,
     orders,
     add,
+    testAdd,
     dec,
     inc,
     remove,

@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Form, InputGroup, Button, Badge, Card, Modal, Spinner, Alert } from 'react-bootstrap';
 import { products as defaultProducts } from '../data/products';
+import { productsAPI } from '../services/api';
 import { useCart } from '../contexts/CartContext';
 import { formatPrice } from '../utils/currency';
 import { getImageUrl, handleImageError } from '../utils/images';
@@ -16,9 +17,10 @@ export default function Catalog() {
   const [error, setError] = useState(null);
   const [imageErrors, setImageErrors] = useState(new Set());
   const [products, setProducts] = useState([]);
+  const [addingToCart, setAddingToCart] = useState(null); // Para feedback visual
 
   // Hook del carrito
-  const { add } = useCart();
+  const { add, testAdd } = useCart();
 
   // Función debounce optimizada
   const debounce = useCallback((func, wait) => {
@@ -39,31 +41,67 @@ export default function Catalog() {
       try {
         setLoading(true);
         
-        // Cargar productos del localStorage o usar productos por defecto
-        const savedProducts = localStorage.getItem('products_data');
-        let loadedProducts;
+        console.log('🔄 Loading products from API...');
         
-        if (savedProducts) {
-          loadedProducts = JSON.parse(savedProducts);
+        // Cargar productos de la API
+        const apiResponse = await productsAPI.getAll();
+        
+        console.log('✅ API response:', apiResponse);
+        
+        // Extraer productos del response (la API devuelve {products: [...], pagination: {...}})
+        const apiProducts = apiResponse.products || apiResponse;
+        
+        console.log('✅ Products array:', apiProducts);
+        
+        // Limpiar carrito si tiene productos antiguos con IDs de string (solo una vez)
+        const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const hasOldProducts = currentCart.some(item => 
+          typeof item.id === 'string' && 
+          !item.id.match(/^[0-9a-fA-F]{24}$/) && 
+          !item._id
+        );
+        
+        if (hasOldProducts) {
+          console.log('🧹 Cleaning old cart products with string IDs');
+          localStorage.removeItem('cart');
+          // Notificar al usuario
+          console.log('ℹ️ Cart was cleared because it contained old product format');
+        }
+        
+        // Mapear productos para asegurar compatibilidad
+        const mappedProducts = Array.isArray(apiProducts) ? apiProducts.map(product => {
+          console.log('🔧 Original product:', product);
+          const mapped = {
+            _id: product._id,
+            id: product._id, // Usar _id como id para compatibilidad con componentes
+            name: product.name,
+            price: product.price || 0,
+            category: product.category || 'otros',
+            description: product.description || '',
+            img: product.img || product.image || '',
+            // Mantener todas las propiedades originales
+            ...product
+          };
+          console.log('🔧 Mapped product:', mapped);
+          return mapped;
+        }) : [];
+        
+        if (!mappedProducts || mappedProducts.length === 0) {
+          console.warn('⚠️ No products from API, using default products');
+          setProducts(defaultProducts);
         } else {
-          loadedProducts = defaultProducts;
-          localStorage.setItem('products_data', JSON.stringify(defaultProducts));
+          console.log('✅ Setting mapped products:', mappedProducts.length, 'products');
+          setProducts(mappedProducts);
         }
-        
-        // Verificar que los productos estén disponibles
-        if (!loadedProducts || !Array.isArray(loadedProducts) || loadedProducts.length === 0) {
-          throw new Error('No se pudieron cargar los productos del catálogo');
-        }
-
-        setProducts(loadedProducts);
-        
-        // Simular carga para mejor UX
-        await new Promise(resolve => setTimeout(resolve, 500));
         
         setError(null);
       } catch (err) {
-        console.error('Error inicializando catálogo:', err);
-        setError(err.message);
+        console.error('❌ Error loading products from API:', err);
+        console.warn('🔄 Falling back to default products');
+        
+        // Fallback a productos por defecto en caso de error
+        setProducts(defaultProducts);
+        setError(null); // No mostrar error al usuario, usar fallback
       } finally {
         setLoading(false);
       }
@@ -108,7 +146,7 @@ export default function Catalog() {
 
     // Filtro por categoría
     const mappedCategory = categoryMapping[selectedCategory];
-    if (mappedCategory !== 'all') {
+    if (mappedCategory && mappedCategory !== 'all') {
       filtered = filtered.filter(product => 
         product && product.category === mappedCategory
       );
@@ -126,8 +164,16 @@ export default function Catalog() {
       );
     }
 
+    // Si no hay filtro de búsqueda ni de categoría, mostrar todos los productos
+    if (
+      (!searchTerm.trim()) && 
+      (mappedCategory === 'all' || !selectedCategory)
+    ) {
+      return products;
+    }
+
     return filtered;
-  }, [selectedCategory, searchTerm]);
+  }, [selectedCategory, searchTerm, products]);
 
   // Búsqueda con debounce
   const debouncedSearch = useMemo(
@@ -148,26 +194,51 @@ export default function Catalog() {
     if (searchInput) searchInput.value = '';
   }, []);
 
+  // Función de diagnóstico para debugging
+  const debugProduct = (product, action) => {
+    console.group(`🔍 Debug: ${action}`);
+    console.log('Product object:', product);
+    console.log('Product._id:', product._id);
+    console.log('Product.id:', product.id);
+    console.log('Product.name:', product.name);
+    console.log('Product.price:', product.price);
+    console.log('Product type:', typeof product);
+    console.log('Product keys:', Object.keys(product));
+    console.groupEnd();
+  };
+
   const handleAddToCart = useCallback((product) => {
     try {
-      if (!product || !product.id) {
-        throw new Error('Producto no válido');
+      debugProduct(product, 'handleAddToCart - Before validation');
+      
+      if (!product || (!product.id && !product._id)) {
+        throw new Error('Producto no válido - sin ID');
       }
       
-      add({
-        id: product.id,
+      // Feedback visual
+      setAddingToCart(product._id || product.id);
+      
+      const productToAdd = {
+        id: product._id || product.id,
+        _id: product._id,
         name: product.name,
         price: product.price,
         image: product.img,
         qty: 1
-      });
-
-      // Mostrar feedback visual (opcional)
-      // toast.success(`${product.name} agregado al carrito`);
+      };
+      
+      debugProduct(productToAdd, 'handleAddToCart - Product to add');
+      
+      console.log('🛒 Calling add function...');
+      add(productToAdd);
+      console.log('✅ Add function called successfully');
+      
+      // Limpiar feedback visual después de 1 segundo
+      setTimeout(() => setAddingToCart(null), 1000);
       
     } catch (error) {
-      console.error('Error agregando al carrito:', error);
-      // toast.error('Error al agregar producto');
+      console.error('❌ Error agregando al carrito:', error);
+      setAddingToCart(null);
     }
   }, [add]);
 
@@ -256,6 +327,14 @@ export default function Catalog() {
               <Badge bg="info" className="fs-6 px-3 py-2">
                 🚚 Delivery disponible
               </Badge>
+              <Button 
+                variant="warning" 
+                size="sm" 
+                onClick={testAdd}
+                className="ms-2"
+              >
+                🧪 Test Add
+              </Button>
             </div>
           </div>
 
@@ -386,10 +465,18 @@ export default function Catalog() {
                             variant="primary"
                             size="sm"
                             onClick={() => handleAddToCart(product)}
+                            disabled={addingToCart === product.id}
                             style={{ backgroundColor: '#8B4513', borderColor: '#8B4513' }}
                             className="d-flex align-items-center gap-1"
                           >
-                            🛒 Agregar
+                            {addingToCart === product.id ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm me-1"></span>
+                                Agregando...
+                              </>
+                            ) : (
+                              <>🛒 Agregar</>
+                            )}
                           </Button>
                         </div>
                       </div>
@@ -628,7 +715,7 @@ export default function Catalog() {
       </Modal>
 
       {/* Estilos CSS inline para animaciones */}
-      <style jsx>{`
+      <style>{`
         .product-card:hover .hover-overlay {
           background-color: rgba(0,0,0,0.1) !important;
         }
