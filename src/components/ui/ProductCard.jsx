@@ -94,12 +94,21 @@ export const ProductCard = memo(({
             </Badge>
           ))}
           
+          {/* Fondo de loading más amigable */}
           {!imageLoaded && (
             <div 
-              className="d-flex align-items-center justify-content-center bg-light"
-              style={{ height: imageHeight, borderRadius: '12px 12px 0 0' }}
+              className="d-flex align-items-center justify-content-center"
+              style={{ 
+                height: imageHeight, 
+                borderRadius: '12px 12px 0 0',
+                background: 'linear-gradient(135deg, #fffbe7 0%, #ffe0ec 100%)',
+                color: '#b48a78',
+                fontSize: '1.2rem',
+                fontWeight: 'bold'
+              }}
             >
-              <div className="text-muted">Cargando...</div>
+              <span role="img" aria-label="pastel" style={{ fontSize: '2rem', marginRight: 8 }}>🍰</span>
+              Cargando imagen...
             </div>
           )}
           

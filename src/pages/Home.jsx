@@ -15,21 +15,21 @@ export default function Home() {
       id: 'TC001',
       name: 'Torta Cuadrada de Chocolate',
       price: 15000,
-      image: '/imagenes/tortas/Torta Cuadrada de Chocolate.png',
+      image: '/imagenes/tortas/torta_cuadrada_chocolate.png',
       description: 'Deliciosa torta de chocolate con capas de ganache y un toque de avellanas.'
     },
     {
       id: 'TT002', 
       name: 'Torta Circular de Manjar',
       price: 12000,
-      image: '/imagenes/tortas/Torta_Circular _de _Manjar.png',
+      image: '/imagenes/tortas/torta_circular_manjar.png',
       description: 'Torta tradicional chilena con manjar y nueces, un deleite clásico.'
     },
     {
       id: 'TL001',
       name: 'Torta Tres Leches', 
       price: 13000,
-      image: '/imagenes/tortas/TRES-LECHES-1.webp',
+      image: '/imagenes/tortas/tres_leches_1.webp',
       description: 'Bizcocho suave empapado en tres tipos de leche, cubierto con merengue y frutas.'
     }
   ];
@@ -74,11 +74,11 @@ export default function Home() {
           <Carousel className="shadow rounded-4 overflow-hidden" data-bs-ride="carousel">
             <Carousel.Item>
               <img
-                className="d-block w-100"
-                src="/imagenes/tortas/Guinnes.jpg"
-                alt="Récord Guinness torta más grande del mundo"
-                style={{ maxHeight: '340px', objectFit: 'cover' }}
-              />
+                  className="d-block w-100"
+                  src="/imagenes/tortas/guinnes.jpg"
+                  alt="Récord Guinness torta más grande del mundo"
+                  style={{ maxHeight: '340px', objectFit: 'cover' }}
+                />
               <Carousel.Caption className="d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
                 <h2 className="display-6 font-pacifico">¡Bienvenidos a Pastelería 1000 Sabores!</h2>
                 <p>Referente en la repostería chilena desde 1975.<br />¡Récord Guinness de la torta más grande del mundo!</p>
@@ -87,11 +87,11 @@ export default function Home() {
             
             <Carousel.Item>
               <img
-                className="d-block w-100"
-                src="/imagenes/tortas/Torta Especial de Cumpleaños.png"
-                alt="Torta de cumpleaños personalizada"
-                style={{ maxHeight: '340px', objectFit: 'cover' }}
-              />
+                  className="d-block w-100"
+                  src="/imagenes/tortas/torta_especial_cumpleanos.png"
+                  alt="Torta de cumpleaños personalizada"
+                  style={{ maxHeight: '340px', objectFit: 'cover' }}
+                />
               <Carousel.Caption className="d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
                 <h2 className="display-6 font-pacifico">Personaliza tu torta</h2>
                 <p>Elige tamaño, relleno y mensaje especial para cada ocasión.</p>
@@ -100,11 +100,11 @@ export default function Home() {
 
             <Carousel.Item>
               <img
-                className="d-block w-100"
-                src="/imagenes/tortas2/torta cuadrada de frutas.jpg"
-                alt="Torta de frutas frescas"
-                style={{ maxHeight: '340px', objectFit: 'cover' }}
-              />
+                  className="d-block w-100"
+                  src="/imagenes/tortas2/torta_cuadrada_frutas.jpg"
+                  alt="Torta de frutas frescas"
+                  style={{ maxHeight: '340px', objectFit: 'cover' }}
+                />
               <Carousel.Caption className="d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
                 <h2 className="display-6 font-pacifico">50 años endulzando Chile</h2>
                 <p>Tradición, calidad y creatividad en cada porción.</p>

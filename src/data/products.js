@@ -5,7 +5,7 @@ export const products = [
     id: "torta_choco_cuadrada",
     name: "Torta Cuadrada de Chocolate",
     price: 14990,
-    img: "/imagenes/tortas/Torta Cuadrada de Chocolate.png",
+    img: "/imagenes/tortas/torta_cuadrada_chocolate.png",
     category: "clasicas",
     description: "Deliciosa torta de chocolate húmeda con cobertura de chocolate intenso."
   },
@@ -13,7 +13,7 @@ export const products = [
     id: "torta_vainilla_circular",
     name: "Torta Circular de Vainilla",
     price: 12990,
-    img: "/imagenes/tortas/Torta_Circular_de_Vainilla.png",
+    img: "/imagenes/tortas/torta_circular_vainilla.png",
     category: "clasicas",
     description: "Esponjosa torta de vainilla con suave crema de mantequilla."
   },
@@ -21,7 +21,7 @@ export const products = [
     id: "torta_manjar",
     name: "Torta Circular de Manjar",
     price: 15990,
-    img: "/imagenes/tortas/Torta_Circular _de _Manjar.png",
+    img: "/imagenes/tortas/torta_circular_manjar.png",
     category: "clasicas",
     description: "Torta de vainilla rellena con exquisito manjar casero."
   },
@@ -29,7 +29,7 @@ export const products = [
     id: "torta_tres_leches",
     name: "Torta Tres Leches",
     price: 16990,
-    img: "/imagenes/tortas/TRES-LECHES-1.webp",
+    img: "/imagenes/tortas/tres_leches_1.webp",
     category: "especiales",
     description: "Tradicional torta tres leches con cobertura de merengue."
   },
@@ -39,7 +39,7 @@ export const products = [
     id: "torta_cumpleanos",
     name: "Torta Especial de Cumpleaños",
     price: 18990,
-    img: "/imagenes/tortas/Torta Especial de Cumpleaños.png",
+    img: "/imagenes/tortas/torta_especial_cumpleanos.png",
     category: "especiales",
     description: "Torta personalizada perfecta para celebraciones especiales."
   },
@@ -47,7 +47,7 @@ export const products = [
     id: "torta_boda",
     name: "Torta Especial de Boda",
     price: 89990,
-    img: "/imagenes/tortas2/torta-especial-de-boda.jpg",
+    img: "/imagenes/tortas2/torta_especial_boda.jpg",
     category: "especiales",
     description: "Elegante torta de boda de múltiples pisos, personalizable."
   },
@@ -55,7 +55,7 @@ export const products = [
     id: "torta_guinness",
     name: "Torta Récord Guinness",
     price: 24990,
-    img: "/imagenes/tortas/Guinnes.jpg",
+    img: "/imagenes/tortas/guinnes.jpg",
     category: "especiales",
     description: "Réplica de nuestra famosa torta récord Guinness de 1995."
   },
@@ -73,7 +73,7 @@ export const products = [
     id: "torta_papaya",
     name: "Torta de Papaya",
     price: 14990,
-    img: "/imagenes/tortas/Torta_de_Papaya.png",
+    img: "/imagenes/tortas/torta_papaya.png",
     category: "frutales",
     description: "Exótica torta de papaya con toque tropical."
   },
@@ -81,7 +81,7 @@ export const products = [
     id: "torta_uva_chardonnay",
     name: "Torta de Uva Chardonnay",
     price: 19990,
-    img: "/imagenes/tortas/Torta_de_uva_Chardonnay.png",
+    img: "/imagenes/tortas/torta_uva_chardonnay.png",
     category: "gourmet",
     description: "Sofisticada torta con uvas y un toque de Chardonnay."
   },
@@ -89,7 +89,7 @@ export const products = [
     id: "torta_frutas_cuadrada",
     name: "Torta Cuadrada de Frutas",
     price: 16990,
-    img: "/imagenes/tortas/torta cuadrada de frutas.jpg",
+    img: "/imagenes/tortas/torta_cuadrada_frutas.jpg",
     category: "frutales",
     description: "Colorida torta decorada con frutas frescas de temporada."
   },
@@ -97,7 +97,7 @@ export const products = [
     id: "torta_naranja_clasica",
     name: "Torta de Naranja Clásica",
     price: 12990,
-    img: "/imagenes/tortas2/torta-naranja.jpg",
+    img: "/imagenes/tortas2/torta_naranja.jpg",
     category: "frutales",
     description: "Clásica torta de naranja con glaseado cítrico."
   },
@@ -105,7 +105,7 @@ export const products = [
     id: "torta_frutas_tradicional",
     name: "Torta de Frutas Tradicional",
     price: 15990,
-    img: "/imagenes/tortas2/torta cuadrada de frutas.jpg",
+    img: "/imagenes/tortas2/torta_cuadrada_frutas.jpg",
     category: "frutales",
     description: "Torta tradicional decorada con frutas frescas variadas."
   },
@@ -115,7 +115,7 @@ export const products = [
     id: "tiramisu_clasico",
     name: "Tiramisú Clásico",
     price: 11990,
-    img: "/imagenes/tortas/Tiramisú_Clásico.png",
+    img: "/imagenes/tortas/tiramisu_clasico.png",
     category: "postres",
     description: "Auténtico tiramisú italiano con café y mascarpone."
   },
@@ -123,7 +123,7 @@ export const products = [
     id: "tiramisu_premium",
     name: "Tiramisú Clásico Premium",
     price: 13990,
-    img: "/imagenes/tortas2/tiramisu clasico.jpg",
+    img: "/imagenes/tortas2/tiramisu_clasico.jpg",
     category: "postres",
     description: "Versión premium del clásico tiramisú con ingredientes importados."
   },
@@ -131,7 +131,7 @@ export const products = [
     id: "mousse_chocolate",
     name: "Mousse de Chocolate",
     price: 9990,
-    img: "/imagenes/tortas/Mousse_de_Chocolate.png",
+    img: "/imagenes/tortas/mousse_chocolate.png",
     category: "postres",
     description: "Sedoso mousse de chocolate belga, irresistible."
   },
@@ -139,7 +139,7 @@ export const products = [
     id: "mousse_chocolate_premium",
     name: "Mousse de Chocolate Premium",
     price: 11990,
-    img: "/imagenes/tortas2/mousse de chocolate.jpg",
+    img: "/imagenes/tortas2/mousse_chocolate.jpg",
     category: "postres",
     description: "Mousse de chocolate premium con chocolate 70% cacao."
   },
@@ -149,7 +149,7 @@ export const products = [
     id: "empanada_manzana",
     name: "Empanada de Manzana",
     price: 3990,
-    img: "/imagenes/tortas/Empanada_de_Manzana.png",
+    img: "/imagenes/tortas/empanada_manzana.png",
     category: "reposteria",
     description: "Crujiente empanada rellena de manzana y canela."
   },
@@ -157,7 +157,7 @@ export const products = [
     id: "kuchen_frambuesa",
     name: "Kuchen de Frambuesa",
     price: 12990,
-    img: "/imagenes/tortas/Torta_de_kuchen_de_frambuesa.png",
+    img: "/imagenes/tortas/torta_kuchen_frambuesa.png",
     category: "tradicionales",
     description: "Tradicional kuchen alemán con frambuesas frescas."
   },
@@ -165,7 +165,7 @@ export const products = [
     id: "tarta_santiago",
     name: "Tarta de Santiago",
     price: 15990,
-    img: "/imagenes/tortas2/TARTA-DE-SANTIAGO.jpg",
+    img: "/imagenes/tortas2/tarta_de_santiago.jpg",
     category: "tradicionales",
     description: "Tradicional tarta española de almendras."
   },
@@ -175,7 +175,7 @@ export const products = [
     id: "brownie_sin_gluten",
     name: "Brownie Sin Gluten",
     price: 8990,
-    img: "/imagenes/tortas2/brownie sin gluten.avif",
+    img: "/imagenes/tortas2/brownie_sin_gluten.avif",
     category: "sin-gluten",
     description: "Delicioso brownie libre de gluten, perfecto para celíacos."
   },
@@ -183,7 +183,7 @@ export const products = [
     id: "pan_sin_gluten",
     name: "Pan Sin Gluten",
     price: 6990,
-    img: "/imagenes/tortas2/Pan-sin-gluten.jpg",
+    img: "/imagenes/tortas2/pan_sin_gluten.jpg",
     category: "sin-gluten",
     description: "Pan artesanal libre de gluten, suave y esponjoso."
   },
@@ -193,7 +193,7 @@ export const products = [
     id: "cheesecake_sin_azucar",
     name: "Cheesecake Sin Azúcar",
     price: 14990,
-    img: "/imagenes/tortas2/cheesecake sin azucar.jpg",
+    img: "/imagenes/tortas2/cheesecake_sin_azucar.jpg",
     category: "sin-azucar",
     description: "Cremoso cheesecake endulzado naturalmente."
   },
@@ -201,7 +201,7 @@ export const products = [
     id: "torta_naranja_sin_azucar",
     name: "Torta de Naranja Sin Azúcar",
     price: 13990,
-    img: "/imagenes/tortas2/torta sin azucar de naranja.webp",
+    img: "/imagenes/tortas2/torta_sin_azucar_naranja.webp",
     category: "sin-azucar",
     description: "Torta de naranja endulzada con stevia natural."
   },
@@ -211,7 +211,7 @@ export const products = [
     id: "galletas_veganas",
     name: "Galletas Veganas",
     price: 7990,
-    img: "/imagenes/tortas2/galletas veganas.jpg",
+    img: "/imagenes/tortas2/galletas_veganas.jpg",
     category: "vegana",
     description: "Deliciosas galletas 100% veganas con avena y chía."
   },
@@ -219,7 +219,7 @@ export const products = [
     id: "torta_vegana_chocolate_arandanos",
     name: "Torta Vegana de Chocolate y Arándanos",
     price: 17990,
-    img: "/imagenes/tortas2/torta-vegana-chocolate-arandanos.jpg",
+    img: "/imagenes/tortas2/torta_vegana_chocolate_arandanos.jpg",
     category: "vegana",
     description: "Torta vegana de chocolate con arándanos frescos."
   }

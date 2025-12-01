@@ -14,60 +14,56 @@ export const useAuth = () => {
 };
 
 export function AuthProvider({ children }) {
+  // Limpiar usuarios locales antiguos al cargar el contexto (solo una vez)
+  // Esto evita confusión: ahora el registro es solo vía backend, no localStorage
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('registered_users');
+  }
   const [user, setUser] = useLocalStorage('current_user', null);
   const [users, setUsers] = useLocalStorage('registered_users', []);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Registrar nuevo usuario
+  // Registrar nuevo usuario usando la API real del backend
+  // Antes: este método solo guardaba usuarios en localStorage, por eso el registro fallaba y no se creaba el usuario en MongoDB.
+  // Ahora: hace una petición POST a /api/auth/register y maneja la respuesta del backend.
   const register = async (userData) => {
     setIsLoading(true);
     try {
-      const { email, password, firstName, lastName, phone } = userData;
-      
-      // Verificar si el usuario ya existe
-      const existingUser = users.find(u => u.email === email);
-      if (existingUser) {
-        throw new Error('El email ya está registrado');
+      // Ajusta la URL según tu entorno (puede ser /api/auth/register si usas proxy en dev, o http://localhost:3001/api/auth/register)
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // El backend devuelve status 400/409/500 con mensaje
+        throw new Error(data.message || 'Error al registrar usuario');
       }
 
-      const newUser = {
-        id: generateId(),
-        email,
-        password, // En producción, esto debería estar hasheado
-        firstName,
-        lastName,
-        phone,
-        role: 'cliente', // Rol por defecto
-        permissions: ['view_products', 'place_orders'],
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        preferences: {
-          newsletter: true,
-          promotions: true
-        }
+      // El backend responde con { success, user, token, ... }
+      const userSession = {
+        id: data.user._id,
+        email: data.user.email,
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+        phone: data.user.phone,
+        role: data.user.role,
+        permissions: data.user.permissions,
+        isActive: data.user.isActive,
+        preferences: data.user.preferences
       };
 
-      setUsers(prevUsers => [...prevUsers, newUser]);
-      
-      // Crear sesión automáticamente
-      const userSession = {
-        id: newUser.id,
-        email: newUser.email,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        phone: newUser.phone,
-        role: newUser.role,
-        permissions: newUser.permissions,
-        isActive: newUser.isActive,
-        preferences: newUser.preferences
-      };
-      
-      setUser(userSession);
+      setUser(userSession); // Guarda la sesión en localStorage
       setIsLoading(false);
       return { success: true, user: userSession };
-      
     } catch (error) {
       setIsLoading(false);
+      // Devuelve el mensaje de error del backend o error de red
       return { success: false, error: error.message };
     }
   };

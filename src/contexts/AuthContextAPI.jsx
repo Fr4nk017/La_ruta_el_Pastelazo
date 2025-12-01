@@ -128,19 +128,27 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Verificar si hay un token guardado al cargar la app
+  // =============================
+  // Persistencia de sesión (rehidratación)
+  // =============================
+  // Al montar la app, intenta recuperar el token y usuario de localStorage.
+  // Si hay token, llama a /users/profile para validar y obtener el usuario actualizado.
+  // Si el token es inválido o expiró, limpia todo y fuerza logout.
+  // Esto permite que la sesión NO se pierda al recargar la página.
   useEffect(() => {
     const initializeAuth = async () => {
       const token = localStorage.getItem('authToken');
+      // El usuario guardado puede estar desactualizado, pero lo usamos para mostrar loading rápido
       const savedUser = localStorage.getItem('user');
 
-      if (token && savedUser) {
+      if (token) {
         try {
-          // Verificar si el token es válido obteniendo el perfil
+          // Llamar al backend para validar el token y obtener el usuario actualizado
           const profileResponse = await authAPI.getProfile();
-          
-          if (profileResponse.success) {
+          if (profileResponse && profileResponse.data) {
             const userData = profileResponse.data;
+            // Guardar usuario actualizado en localStorage
+            localStorage.setItem('user', JSON.stringify(userData));
             dispatch({
               type: authActions.LOGIN_SUCCESS,
               payload: {
@@ -149,38 +157,41 @@ export const AuthProvider = ({ children }) => {
               }
             });
           } else {
-            // Token inválido, limpiar datos
+            // Token inválido o usuario no encontrado
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');
             dispatch({ type: authActions.LOGOUT });
           }
         } catch (error) {
-          // Error al verificar token, limpiar datos
+          // Error al validar token (expirado, inválido, etc.)
           localStorage.removeItem('authToken');
           localStorage.removeItem('user');
           dispatch({ type: authActions.LOGOUT });
         }
       } else {
+        // No hay token, marcar como no autenticado
         dispatch({ type: authActions.SET_LOADING, payload: false });
       }
     };
-
     initializeAuth();
   }, []);
 
-  // Función de login
+  // =============================
+  // Login: guarda token y usuario en localStorage y contexto
+  // =============================
   const login = async (credentials) => {
     dispatch({ type: authActions.SET_LOADING, payload: true });
     dispatch({ type: authActions.CLEAR_ERROR });
 
     try {
       const response = await authAPI.login(credentials);
-      
       if (response.success) {
         // Soportar ambas estructuras: response.data o response.data.data
         const userData = response.data?.user || response.user;
         const token = response.data?.token || response.token;
-        
+        // Guardar token y usuario en localStorage para persistencia
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('user', JSON.stringify(userData));
         dispatch({
           type: authActions.LOGIN_SUCCESS,
           payload: {
@@ -188,7 +199,6 @@ export const AuthProvider = ({ children }) => {
             token: token
           }
         });
-        
         toast.success(`¡Bienvenido, ${userData.firstName}!`);
         return { success: true, user: userData };
       } else {
@@ -232,16 +242,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Función de logout
+  // =============================
+  // Logout: limpia token, usuario y estado global
+  // =============================
   const logout = async () => {
     dispatch({ type: authActions.SET_LOADING, payload: true });
-
     try {
       await authAPI.logout();
     } catch (error) {
       // Incluso si falla el logout en el servidor, limpiar datos locales
       console.error('Error al hacer logout:', error);
     } finally {
+      // Limpiar localStorage y estado global
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
       dispatch({ type: authActions.LOGOUT });
       toast.success('Sesión cerrada correctamente');
     }
@@ -476,6 +490,20 @@ export const AuthProvider = ({ children }) => {
     canAccessDashboard
   };
 
+  // =============================
+  // Pruebas manuales recomendadas:
+  // 1. Inicia sesión normalmente.
+  // 2. Navega a una ruta protegida.
+  // 3. Recarga la página (F5).
+  // 4. Confirma que sigues autenticado y NO te redirige al login.
+  // 5. Haz logout y verifica que se limpia todo correctamente.
+  //
+  // Notas de seguridad:
+  // - Nunca se guarda la contraseña en localStorage.
+  // - El token solo se guarda en localStorage para persistencia de sesión.
+  // - El usuario se rehidrata siempre desde el backend al cargar la app.
+  //
+  // =============================
   return (
     <AuthContextAPI.Provider value={value}>
       {children}

@@ -1,5 +1,14 @@
 <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
   <rect width="100%" height="100%" fill="#f8f9fa"/>
-  <text x="50%" y="40%" font-family="Arial, sans-serif" font-size="18" fill="#6c757d" text-anchor="middle">🍰</text>
-  <text x="50%" y="60%" font-family="Arial, sans-serif" font-size="14" fill="#6c757d" text-anchor="middle">Imagen no disponible</text>
+  <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" rx="24" fill="#FFF8E1"/>
+    <ellipse cx="100" cy="150" rx="60" ry="20" fill="#FFD1DC"/>
+    <rect x="50" y="80" width="100" height="50" rx="12" fill="#FFF" stroke="#E0A899" stroke-width="4"/>
+    <ellipse cx="100" cy="80" rx="50" ry="18" fill="#F8B195" stroke="#E0A899" stroke-width="4"/>
+    <ellipse cx="100" cy="80" rx="40" ry="12" fill="#FFF"/>
+    <circle cx="100" cy="70" r="8" fill="#F67280"/>
+    <rect x="95" y="40" width="10" height="20" rx="5" fill="#F8B195"/>
+    <ellipse cx="100" cy="40" rx="5" ry="3" fill="#F67280"/>
+    <text x="100" y="180" text-anchor="middle" fill="#E0A899" font-size="18" font-family="Arial" font-weight="bold">Sin imagen</text>
+  </svg>
 </svg>
