@@ -49,6 +49,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "phantomjs-prebuilt": "^2.1.16",
+    "terser": "^5.44.1",
     "vite": "^6.0.1",
     "vitest": "^2.1.8"
   }
