@@ -1,10 +1,10 @@
 // Modal de Login - La Ruta el Pastelazo
 import { useState } from 'react';
 import { Modal, Form, Button, Alert, Row, Col } from 'react-bootstrap';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthAPI } from '../../contexts/AuthContextAPI';
 
 export default function LoginModal({ show, onHide, onSwitchToRegister }) {
-  const { login, isLoading } = useAuth();
+  const { login, isLoading } = useAuthAPI();
   const [formData, setFormData] = useState({
     email: '',
     password: ''

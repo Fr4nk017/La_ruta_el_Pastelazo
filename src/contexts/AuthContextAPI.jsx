@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authAPI, usersAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -127,6 +128,7 @@ const authReducer = (state, action) => {
 // Provider del contexto de autenticación
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const navigate = useNavigate();
 
   // =============================
   // Persistencia de sesión (rehidratación)
@@ -190,6 +192,7 @@ export const AuthProvider = ({ children }) => {
         const userData = response.data?.user || response.user;
         const token = response.data?.token || response.token;
         // Guardar token y usuario en localStorage para persistencia
+        localStorage.removeItem('lastOrderId');
         localStorage.setItem('authToken', token);
         localStorage.setItem('user', JSON.stringify(userData));
         dispatch({
@@ -254,10 +257,16 @@ export const AuthProvider = ({ children }) => {
       console.error('Error al hacer logout:', error);
     } finally {
       // Limpiar localStorage y estado global
+      const currentUserId = state.user?._id;
+      if (currentUserId) {
+        localStorage.removeItem(`lastOrderId:${currentUserId}`);
+      }
+      localStorage.removeItem('lastOrderId');
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       dispatch({ type: authActions.LOGOUT });
       toast.success('Sesión cerrada correctamente');
+      navigate('/', { replace: true }); // FIX: redirigir a inicio para evitar quedar en la pantalla de login
     }
   };
 
@@ -320,7 +329,7 @@ export const AuthProvider = ({ children }) => {
 
   // Cargar todos los usuarios
   const loadUsers = async () => {
-    if (!isAdmin()) {
+    if (!isAdmin() && !isWorker()) {
       toast.error('No tienes permisos para ver usuarios');
       return { success: false, error: 'Sin permisos' };
     }

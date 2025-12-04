@@ -14,6 +14,7 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { cart, checkout, clear } = useCart();
   const { user, isAuthenticated } = useAuthAPI();
+  const lastOrderStorageKey = user?._id ? `lastOrderId:${user._id}` : null;
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState({});
@@ -225,8 +226,8 @@ export default function Checkout() {
       const newOrderId = response.data._id || response.data.orderNumber;
       setOrderId(newOrderId);
       // Guardar el último orderId en localStorage para fallback en seguimiento
-      if (newOrderId) {
-        localStorage.setItem('lastOrderId', newOrderId);
+      if (newOrderId && lastOrderStorageKey) {
+        localStorage.setItem(lastOrderStorageKey, newOrderId);
       }
       setOrderSuccess(true);
       setIsProcessing(false);

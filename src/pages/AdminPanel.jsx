@@ -1,13 +1,34 @@
 // Panel de Administración - La Ruta el Pastelazo
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Table, Modal, Form, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Table, Modal, Form, Alert, Spinner, Badge } from 'react-bootstrap';
 import { useAuthAPI } from '../contexts/AuthContextAPI';
-import { productsAPI } from '../services/api';
+import { productsAPI, ordersAPI } from '../services/api';
 import { Link } from 'react-router-dom';
 import { formatPrice } from '../utils/currency';
+import { formatDateTime } from '../utils/dates';
+
+const ORDER_STATUS_OPTIONS = ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'];
+
+const ORDER_STATUS_LABELS = {
+  pending: 'Pendiente',
+  confirmed: 'Confirmado',
+  preparing: 'En preparación',
+  ready: 'Listo',
+  delivered: 'Entregado',
+  cancelled: 'Cancelado'
+};
+
+const ORDER_STATUS_VARIANTS = {
+  pending: 'warning',
+  confirmed: 'info',
+  preparing: 'primary',
+  ready: 'success',
+  delivered: 'success',
+  cancelled: 'danger'
+};
 
 export default function AdminPanel() {
-  const { users, isAdmin, user } = useAuthAPI();
+  const { users, isAdmin, user, loadUsers } = useAuthAPI();
   const [showProductModal, setShowProductModal] = useState(false);
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -23,6 +44,10 @@ export default function AdminPanel() {
     category: 'clasicas',
     img: ''
   });
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersError, setOrdersError] = useState('');
+  const [updatingOrderId, setUpdatingOrderId] = useState(null);
 
   // Verificar si el usuario puede administrar (admin o trabajador)
   const canManage = () => {
@@ -30,8 +55,11 @@ export default function AdminPanel() {
   };
 
   useEffect(() => {
+    if (!canManage()) return;
     loadProducts();
-  }, []);
+    loadUsers();
+    loadOrders();
+  }, [user?.role]);
 
   const loadProducts = async () => {
     try {
@@ -51,9 +79,54 @@ export default function AdminPanel() {
     }
   };
 
+  const loadOrders = async () => {
+    try {
+      setOrdersLoading(true);
+      setOrdersError('');
+      const data = await ordersAPI.getAll({ limit: 100 });
+      const ordersList = data?.orders || data?.data?.orders || [];
+      setOrders(Array.isArray(ordersList) ? ordersList : []);
+    } catch (error) {
+      console.error('Error loading orders:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Error al cargar las órdenes';
+      setOrdersError(errorMessage);
+      setOrders([]);
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
+
   const showMessage = (type, text) => {
     setMessage({ type, text });
     setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+  };
+
+  const handleUpdateOrderStatus = async (orderId, newStatus) => {
+    const currentOrder = orders.find(order => order._id === orderId);
+    if (!orderId || !newStatus || currentOrder?.status === newStatus) {
+      return;
+    }
+    try {
+      setUpdatingOrderId(orderId);
+      const response = await ordersAPI.updateStatus(orderId, newStatus);
+      const updatedData = response?.data || {};
+      setOrders(prev => prev.map(order => (
+        order._id === orderId
+          ? {
+              ...order,
+              status: updatedData.status || newStatus,
+              updatedAt: updatedData.updatedAt || order.updatedAt
+            }
+          : order
+      )));
+      showMessage('success', `Estado actualizado a ${ORDER_STATUS_LABELS[newStatus] || newStatus}`);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      const errorMessage = error.response?.data?.message || 'No se pudo actualizar el estado de la orden';
+      showMessage('danger', errorMessage);
+    } finally {
+      setUpdatingOrderId(null);
+    }
   };
 
   const handleEditPrice = (product) => {
@@ -111,7 +184,8 @@ export default function AdminPanel() {
       };
 
       console.log('Creating product:', productData);
-      await productsAPI.create(productData);
+      const response = await productsAPI.create(productData);
+      console.log('✅ Producto creado exitosamente:', response);
       
       showMessage('success', `Producto "${newProduct.name}" agregado exitosamente a la base de datos`);
       setShowAddProductModal(false);
@@ -124,8 +198,10 @@ export default function AdminPanel() {
       });
       loadProducts(); // Recargar productos
     } catch (error) {
-      console.error('Error creating product:', error);
-      showMessage('danger', `Error al crear producto: ${error.message || 'Error desconocido'}`);
+      console.error('❌ Error completo al crear producto:', error);
+      console.error('Respuesta del servidor:', error.response?.data);
+      const errorMsg = error.response?.data?.message || error.message || 'Error desconocido';
+      showMessage('danger', `Error al crear producto: ${errorMsg}`);
     } finally {
       setSaving(false);
     }
@@ -232,6 +308,119 @@ export default function AdminPanel() {
 
       <Card className="mb-4">
         <Card.Header className="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 className="mb-0">Gestión de Órdenes</h5>
+            <small className="text-muted">Actualiza el estado de los pedidos de los clientes.</small>
+          </div>
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={() => loadOrders()}
+            disabled={ordersLoading}
+          >
+            {ordersLoading ? 'Actualizando…' : 'Recargar'}
+          </Button>
+        </Card.Header>
+        <Card.Body>
+          {ordersLoading ? (
+            <div className="text-center py-4">
+              <Spinner animation="border" />
+              <p className="mt-2">Cargando órdenes…</p>
+            </div>
+          ) : ordersError ? (
+            <Alert variant="danger" className="mb-0">
+              {ordersError}
+            </Alert>
+          ) : orders.length === 0 ? (
+            <div className="text-center py-4">
+              <p className="text-muted mb-0">Aún no hay pedidos registrados.</p>
+            </div>
+          ) : (
+            <Table responsive hover className="align-middle">
+              <thead>
+                <tr>
+                  <th>Orden</th>
+                  <th>Cliente</th>
+                  <th>Creación</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map(order => {
+                  const orderId = order._id;
+                  const customerName = order.userId
+                    ? `${order.userId.firstName || ''} ${order.userId.lastName || ''}`.trim()
+                    : `${order.customerInfo?.firstName || ''} ${order.customerInfo?.lastName || ''}`.trim();
+                  const customerEmail = order.userId?.email || order.customerInfo?.email || 'Sin correo';
+                  const statusLabel = ORDER_STATUS_LABELS[order.status] || order.status;
+                  const statusVariant = ORDER_STATUS_VARIANTS[order.status] || 'secondary';
+                  return (
+                    <tr key={orderId}>
+                      <td>
+                        <div className="d-flex flex-column">
+                          <strong>#{order.orderNumber || orderId}</strong>
+                          <small className="text-muted">{order.items?.length || 0} productos</small>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="d-flex flex-column">
+                          <span>{customerName || 'Cliente invitado'}</span>
+                          <small className="text-muted">{customerEmail}</small>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="d-flex flex-column">
+                          <span>{order.createdAt ? formatDateTime(order.createdAt) : 'Sin registro'}</span>
+                          {order.updatedAt && (
+                            <small className="text-muted">Última actualización: {formatDateTime(order.updatedAt)}</small>
+                          )}
+                        </div>
+                      </td>
+                      <td>{formatPrice(order.total || 0)}</td>
+                      <td style={{ minWidth: 200 }}>
+                        <div className="d-flex flex-column gap-2">
+                          <Badge bg={statusVariant} className="text-uppercase fw-semibold">
+                            {statusLabel}
+                          </Badge>
+                          <Form.Select
+                            size="sm"
+                            value={order.status}
+                            onChange={(event) => handleUpdateOrderStatus(orderId, event.target.value)}
+                            disabled={updatingOrderId === orderId}
+                          >
+                            {ORDER_STATUS_OPTIONS.map(status => (
+                              <option key={status} value={status}>
+                                {ORDER_STATUS_LABELS[status]}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="d-flex gap-2">
+                          <Button
+                            as={Link}
+                            to={`/tracking?id=${orderId}`}
+                            size="sm"
+                            variant="outline-primary"
+                          >
+                            Ver seguimiento
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          )}
+        </Card.Body>
+      </Card>
+
+      <Card className="mb-4">
+        <Card.Header className="d-flex justify-content-between align-items-center">
           <h5 className="mb-0">Gestión de Productos y Precios (MongoDB)</h5>
           <small className="text-muted">Total: {apiProducts.length} productos</small>
         </Card.Header>
@@ -307,7 +496,7 @@ export default function AdminPanel() {
                       >
                         Editar Precio
                       </Button>
-                      {user?.role === 'admin' && (
+                      {(user?.role === 'admin' || user?.role === 'trabajador') && (
                         <Button
                           variant="outline-danger"
                           size="sm"

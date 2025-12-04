@@ -2,7 +2,40 @@ import axios from 'axios';
 
 // Configuración base de la API (usando variables de entorno de Vite)
 const API_ORIGIN = import.meta?.env?.VITE_API_ORIGIN || 'http://localhost:3000';
-const API_BASE_URL = import.meta?.env?.VITE_API_BASE_URL || `${API_ORIGIN}/api`;
+const rawBaseUrl = import.meta?.env?.VITE_API_BASE_URL || API_ORIGIN;
+
+const normalizeOrigin = (value) => value.replace(/\/$/, '');
+const ensureApiPrefix = (path) => {
+  if (!path || path === '/') return '/api';
+  const cleaned = path.replace(/\/$/, '');
+  return cleaned.startsWith('/api') ? cleaned : `${cleaned}/api`;
+};
+
+// FIX: resolver rutas relativas y garantizar que siempre apunten al backend (incluyendo prefijo /api)
+const API_BASE_URL = (() => {
+  try {
+    if (rawBaseUrl.startsWith('http://') || rawBaseUrl.startsWith('https://')) {
+      const url = new URL(rawBaseUrl);
+      url.pathname = ensureApiPrefix(url.pathname);
+      return `${url.origin}${url.pathname}`.replace(/\/$/, '');
+    }
+
+    const origin = normalizeOrigin(API_ORIGIN);
+    if (rawBaseUrl.startsWith('/')) {
+      const path = ensureApiPrefix(rawBaseUrl);
+      return `${origin}${path}`.replace(/\/$/, '');
+    }
+
+    if (rawBaseUrl) {
+      const path = ensureApiPrefix(`/${rawBaseUrl}`);
+      return `${origin}${path}`.replace(/\/$/, '');
+    }
+  } catch (error) {
+    console.warn('⚠️ API base URL inválida, usando origen por defecto:', rawBaseUrl);
+  }
+
+  return `${normalizeOrigin(API_ORIGIN)}/api`;
+})();
 
 console.log('🔧 API Configuration:', { API_ORIGIN, API_BASE_URL, env: import.meta.env });
 
@@ -39,9 +72,12 @@ api.interceptors.response.use(
     
     // Error de autenticación
     if (error.response?.status === 401) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
     }
     
     return Promise.reject(error);
@@ -177,32 +213,27 @@ export const ordersAPI = {
 
   // Obtener todas las órdenes (admin/trabajador)
   getAll: async (filters = {}) => {
-    const params = new URLSearchParams();
-    Object.keys(filters).forEach(key => {
-      if (filters[key]) {
-        params.append(key, filters[key]);
-      }
-    });
-    
-    const response = await api.get(`/orders?${params.toString()}`);
+    const response = await api.get('/orders/all', { params: filters });
     return response.data.data;
   },
 
-  // Obtener orden por ID
+  // Obtener orden por ID (usa endpoint público cuando no hay sesión)
   getById: async (id) => {
-    const response = await api.get(`/orders/${id}`);
+    const token = localStorage.getItem('authToken');
+    const endpoint = token ? `/orders/${id}` : `/orders/track/${id}`;
+    const response = await api.get(endpoint);
     return response.data.data;
   },
 
   // Actualizar estado de orden (admin/trabajador)
   updateStatus: async (id, status) => {
-    const response = await api.patch(`/orders/${id}/status`, { status });
+    const response = await api.put(`/orders/${id}/status`, { status });
     return response.data;
   },
 
   // Cancelar orden
   cancel: async (id) => {
-    const response = await api.patch(`/orders/${id}/cancel`);
+    const response = await api.put(`/orders/${id}/cancel`);
     return response.data;
   }
 };

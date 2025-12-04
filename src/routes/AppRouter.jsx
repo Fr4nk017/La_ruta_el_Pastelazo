@@ -17,6 +17,7 @@ const AdminPanel = lazy(() => import('../pages/AdminPanel'));
 const TestAPIConnection = lazy(() => import('../pages/TestAPIConnection'));
 
 const Login = lazy(() => import('../pages/Login'));
+const Register = lazy(() => import('../pages/Register'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 export default function AppRouter() {
@@ -33,6 +34,8 @@ export default function AppRouter() {
       <Route path={ROUTES.ROLES_APP} element={<RolesApp />} />
       <Route path={ROUTES.ADMIN} element={<AdminPanel />} />
       <Route path="/test-api" element={<TestAPIConnection />} />
+      <Route path={ROUTES.LOGIN} element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
