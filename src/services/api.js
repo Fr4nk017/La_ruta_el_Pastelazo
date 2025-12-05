@@ -153,13 +153,14 @@ export const productsAPI = {
     });
     
     const response = await api.get(`/products?${params.toString()}`);
-    return response.data.data; // Extraer data del response
+    // El backend devuelve { success, products }, no { data: { ... } }
+    return response.data.products || response.data.data || response.data;
   },
 
   // Obtener producto por ID
   getById: async (id) => {
     const response = await api.get(`/products/${id}`);
-    return response.data.data;
+    return response.data.product || response.data.data || response.data;
   },
 
   // Crear producto (admin/trabajador)
@@ -208,26 +209,26 @@ export const ordersAPI = {
   // Obtener órdenes del usuario
   getUserOrders: async () => {
     const response = await api.get('/orders');
-    return response.data.data;
+    return response.data.orders || response.data.data || response.data;
   },
 
   // Obtener todas las órdenes (admin/trabajador)
   getAll: async (filters = {}) => {
     const response = await api.get('/orders/all', { params: filters });
-    return response.data.data;
+    return response.data.orders || response.data.data || response.data;
   },
 
   // Obtener orden por ID (usa endpoint público cuando no hay sesión)
   getById: async (id) => {
     const token = localStorage.getItem('authToken');
-    const endpoint = token ? `/orders/${id}` : `/orders/track/${id}`;
+    const endpoint = token ? `/orders/${id}` : `/orders/${id}`;
     const response = await api.get(endpoint);
-    return response.data.data;
+    return response.data.order || response.data.data || response.data;
   },
 
   // Actualizar estado de orden (admin/trabajador)
   updateStatus: async (id, status) => {
-    const response = await api.put(`/orders/${id}/status`, { status });
+    const response = await api.patch(`/orders/${id}/status`, { status });
     return response.data;
   },
 
@@ -245,13 +246,13 @@ export const usersAPI = {
   // Obtener todos los usuarios
   getAll: async (filters = {}) => {
     const response = await api.get('/users', { params: filters });
-    return response.data;
+    return response.data.users || response.data.data || response.data;
   },
 
   // Obtener usuario por ID
   getById: async (id) => {
     const response = await api.get(`/users/${id}`);
-    return response.data;
+    return response.data.user || response.data.data || response.data;
   },
 
   // Crear nuevo usuario (admin)
@@ -312,7 +313,7 @@ export const usersAPI = {
 export const utilsAPI = {
   // Health check
   healthCheck: async () => {
-    const response = await axios.get(`${API_ORIGIN}/health`);
+    const response = await axios.get(`${API_BASE_URL}/health`);
     return response.data;
   },
 
