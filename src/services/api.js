@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Configuración base de la API (usando variables de entorno de Vite)
-const API_ORIGIN = import.meta?.env?.VITE_API_ORIGIN || 'http://localhost:3000';
+const API_ORIGIN = import.meta?.env?.VITE_API_ORIGIN || 'https://la-ruta-el-pastelazo-backend.vercel.app';
 const rawBaseUrl = import.meta?.env?.VITE_API_BASE_URL || API_ORIGIN;
 
 const normalizeOrigin = (value) => value.replace(/\/$/, '');

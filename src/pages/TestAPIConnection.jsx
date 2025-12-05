@@ -538,20 +538,20 @@ const TestAPIConnection = () => {
                   <ul className="list-unstyled">
                     <li>
                       <strong>Backend:</strong>{' '}
-                      <a href="http://localhost:5000" target="_blank" rel="noopener noreferrer">
-                        http://localhost:5000
+                      <a href="https://la-ruta-el-pastelazo-backend.vercel.app" target="_blank" rel="noopener noreferrer">
+                        https://la-ruta-el-pastelazo-backend.vercel.app
                       </a>
                     </li>
                     <li>
                       <strong>API:</strong>{' '}
-                      <a href="http://localhost:5000/api" target="_blank" rel="noopener noreferrer">
-                        http://localhost:5000/api
+                      <a href="https://la-ruta-el-pastelazo-backend.vercel.app/api" target="_blank" rel="noopener noreferrer">
+                        https://la-ruta-el-pastelazo-backend.vercel.app/api
                       </a>
                     </li>
                     <li>
                       <strong>Health:</strong>{' '}
-                      <a href="http://localhost:5000/health" target="_blank" rel="noopener noreferrer">
-                        http://localhost:5000/health
+                      <a href="https://la-ruta-el-pastelazo-backend.vercel.app/api/health" target="_blank" rel="noopener noreferrer">
+                        https://la-ruta-el-pastelazo-backend.vercel.app/api/health
                       </a>
                     </li>
                     <li>
