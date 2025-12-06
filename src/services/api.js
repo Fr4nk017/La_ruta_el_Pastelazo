@@ -1,43 +1,25 @@
 import axios from 'axios';
 
-// Configuración base de la API (usando variables de entorno de Vite)
-const API_ORIGIN = import.meta?.env?.VITE_API_ORIGIN || 'https://la-ruta-el-pastelazo-backend.vercel.app';
-const rawBaseUrl = import.meta?.env?.VITE_API_BASE_URL || API_ORIGIN;
+// URL base para el backend (incluye el prefijo /api)
+// Usa VITE_API_URL en Vercel; fallback a la URL pública del backend desplegado.
+const DEFAULT_API_URL = 'https://la-ruta-el-pastelazo-backend.vercel.app/api';
 
-const normalizeOrigin = (value) => value.replace(/\/$/, '');
-const ensureApiPrefix = (path) => {
-  if (!path || path === '/') return '/api';
-  const cleaned = path.replace(/\/$/, '');
-  return cleaned.startsWith('/api') ? cleaned : `${cleaned}/api`;
-};
+const normalizeApiUrl = (value) => {
+  if (!value) return null;
+  const trimmed = value.trim().replace(/\/$/, '');
 
-// FIX: resolver rutas relativas y garantizar que siempre apunten al backend (incluyendo prefijo /api)
-const API_BASE_URL = (() => {
-  try {
-    if (rawBaseUrl.startsWith('http://') || rawBaseUrl.startsWith('https://')) {
-      const url = new URL(rawBaseUrl);
-      url.pathname = ensureApiPrefix(url.pathname);
-      return `${url.origin}${url.pathname}`.replace(/\/$/, '');
-    }
-
-    const origin = normalizeOrigin(API_ORIGIN);
-    if (rawBaseUrl.startsWith('/')) {
-      const path = ensureApiPrefix(rawBaseUrl);
-      return `${origin}${path}`.replace(/\/$/, '');
-    }
-
-    if (rawBaseUrl) {
-      const path = ensureApiPrefix(`/${rawBaseUrl}`);
-      return `${origin}${path}`.replace(/\/$/, '');
-    }
-  } catch (error) {
-    console.warn('⚠️ API base URL inválida, usando origen por defecto:', rawBaseUrl);
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
   }
 
-  return `${normalizeOrigin(API_ORIGIN)}/api`;
-})();
+  // Si viene sin protocolo, asumimos https
+  const withProtocol = `https://${trimmed}`;
+  return withProtocol.endsWith('/api') ? withProtocol : `${withProtocol}/api`;
+};
 
-console.log('🔧 API Configuration:', { API_ORIGIN, API_BASE_URL, env: import.meta.env });
+const API_BASE_URL = normalizeApiUrl(import.meta?.env?.VITE_API_URL) || DEFAULT_API_URL;
+
+console.log('🔧 API BASE URL:', API_BASE_URL);
 
 // Crear instancia de axios
 const api = axios.create({
