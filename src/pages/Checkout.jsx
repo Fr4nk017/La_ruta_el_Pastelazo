@@ -213,6 +213,9 @@ export default function Checkout() {
       console.log('📦 Order data prepared:', orderData);
       console.log('📦 Order data JSON:', JSON.stringify(orderData, null, 2));
       console.log('📦 Cart contents detail:', cart.map(item => ({ id: item._id || item.id, name: item.name, qty: item.qty })));
+      console.log('📦 CustomerInfo keys:', Object.keys(orderData.customerInfo));
+      console.log('📦 All keys in orderData:', Object.keys(orderData));
+      console.log('📦 Items validation:', orderData.items.map((item, i) => ({ index: i, productId: item.productId, quantity: item.quantity })));
 
       // Crear orden en el backend
       const response = await ordersAPI.create(orderData);
@@ -231,15 +234,21 @@ export default function Checkout() {
       clear(); // Limpiar carrito después del pedido exitoso
     } catch (error) {
       console.error('❌ Order creation failed:', error);
+      console.error('Error response:', error.response);
+      console.error('Error response data:', error.response?.data);
+      console.error('Error response status:', error.response?.status);
       
       let errorMessage = 'Error al procesar el pedido. Intenta nuevamente.';
       
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
+      } else if (error.response?.data?.missingFields) {
+        errorMessage = `Faltan campos: ${error.response.data.missingFields.join(', ')}`;
       } else if (error.message) {
         errorMessage = error.message;
       }
       
+      console.error('Final error message:', errorMessage);
       setErrors({ general: errorMessage });
       setIsProcessing(false);
     }
