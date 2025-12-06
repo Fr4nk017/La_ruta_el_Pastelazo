@@ -217,6 +217,22 @@ export default function Checkout() {
       console.log('📦 All keys in orderData:', Object.keys(orderData));
       console.log('📦 Items validation:', orderData.items.map((item, i) => ({ index: i, productId: item.productId, quantity: item.quantity })));
 
+      // PRIMERO: Hacer un test para verificar que el servidor recibe los datos correctamente
+      console.log('🧪 Testing if server receives data correctly...');
+      try {
+        const testResponse = await fetch('https://la-ruta-el-pastelazo-backend.vercel.app/test-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderData)
+        });
+        const testData = await testResponse.json();
+        console.log('🧪 Test response:', testData);
+      } catch (testError) {
+        console.error('🧪 Test failed:', testError);
+      }
+
       // Crear orden en el backend
       const response = await ordersAPI.create(orderData);
       
