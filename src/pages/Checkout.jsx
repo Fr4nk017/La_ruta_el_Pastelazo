@@ -180,11 +180,6 @@ export default function Checkout() {
 
   const confirmOrder = async () => {
     setShowConfirmModal(false);
-    // Si no está autenticado, mostrar error y no continuar
-    if (!isAuthenticated) {
-      setErrors({ general: 'Debes iniciar sesión para confirmar tu compra y ver tu historial de pedidos.' });
-      return;
-    }
     setIsProcessing(true);
 
     try {
@@ -216,6 +211,8 @@ export default function Checkout() {
       };
 
       console.log('📦 Order data prepared:', orderData);
+      console.log('📦 Order data JSON:', JSON.stringify(orderData, null, 2));
+      console.log('📦 Cart contents detail:', cart.map(item => ({ id: item._id || item.id, name: item.name, qty: item.qty })));
 
       // Crear orden en el backend
       const response = await ordersAPI.create(orderData);
